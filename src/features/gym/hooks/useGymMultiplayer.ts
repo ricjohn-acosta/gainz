@@ -5,18 +5,20 @@ import {useEffect, useState} from "react";
 
 export const useGymMultiplayer = () => {
 
-    const [avatars, setAvatars] = useState({})
+    const [avatars, setAvatars] = useState<any>(null)
     const [user, setUser] = useState(null)
     const [userRef, setUserRef] = useState(null)
 
     const startMultiplayer = () => {
-        const playerRef = ref(realtimeDB,`players`);
-        onValue(playerRef, (snapshot) => {
-            setAvatars(snapshot.val() || {})
+        const uid = auth.currentUser.uid
+        const playerRef = ref(realtimeDB,`players/${uid}`);
+        onValue(playerRef, (snapshot: any) => {
+            const avatars = snapshot.val() || {}
+            setAvatars(avatars)
         })
     }
 
-    const authListener = (authUser) => {
+    const authListener = (authUser: any) => {
         if (authUser) {
             const playerId = authUser.uid;
             const userRef = ref(realtimeDB,`players/${playerId}`);
@@ -41,7 +43,7 @@ export const useGymMultiplayer = () => {
     }, [auth])
 
     const signInAsGuest = () => {
-        return signInAnonymously(auth).then(res => console.log(res)).catch(e => console.log('error', e))
+        return signInAnonymously(auth).then().catch(e => console.log('error', e))
     }
 
     const handleAvatarMovement = (event) => {
@@ -59,8 +61,7 @@ export const useGymMultiplayer = () => {
             avatars
         },
         operations: {
-            signInAsGuest,
-            handleAvatarMovement
+            signInAsGuest
         }
     }
 }

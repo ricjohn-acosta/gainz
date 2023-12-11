@@ -8,21 +8,17 @@ import {useAvatarMovement} from "../hooks/useAvatarMovement";
 
 const GymAvatar = (props) => {
 
-    const {openBottomSheet, position, uid, avatarAnimation, spriteAnimationRef} = props
-    const [animation] = useState<any>(new Animated.ValueXY({ x: 0, y: 0 }));
+    const {openBottomSheet, position, uid} = props
+    const [animation] = useState<any>(new Animated.ValueXY({ x: position.locationX, y: position.locationY }));
     const [idleTimerStart, setIdleTimerStart] = useState<boolean>(false)
     const [idle, setIdle] = useState<boolean>(false)
     const mummyRef = useRef();
-    // const {data: {avatarAnimation, spriteAnimationRef}} = useAvatarMovement()
 
-    const move = () => {
-
-    }
     // Move square on press
-    // useEffect(() => {
-    //     if (!position) return
-    //     moveSquare()
-    // }, [position]);
+    useEffect(() => {
+        if (!position) return
+        moveSquare()
+    }, [position]);
 
     // Move square randomly on idle after 15 seconds - then move randomly every 5 seconds
     // useEffect(() => {
@@ -34,47 +30,50 @@ const GymAvatar = (props) => {
     //         clearInterval(intervalId);
     //     };
     // }, [idle]);
-    //
-    // useEffect(() => {
-    //     if (!idleTimerStart) return
-    //     const timeoutId = setTimeout(() => {
-    //         setIdle(true)
-    //     }, 10000)
-    //
-    //     return () => {
-    //         clearTimeout(timeoutId)
-    //     }
-    // }, [idleTimerStart]);
 
-    // const moveSquare = () => {
-    //     // if (!position.isMoving) return
-    //     // if (position.locationX === 0 && position.locationY === 0) return
-    //     // if (position.isMoving) {
-    //     //     mummyRef.current.play({type: 'walk', fps: 16, loop: true })
-    //     // }
-    //     mummyRef.current.play({type: 'walk', fps: 16, loop: true })
-    //
-    //     setIdle(false)
-    //     setIdleTimerStart(false)
-    //     Animated.timing(animation, {
-    //         toValue: { x: position.locationX - 100/2, y: position.locationY - 100/2 },
-    //         duration: 2000,
-    //         easing: Easing.linear,
-    //         useNativeDriver: false,
-    //     }).start((animation) => {
-    //         if (animation.finished) {
-    //             const userRef = ref(realtimeDB,`players/${position.id}`);
-    //             update(userRef,{
-    //                 isMoving: false,
-    //             })
-    //             setIdleTimerStart(true)
-    //             mummyRef.current.stop()
-    //         }
-    //     })
-    // };
+    useEffect(() => {
+        if (!idleTimerStart) return
+        const timeoutId = setTimeout(() => {
+            setIdle(true)
+        }, 10000)
+
+        return () => {
+            clearTimeout(timeoutId)
+        }
+    }, [idleTimerStart]);
+
+    const moveSquare = () => {
+        // if (!position.isMoving) return
+        if (!position) return
+        // if (position.isMoving) {
+        //     mummyRef.current.play({type: 'walk', fps: 16, loop: true })
+        // }
+        // @ts-ignore
+        mummyRef.current.play({type: 'walk', fps: 16, loop: true })
+
+        setIdle(false)
+        setIdleTimerStart(false)
+        Animated.timing(animation, {
+            toValue: { x: position.locationX - 100/2, y: position.locationY - 100/2 },
+            duration: 2000,
+            easing: Easing.linear,
+            useNativeDriver: false,
+        }).start((animation) => {
+            if (animation.finished) {
+                // const userRef = ref(realtimeDB,`players/${position.id}`);
+                // update(userRef,{
+                //     isMoving: false,
+                // })
+                // setIdleTimerStart(true)
+                // // @ts-ignore
+                // mummyRef.current.stop()
+            }
+        })
+    };
 
     // const moveSquareWhenIdle = () => {
     //     if (!idle) return
+    //     // @ts-ignore
     //     mummyRef.current.play({type: 'walk', fps: 16, loop: true })
     //     const randomX = Math.floor(Math.random() * (80 - 50 + 1) + 50)
     //     const randomY = Math.floor(Math.random() * (80 - 50 + 1) + 50)
@@ -86,19 +85,20 @@ const GymAvatar = (props) => {
     //         useNativeDriver: false,
     //     }).start(animation => {
     //         if (animation.finished) {
+    //             // @ts-ignore
     //             mummyRef.current.stop()
     //         }
     //     })
     // };
 
-    if (!animation) return <></>
+    if (!animation || !position) return <></>
     return (
         <TouchableOpacity onPress={() => openBottomSheet()} style={styles.avatarContainer}>
-            <Animated.View style={{...styles.avatarContainer, transform: [{ translateX: avatarAnimation.x }, { translateY: avatarAnimation.y }]}}>
+            <Animated.View style={{...styles.avatarContainer, transform: [{ translateX: animation.x }, { translateY: animation.y }]}}>
                 <Text style={styles.avatarName}>mookentooken</Text>
                 <View style={styles.avatar}>
                     <SpriteSheet
-                        ref={spriteAnimationRef}
+                        ref={mummyRef}
                         source={require('../../../../assets/mummy.png')}
                         columns={9}
                         rows={6}
