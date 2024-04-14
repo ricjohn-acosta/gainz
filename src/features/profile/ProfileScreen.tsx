@@ -21,10 +21,14 @@ import { useIsFocused } from "@react-navigation/native";
 import useTeamStore from "../../stores/teamStore";
 import useHypeStore from "../../stores/hypeStore";
 import moment from "moment";
+import useProfileStore from "../../stores/profileStore";
 
 export default function ProfileScreen({ route }) {
   const { uid } = route.params;
 
+  const {
+    data: { me },
+  } = useProfileStore();
   const {
     operations: { getMyTeam, getHypeRank, getMember },
   } = useTeamStore();
@@ -35,7 +39,7 @@ export default function ProfileScreen({ route }) {
   const { bottomSheetModalRef, showModal } = useSheet();
   const isFocused = useIsFocused();
 
-  const [refresh, setRefresh] = useState<boolean>(false);
+  const [refresh, setRefreshing] = useState<boolean>(false);
   const [hypeActivityListData, setHypeActivityListData] = useState<any>(null);
 
   useEffect(() => {
@@ -46,6 +50,23 @@ export default function ProfileScreen({ route }) {
       setHypeActivityListData(formattedHypeActivityData);
     });
   }, [uid, isFocused]);
+
+  const displayHypeButton = () => {
+    if (!me) return;
+    return uid !== me.id;
+  };
+
+  const onRefresh = () => {
+    try {
+      setRefreshing(true);
+      setTimeout(() => {
+        getMyTeam();
+        setRefreshing(false);
+      }, 1000);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const createListData = (hypeActivityData) => {
     const result = [];
@@ -94,10 +115,6 @@ export default function ProfileScreen({ route }) {
     );
   };
 
-  const handleRefresh = () => {
-    setRefresh(true);
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.avatarContainer}>
@@ -121,11 +138,14 @@ export default function ProfileScreen({ route }) {
         </View>
       </View>
 
-      <TouchableOpacity onPress={showModal}>
+      {displayHypeButton() && (
         <View style={styles.hypeBtnContainer}>
-          <Text style={styles.hypeBtnText}>Hype up {getMember(uid)?.username}!</Text>
+          <PrimaryButton
+            onPress={showModal}
+            text={`Hype up ${getMember(uid)?.username}!`}
+          />
         </View>
-      </TouchableOpacity>
+      )}
       <BasicBottomSheet ref={bottomSheetModalRef} _snapPoints={["50%"]}>
         <View style={{ padding: 20 }}>
           <Text style={styles.sendMessage}>Send Ricjohn a message 🔥</Text>
@@ -145,7 +165,7 @@ export default function ProfileScreen({ route }) {
       <SafeAreaView style={styles.activityContainer}>
         <SectionList
           refreshControl={
-            <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />
+            <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
           }
           scrollEnabled
           stickySectionHeadersEnabled={false}
@@ -225,9 +245,6 @@ const styles = StyleSheet.create({
   },
   hypeBtnContainer: {
     marginTop: 20,
-    backgroundColor: "#1f30fb",
-    borderRadius: 25,
-    padding: 14,
   },
   hypeBtnText: {
     textAlign: "center",

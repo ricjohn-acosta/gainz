@@ -272,39 +272,39 @@ export default function App() {
           <Stack.Navigator>
             {session && me && !notLoaded ? (
               <>
-                {!hasUserSkippedInviteCode && (
-                  <Stack.Screen
-                    name="Invitation"
-                    component={InvitationForm}
-                    options={({ navigation }) => ({
-                      headerTitle: "",
-                      headerShown: true,
-                      headerStyle: {
-                        backgroundColor: "#f2f4ff",
-                      },
-                      headerShadowVisible: false,
-                      headerRight: () => (
-                        <View style={{ marginRight: 20 }}>
-                          <TextButton
-                            text="Skip"
-                            textStyle={{ color: "grey" }}
-                            onPress={() => {
-                              AsyncStorage.setItem(
-                                "has_skipped_invite_code",
-                                "true",
-                              ).then(() =>
-                                navigation.reset({
-                                  index: 0,
-                                  routes: [{ name: "AuthStack" }],
-                                }),
-                              );
-                            }}
-                          />
-                        </View>
-                      ),
-                    })}
-                  />
-                )}
+                {/*{!hasUserSkippedInviteCode && (*/}
+                {/*  <Stack.Screen*/}
+                {/*    name="Invitation"*/}
+                {/*    component={InvitationForm}*/}
+                {/*    options={({ navigation }) => ({*/}
+                {/*      headerTitle: "",*/}
+                {/*      headerShown: true,*/}
+                {/*      headerStyle: {*/}
+                {/*        backgroundColor: "#f2f4ff",*/}
+                {/*      },*/}
+                {/*      headerShadowVisible: false,*/}
+                {/*      headerRight: () => (*/}
+                {/*        <View style={{ marginRight: 20 }}>*/}
+                {/*          <TextButton*/}
+                {/*            text="Skip"*/}
+                {/*            textStyle={{ color: "grey" }}*/}
+                {/*            onPress={() => {*/}
+                {/*              AsyncStorage.setItem(*/}
+                {/*                "has_skipped_invite_code",*/}
+                {/*                "true",*/}
+                {/*              ).then(() =>*/}
+                {/*                navigation.reset({*/}
+                {/*                  index: 0,*/}
+                {/*                  routes: [{ name: "AuthStack" }],*/}
+                {/*                }),*/}
+                {/*              );*/}
+                {/*            }}*/}
+                {/*          />*/}
+                {/*        </View>*/}
+                {/*      ),*/}
+                {/*    })}*/}
+                {/*  />*/}
+                {/*)}*/}
                 <Stack.Screen
                   name="AuthStack"
                   component={AuthNavigatorStack}
