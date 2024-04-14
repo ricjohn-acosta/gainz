@@ -1,8 +1,8 @@
 import { create } from "zustand/esm";
 import { supabase } from "../services/supabase";
-import useAuthStore from "./authStore";
-import { parseProfileQueryResult } from "./profile/helpers";
 import useProfileStore from "./profileStore";
+import { PostgrestError } from "@supabase/supabase-js";
+import { sortTeamBy } from "../helpers/teamSorter";
 
 interface TeamState {
   data: {
@@ -10,7 +10,9 @@ interface TeamState {
     myTeam?: any;
   };
   operations: {
-    getMyTeam: () => Promise<any>;
+    getMyTeam: () => Promise<PostgrestError>;
+    getHypeRank: (uid: string) => number;
+    getMember: (uid: string) => any;
   };
 }
 
@@ -22,17 +24,17 @@ const useTeamStore = create<TeamState>((set, get) => ({
   operations: {
     getMyTeam: async () => {
       const me = useProfileStore.getState().data.me;
-      console.log(me.username);
 
       if (!me) return;
-      console.log(me.username);
 
       const { data, error } = await supabase
         .from("team_members")
         .select("*")
         .eq("team_id", me.team_id);
-      console.log(me.username, data);
-      if (error) console.error(error);
+      if (error) {
+        console.error(error);
+        return error;
+      }
 
       if (!data) {
         set({ data: { myTeam: null, meTeamData: null } });
@@ -41,6 +43,19 @@ const useTeamStore = create<TeamState>((set, get) => ({
         set({ data: { myTeam: data, meTeamData } });
       }
     },
+    getHypeRank: (uid: string) => {
+      const team = get().data.myTeam;
+      return (
+        sortTeamBy("desc", "hype_received", team).findIndex(
+          (member) => member.profile_id === uid,
+        ) + 1
+      );
+    },
+    getMember: (uid: string) => {
+      const team = get().data.myTeam;
+      if (!team) return null
+      return team.find(user => user.profile_id === uid)
+    }
   },
 }));
 

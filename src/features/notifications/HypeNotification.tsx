@@ -15,21 +15,41 @@ export default function HypeNotification(props: HypeNotificationProps) {
 
   return (
     <>
-      <View style={styles.container}>
+      <View
+        style={{ ...styles.container, marginBottom: !donorMessage ? 24 : 0 }}
+      >
         <Avatar url={images.mockProfilePic1} sm />
-        <Text style={styles.time}>{time}</Text>
-        <View style={styles.container}>
-          <Text style={styles.displayName}>{donor}</Text>
-          <Text style={styles.defaultMessage}> hyped up </Text>
-          <Text style={styles.displayName}>{recipient}!</Text>
-        </View>
-        <View style={styles.hypeComboContainer}>
-          <Image style={styles.combo} source={images.x5Combo} />
+        <View style={styles.detailsContainer}>
+          <Text
+            style={{
+              fontWeight: "bold",
+              color: "#1f30fb",
+            }}
+          >
+            {donor}
+            <Text style={{ color: "black", fontWeight: "normal" }}>
+              {" "}
+              hyped up{" "}
+            </Text>
+            {recipient}
+            <Text
+              style={{
+                color: "grey",
+                marginRight: 4,
+                fontWeight: "normal",
+              }}
+            >
+              {" "}
+              {time}
+            </Text>
+          </Text>
         </View>
       </View>
-      <View style={styles.donorMessageContainer}>
-        <Text style={styles.donorMessage}>{donorMessage}</Text>
-      </View>
+      {donorMessage && (
+        <View style={styles.donorMessageContainer}>
+          <Text style={styles.donorMessage}>{donorMessage}</Text>
+        </View>
+      )}
     </>
   );
 }
@@ -38,6 +58,11 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  detailsContainer: {
+    marginLeft: 2,
+    width: 0,
+    flexGrow: 1,
   },
   hypeComboContainer: {
     marginLeft: 4,
@@ -52,15 +77,12 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   donorMessage: {
+    marginLeft: 6,
     fontSize: 14,
     fontStyle: "italic",
   },
   combo: {
     width: 34,
     height: 34,
-  },
-  time: {
-    color: "grey",
-    marginRight: 4,
   },
 });

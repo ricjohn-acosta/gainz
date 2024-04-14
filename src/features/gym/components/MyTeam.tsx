@@ -55,7 +55,9 @@ export default function MyTeam() {
             return (
               <View style={{ flexDirection: "column" }}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("Profile")}
+                  onPress={() => navigation.navigate("Profile", {
+                    uid: data.item.profile_id
+                  })}
                 >
                   <Avatar
                     url={data.item.img}

@@ -1,5 +1,5 @@
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   RefreshControl,
   SafeAreaView,
@@ -17,59 +17,82 @@ import { useSheet } from "../../components/BottomSheet/hooks/useSheet";
 import Divider from "../../components/Divider/Divider";
 import HypeNotification from "../notifications/HypeNotification";
 import { PrimaryButton } from "../../components/Button/PrimaryButton";
+import { useIsFocused } from "@react-navigation/native";
+import useTeamStore from "../../stores/teamStore";
+import useHypeStore from "../../stores/hypeStore";
+import moment from "moment";
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ route }) {
+  const { uid } = route.params;
+
+  const {
+    operations: { getMyTeam, getHypeRank, getMember },
+  } = useTeamStore();
+  const {
+    operations: { getUserHypeActivity },
+  } = useHypeStore();
+
   const { bottomSheetModalRef, showModal } = useSheet();
-  const [refresh, setRefresh] = useState<boolean>(false);
+  const isFocused = useIsFocused();
 
-  const mockData = [
-    {
-      date: "Yesterday",
-      data: [
-        {
-          donor: "Georgia",
-          recipient: "Aiza",
-          time: "8:53 PM",
-          donorMessage: "Well done for finishing chest day :)",
-        },
-        {
-          donor: "Georgia",
-          recipient: "Aiza",
-          time: "7:12 PM",
-          donorMessage: "Good bench press form!",
-        },
-      ],
-    },
-    {
-      date: "February 14",
-      data: [
-        {
-          donor: "Georgia",
-          recipient: "Aiza",
-          time: "11:02 AM",
-          donorMessage: "thank you for turning up for a HIIT session!",
-        },
-        {
-          donor: "Georgia",
-          recipient: "Aiza",
-          time: "10:30 AM",
-          donorMessage: "For finishing cardio :)",
-        },
-        {
-          donor: "Georgia",
-          recipient: "Aiza",
-          time: "9:54 AM",
-          donorMessage: "an hour to go!",
-        },
-        {
-          donor: "Georgia",
-          recipient: "Aiza",
-          time: "9:34 AM",
-          donorMessage: `Here's to a fun HIIT session`,
-        },
-      ],
-    },
-  ];
+  const [refresh, setRefresh] = useState<boolean>(false);
+  const [hypeActivityListData, setHypeActivityListData] = useState<any>(null);
+
+  useEffect(() => {
+    getMyTeam();
+    const username = getMember(uid)?.username;
+    getUserHypeActivity(username).then((hypeActivityData) => {
+      const formattedHypeActivityData = createListData(hypeActivityData);
+      setHypeActivityListData(formattedHypeActivityData);
+    });
+  }, [uid, isFocused]);
+
+  const createListData = (hypeActivityData) => {
+    const result = [];
+
+    const timestampConverted = hypeActivityData.map((item) => {
+      const dateTimeObj = moment(item.created_at);
+      const todayObj = moment().startOf("day");
+
+      return {
+        ...item,
+        created_at: dateTimeObj.isSame(todayObj, "day")
+          ? "Today"
+          : moment(item.created_at).format("MMMM DD"),
+        timestamp: item.created_at,
+        time: dateTimeObj.format("h:mm a"),
+      };
+    });
+
+    // First we group by date
+    timestampConverted.forEach((activityItem) => {
+      if (result.find((item) => item.date === activityItem.created_at)) return;
+      result.push({
+        date: activityItem.created_at,
+        data: [],
+        timestamp: activityItem.timestamp,
+      });
+    });
+
+    // Second we group the activity by date
+    timestampConverted.forEach((activityItem) => {
+      const dateGroup = result.find(
+        (item) => item.date === activityItem.created_at,
+      );
+      dateGroup.data.push(activityItem);
+    });
+
+    // Third we sort individual activity from most recent to latest
+    result.forEach((item) =>
+      item.data.sort(
+        (a, b) => moment(b.timestamp).valueOf() - moment(a.timestamp).valueOf(),
+      ),
+    );
+
+    return result.sort(
+      (a, b) => moment(b.timestamp).valueOf() - moment(a.timestamp).valueOf(),
+    );
+  };
 
   const handleRefresh = () => {
     setRefresh(true);
@@ -81,26 +104,26 @@ export default function ProfileScreen() {
         <Avatar url={images.mockProfilePic3} status="online" lg />
       </View>
       <View>
-        <Text style={styles.displayName}>Aiza</Text>
+        <Text style={styles.displayName}>{getMember(uid)?.username}</Text>
       </View>
       <View style={styles.statContainer}>
         <View style={styles.halfCard}>
-          <Text style={styles.counter}>1230🔥</Text>
+          <Text style={styles.counter}>{getMember(uid)?.hype_received}🔥</Text>
           <Text style={styles.label}>Received</Text>
         </View>
         <View style={styles.halfCard}>
-          <Text style={styles.counter}>321🔥</Text>
+          <Text style={styles.counter}>{getMember(uid)?.hype_given}🔥</Text>
           <Text style={styles.label}>Given</Text>
         </View>
         <View style={styles.halfCard}>
-          <Text style={styles.counter}>6🔥</Text>
+          <Text style={styles.counter}>{getHypeRank(uid)}🔥</Text>
           <Text style={styles.label}>Hype rank</Text>
         </View>
       </View>
 
       <TouchableOpacity onPress={showModal}>
         <View style={styles.hypeBtnContainer}>
-          <Text style={styles.hypeBtnText}>Hype up Aiza!</Text>
+          <Text style={styles.hypeBtnText}>Hype up {getMember(uid)?.username}!</Text>
         </View>
       </TouchableOpacity>
       <BasicBottomSheet ref={bottomSheetModalRef} _snapPoints={["50%"]}>
@@ -126,15 +149,15 @@ export default function ProfileScreen() {
           }
           scrollEnabled
           stickySectionHeadersEnabled={false}
-          sections={mockData}
+          sections={hypeActivityListData ?? []}
           renderItem={({ item }: any) => {
             return (
               <>
                 <HypeNotification
-                  donor={item.donor}
-                  recipient={item.recipient}
+                  donor={item.sender_username}
+                  recipient={item.recipient_username}
                   time={item.time}
-                  donorMessage={item.donorMessage}
+                  donorMessage={item.hype_message}
                 />
               </>
             );
