@@ -1,8 +1,6 @@
-import { Ionicons } from "@expo/vector-icons";
-import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
-import { useMemo, useState } from "react";
+import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import { useState } from "react";
 import {
-  Button,
   RefreshControl,
   SafeAreaView,
   SectionList,
@@ -18,7 +16,7 @@ import BasicBottomSheet from "../../components/BottomSheet/BasicBottomSheet";
 import { useSheet } from "../../components/BottomSheet/hooks/useSheet";
 import Divider from "../../components/Divider/Divider";
 import HypeNotification from "../notifications/HypeNotification";
-import {PrimaryButton} from "../../components/Button/PrimaryButton";
+import { PrimaryButton } from "../../components/Button/PrimaryButton";
 
 export default function ProfileScreen() {
   const { bottomSheetModalRef, showModal } = useSheet();
@@ -115,7 +113,7 @@ export default function ProfileScreen() {
             style={styles.sendMessageInput}
           />
           <View style={styles.sendBtnContainer}>
-            <PrimaryButton text={'Send'}/>
+            <PrimaryButton text={"Send"} />
           </View>
         </View>
       </BasicBottomSheet>
