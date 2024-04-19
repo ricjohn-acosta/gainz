@@ -20,6 +20,7 @@ import useHypeStore from "../../stores/hypeStore";
 import moment from "moment";
 import useProfileStore from "../../stores/profileStore";
 import { GiveHypeBottomSheet } from "../../components/BottomSheet/GiveHypeBottomSheet/GiveHypeBottomSheet";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function ProfileScreen({ route }) {
   const { uid } = route.params;
@@ -127,15 +128,36 @@ export default function ProfileScreen({ route }) {
       </View>
       <View style={styles.statContainer}>
         <View style={styles.halfCard}>
-          <Text style={styles.counter}>{getMember(uid)?.hype_received}🔥</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.counter}>{getMember(uid)?.hype_received}</Text>
+            <MaterialIcons
+              name="local-fire-department"
+              size={24}
+              color="#ff046d"
+            />
+          </View>
           <Text style={styles.label}>Received</Text>
         </View>
         <View style={styles.halfCard}>
-          <Text style={styles.counter}>{getMember(uid)?.hype_given}🔥</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.counter}>{getMember(uid)?.hype_given}</Text>
+            <MaterialIcons
+              name="local-fire-department"
+              size={24}
+              color="#ff046d"
+            />
+          </View>
           <Text style={styles.label}>Given</Text>
         </View>
         <View style={styles.halfCard}>
-          <Text style={styles.counter}>{getHypeRank(uid)}🔥</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.counter}>{getHypeRank(uid)}</Text>
+            <MaterialIcons
+              name="local-fire-department"
+              size={24}
+              color="#ff046d"
+            />
+          </View>
           <Text style={styles.label}>Hype rank</Text>
         </View>
       </View>

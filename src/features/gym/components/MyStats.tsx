@@ -1,4 +1,4 @@
-import { Entypo } from "@expo/vector-icons";
+import {Entypo, MaterialIcons} from "@expo/vector-icons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useCallback, useRef } from "react";
@@ -76,7 +76,9 @@ export default function MyStats() {
             <Text style={styles.label}>Given</Text>
           </View>
           <View style={styles.singleStatContainer}>
-            <Text style={styles.counter}>{meTeamData ? meTeamData.hype_redeemable : 0}</Text>
+            <Text style={styles.counter}>
+              {meTeamData ? meTeamData.hype_redeemable : 0}
+            </Text>
             <Text style={styles.label}>Redeemable</Text>
           </View>
         </View>
@@ -87,7 +89,11 @@ export default function MyStats() {
           onPress={showGiveHypeBottomSheet}
         >
           <View style={styles.leftContainer}>
-            <Text style={styles.icon}>🔥</Text>
+            <MaterialIcons
+              name="local-fire-department"
+              size={32}
+              color={"#ff046d"}
+            />
           </View>
           <View style={styles.rightContainer}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -104,7 +110,7 @@ export default function MyStats() {
           onPress={showLeaderboardBottomSheet}
         >
           <View style={{ ...styles.leftContainer, backgroundColor: "#fffcdc" }}>
-            <Text style={styles.icon}>📊</Text>
+            <MaterialIcons name="leaderboard" size={32} color={"#f6ce00"} />
           </View>
           <View style={styles.rightContainer}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
