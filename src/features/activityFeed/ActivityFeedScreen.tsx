@@ -18,13 +18,10 @@ import {
 
 import { ActivityCard } from "./components/ActivityCard";
 import images from "../../../assets";
-import Avatar from "../../components/Avatar/Avatar";
 import BasicBottomSheet from "../../components/BottomSheet/BasicBottomSheet";
 import { GiveHypeBottomSheet } from "../../components/BottomSheet/GiveHypeBottomSheet/GiveHypeBottomSheet";
-import { useSheet } from "../../components/BottomSheet/hooks/useSheet";
 
 export const ActivityFeedScreen = () => {
-  const { bottomSheetModalRef, showModal } = useSheet();
   const giveHypeBottomSheetRef = useRef<BottomSheetModal>(null);
   const writePostBottomSheefRef = useRef<BottomSheetModal>(null);
 

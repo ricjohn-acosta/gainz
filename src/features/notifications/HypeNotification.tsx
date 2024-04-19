@@ -47,7 +47,7 @@ export default function HypeNotification(props: HypeNotificationProps) {
       </View>
       {donorMessage && (
         <View style={styles.donorMessageContainer}>
-          <Text style={styles.donorMessage}>{donorMessage}</Text>
+          <Text style={styles.donorMessage}>"{donorMessage}"</Text>
         </View>
       )}
     </>

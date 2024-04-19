@@ -1,19 +1,16 @@
-import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
-import { useEffect, useState } from "react";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   RefreshControl,
   SafeAreaView,
   SectionList,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 
 import images from "../../../assets";
 import Avatar from "../../components/Avatar/Avatar";
-import BasicBottomSheet from "../../components/BottomSheet/BasicBottomSheet";
-import { useSheet } from "../../components/BottomSheet/hooks/useSheet";
 import Divider from "../../components/Divider/Divider";
 import HypeNotification from "../notifications/HypeNotification";
 import { PrimaryButton } from "../../components/Button/PrimaryButton";
@@ -22,6 +19,7 @@ import useTeamStore from "../../stores/teamStore";
 import useHypeStore from "../../stores/hypeStore";
 import moment from "moment";
 import useProfileStore from "../../stores/profileStore";
+import { GiveHypeBottomSheet } from "../../components/BottomSheet/GiveHypeBottomSheet/GiveHypeBottomSheet";
 
 export default function ProfileScreen({ route }) {
   const { uid } = route.params;
@@ -36,8 +34,8 @@ export default function ProfileScreen({ route }) {
     operations: { getUserHypeActivity },
   } = useHypeStore();
 
-  const { bottomSheetModalRef, showModal } = useSheet();
   const isFocused = useIsFocused();
+  const giveHypeBottomSheetRef = useRef<BottomSheetModal>(null);
 
   const [refresh, setRefreshing] = useState<boolean>(false);
   const [hypeActivityListData, setHypeActivityListData] = useState<any>(null);
@@ -50,6 +48,10 @@ export default function ProfileScreen({ route }) {
       setHypeActivityListData(formattedHypeActivityData);
     });
   }, [uid, isFocused]);
+
+  const showGiveHypeBottomSheet = useCallback(() => {
+    giveHypeBottomSheetRef.current?.present();
+  }, []);
 
   const displayHypeButton = () => {
     if (!me) return;
@@ -141,25 +143,11 @@ export default function ProfileScreen({ route }) {
       {displayHypeButton() && (
         <View style={styles.hypeBtnContainer}>
           <PrimaryButton
-            onPress={showModal}
+            onPress={showGiveHypeBottomSheet}
             text={`Hype up ${getMember(uid)?.username}!`}
           />
         </View>
       )}
-      <BasicBottomSheet ref={bottomSheetModalRef} _snapPoints={["50%"]}>
-        <View style={{ padding: 20 }}>
-          <Text style={styles.sendMessage}>Send Ricjohn a message 🔥</Text>
-          <BottomSheetTextInput
-            placeholder={`You're awesome. Keep it up!`}
-            multiline
-            numberOfLines={20}
-            style={styles.sendMessageInput}
-          />
-          <View style={styles.sendBtnContainer}>
-            <PrimaryButton text={"Send"} />
-          </View>
-        </View>
-      </BasicBottomSheet>
 
       <Text style={styles.h2}>Activity</Text>
       <SafeAreaView style={styles.activityContainer}>
@@ -185,6 +173,11 @@ export default function ProfileScreen({ route }) {
           renderSectionHeader={({ section: { date } }) => {
             return <Divider title={date} />;
           }}
+        />
+        <GiveHypeBottomSheet
+          memberUsername={getMember(uid)?.username}
+          ref={giveHypeBottomSheetRef}
+          snapPoints={["65%"]}
         />
       </SafeAreaView>
     </View>

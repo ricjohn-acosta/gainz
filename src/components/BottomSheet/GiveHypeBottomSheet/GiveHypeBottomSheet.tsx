@@ -1,5 +1,5 @@
-import { Entypo, MaterialIcons } from "@expo/vector-icons";
-import React, { forwardRef, useEffect, useRef, useState } from "react";
+import { MaterialIcons } from "@expo/vector-icons";
+import React, { forwardRef, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -14,15 +14,16 @@ import { GiveHypeItem } from "./GiveHypeItem";
 import BasicBottomSheet from "../BasicBottomSheet";
 import useProfileStore from "../../../stores/profileStore";
 import { supabase } from "../../../services/supabase";
-import LottieView from "lottie-react-native";
-import images from "../../../../assets";
 import { GiveHypeSuccess } from "./GiveHypeSuccess";
 import useTeamStore from "../../../stores/teamStore";
 
-interface GiveHypeBottomSheetProps {}
+interface GiveHypeBottomSheetProps {
+  snapPoints?: any;
+  memberUsername?: any;
+}
 
 export const GiveHypeBottomSheet = forwardRef(
-  (props: GiveHypeBottomSheetProps, ref: any) => {
+  ({ snapPoints, memberUsername }: GiveHypeBottomSheetProps, ref: any) => {
     const {
       data: { me },
       operations: { getMeProfile, getTeamProfiles },
@@ -59,7 +60,16 @@ export const GiveHypeBottomSheet = forwardRef(
           };
         })
         .sort((a, b) => a.username.localeCompare(b.username));
-      setHypeTeamList(list);
+
+      if (memberUsername) {
+        // If giving hype to individual user through their profile
+        const filteredList = list.filter(item => item.username === memberUsername)
+        setHypeTeamList(filteredList);
+
+      } else {
+        setHypeTeamList(list);
+      }
+
     }, [myTeam, meTeamData]);
 
     useEffect(() => {
@@ -200,7 +210,7 @@ export const GiveHypeBottomSheet = forwardRef(
       <SafeAreaView>
         <BasicBottomSheet
           ref={ref}
-          _snapPoints={["95%"]}
+          _snapPoints={snapPoints ?? ["95%"]}
           handleOnChange={handleOnChange}
         >
           {showSuccessView ? (
@@ -214,7 +224,7 @@ export const GiveHypeBottomSheet = forwardRef(
           ) : (
             <View style={styles.container}>
               <View style={styles.headerContainer}>
-                <Text style={styles.teamsTitle}>Hype your team</Text>
+                <Text style={styles.teamsTitle}>{memberUsername ? "Hype up " + memberUsername : "Hype your team" }</Text>
                 <View style={styles.hypeCounter}>
                   <Text style={styles.count}>{givableHype}</Text>
                   <MaterialIcons
@@ -226,7 +236,8 @@ export const GiveHypeBottomSheet = forwardRef(
               </View>
 
               <Text style={styles.subtitle}>
-                Choose which members to hype up!
+                {memberUsername ? `Send ${memberUsername} some hype points!` : "Choose which members to hype up!"}
+
               </Text>
               <View style={styles.giveHypeItemContainer}>
                 <FlatList
