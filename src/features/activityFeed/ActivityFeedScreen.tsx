@@ -1,18 +1,14 @@
-import {
-  FontAwesome,
-  MaterialIcons,
-  FontAwesome5,
-  Ionicons,
-} from "@expo/vector-icons";
-import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
-import { LinearGradient } from "expo-linear-gradient";
-import React, { useCallback, useRef } from "react";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import React, { useCallback, useEffect, useRef } from "react";
 import {
   FlatList,
+  Keyboard,
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 
@@ -20,10 +16,38 @@ import { ActivityCard } from "./components/ActivityCard";
 import images from "../../../assets";
 import BasicBottomSheet from "../../components/BottomSheet/BasicBottomSheet";
 import { GiveHypeBottomSheet } from "../../components/BottomSheet/GiveHypeBottomSheet/GiveHypeBottomSheet";
+import { useIsFocused } from "@react-navigation/native";
+import useProfileStore from "../../stores/profileStore";
+import usePostStore from "../../stores/postStore";
+import { useForm } from "react-hook-form";
+import { BasicBottomSheetTextInput } from "../../components/Input/BasicBottomSheetTextInput";
+import { PrimaryButton } from "../../components/Button/PrimaryButton";
+import { postValidation } from "../../stores/posts/postValidation";
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 
 export const ActivityFeedScreen = () => {
+  const {
+    data: { me },
+  } = useProfileStore();
+  const {
+    data: { teamPostsData },
+    operations: { getTeamPosts, createPost },
+  } = usePostStore();
+  const {
+    getValues,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<any>();
+
+  const isFocused = useIsFocused();
   const giveHypeBottomSheetRef = useRef<BottomSheetModal>(null);
   const writePostBottomSheefRef = useRef<BottomSheetModal>(null);
+
+  useEffect(() => {
+    if (!me) return;
+    getTeamPosts();
+  }, [me, isFocused]);
 
   const showGiveHypeBottomSheet = useCallback(() => {
     giveHypeBottomSheetRef.current?.present();
@@ -37,91 +61,20 @@ export const ActivityFeedScreen = () => {
     writePostBottomSheefRef.current?.dismiss();
   }, []);
 
-  const mockData = [
-    {
-      posterDisplayName: "Maicie",
-      avatar: images.mockProfilePic4,
-      datePosted: "14 February",
-      content: `Who's coming in today?`,
-      replies: [
-        {
-          posterDisplayName: "Aiza",
-          avatar: images.mockProfilePic3,
-          datePosted: "12h",
-          content: "yup, gonna train legs!",
-          replies: [],
-        },
-      ],
-    },
-    {
-      posterDisplayName: "Ric",
-      avatar: images.mockProfilePic4,
-      datePosted: "14 February",
-      content: "Hello world!",
-      replies: [
-        {
-          posterDisplayName: "Ric",
-          avatar: images.mockProfilePic4,
-          datePosted: "12h",
-          content: "test reply",
-          replies: [],
-        },
-      ],
-    },
-    {
-      posterDisplayName: "Ric",
-      avatar: images.mockProfilePic4,
-      datePosted: "14 February",
-      content: "Hello world!",
-    },
-    {
-      posterDisplayName: "Ric",
-      avatar: images.mockProfilePic4,
-      datePosted: "14 February",
-      content: "Hello world!",
-      replies: [
-        {
-          posterDisplayName: "Ric",
-          avatar: images.mockProfilePic4,
-          datePosted: "12h",
-          content: "test reply",
-          replies: [],
-        },
-        {
-          posterDisplayName: "Ric",
-          avatar: images.mockProfilePic4,
-          datePosted: "12h",
-          content: "test reply",
-          replies: [],
-        },
-      ],
-    },
-    {
-      posterDisplayName: "Ric",
-      avatar: images.mockProfilePic4,
-      datePosted: "14 February",
-      content: "Hello world!",
-    },
-    {
-      posterDisplayName: "Ric",
-      avatar: images.mockProfilePic4,
-      datePosted: "14 February",
-      content: "Hello world!",
-      replies: [
-        {
-          posterDisplayName: "Ric",
-          avatar: images.mockProfilePic4,
-          datePosted: "12h",
-          content: "test reply",
-          replies: [],
-        },
-      ],
-    },
-  ];
+  const handleCreatePost = async () => {
+    if (getValues() && getValues("content")) {
+      const content = getValues("content");
+
+      const res = await createPost(content);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList
+      <KeyboardAwareFlatList
+        keyboardShouldPersistTaps
+        enableResetScrollToCoords={false}
+        extraScrollHeight={50}
         stickyHeaderIndices={[0]}
         ListHeaderComponent={
           <View style={styles.actionButtonsContainer}>
@@ -164,15 +117,16 @@ export const ActivityFeedScreen = () => {
             </TouchableOpacity>
           </View>
         }
-        data={mockData}
+        data={teamPostsData}
         renderItem={(data: any) => {
           return (
             <ActivityCard
-              posterDisplayName={data.item.posterDisplayName}
+              postId={data.item.postId}
+              posterDisplayName={data.item.username}
               avatar={data.item.avatar}
               datePosted={data.item.datePosted}
               content={data.item.content}
-              replies={data.item.replies}
+              replies={data.item.comments}
             />
           );
         }}
@@ -180,19 +134,24 @@ export const ActivityFeedScreen = () => {
       <BasicBottomSheet ref={writePostBottomSheefRef} _snapPoints={["50%"]}>
         <View style={{ padding: 20 }}>
           <Text style={styles.modalTitle}>Write a post ✏️</Text>
-          <BottomSheetTextInput
-            placeholder="Share your challenges, successes or spread positivity!"
-            multiline
+          <BasicBottomSheetTextInput
+            maxLength={1000}
+            name={"content"}
+            errors={errors}
+            control={control}
+            rules={{ validate: postValidation }}
+            placeholder={
+              "Share your challenges, successes or spread positivity!"
+            }
+            inputStyle={styles.modalInput}
             numberOfLines={20}
-            style={styles.modalInput}
           />
           <View style={styles.modalCtaBtnContainer}>
-            <TouchableOpacity>
-              <View style={styles.modalCtaBtn}>
-                <Text style={styles.modalCtaBtnText}>Post</Text>
-                <FontAwesome name="pencil-square-o" size={23} color="white" />
-              </View>
-            </TouchableOpacity>
+            <PrimaryButton
+              disabled={Object.keys(errors).length !== 0}
+              onPress={handleSubmit(handleCreatePost)}
+              text={"Post"}
+            />
           </View>
         </View>
       </BasicBottomSheet>
@@ -249,7 +208,7 @@ const styles = StyleSheet.create({
     fontWeight: "900",
   },
   modalInput: {
-    height: "50%",
+    height: 130,
     marginTop: 20,
     marginBottom: 10,
     borderStyle: "solid",

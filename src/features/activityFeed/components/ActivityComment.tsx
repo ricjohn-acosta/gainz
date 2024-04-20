@@ -3,6 +3,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import Avatar from "../../../components/Avatar/Avatar";
+import moment from "moment";
 
 interface ActivityCommentProps {
   posterDisplayName: string;
@@ -14,6 +15,10 @@ interface ActivityCommentProps {
 export const ActivityComment = (props: any) => {
   const { posterDisplayName, avatar, datePosted, content } = props;
 
+  const getRelativeTime = () => {
+    return moment(datePosted).fromNow(true);
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.postInfoContainer}>
@@ -22,7 +27,7 @@ export const ActivityComment = (props: any) => {
         </View>
         <View style={styles.nameAndDate}>
           <Text style={styles.displayName}>{posterDisplayName}</Text>
-          <Text style={styles.datePosted}>{datePosted}</Text>
+          <Text style={styles.datePosted}>{getRelativeTime()}</Text>
         </View>
         <View style={styles.likeContainer}>
           <View style={styles.likeBtn}>
@@ -52,6 +57,7 @@ const styles = StyleSheet.create({
   displayName: {
     fontWeight: "bold",
     color: "#000000",
+    marginLeft: 4,
   },
   datePosted: {
     color: "grey",
@@ -59,8 +65,6 @@ const styles = StyleSheet.create({
   },
   nameAndDate: {
     flex: 1,
-    alignItems: "center",
-    flexDirection: "row",
   },
   postContent: {
     marginTop: 10,

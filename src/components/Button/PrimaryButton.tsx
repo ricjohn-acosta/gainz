@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface PrimaryButtonProps {
-  text: string;
+  text?: string;
   onPress?: () => void;
   style?: any;
   textStyle?: any;

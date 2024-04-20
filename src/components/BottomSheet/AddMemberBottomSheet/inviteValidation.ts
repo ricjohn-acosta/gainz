@@ -2,8 +2,10 @@ import { supabase } from "../../../services/supabase";
 
 export const inviteValidation = async (email: string) => {
   if (!email || email === "") {
-    return "Please enter an email";
-  } else if (await checkUserHasTeam(email) && checkEmailFormat(email)) {
+    return "Required";
+  } else if (!checkEmailFormat(email)) {
+    return "Invalid email";
+  } else if (await checkUserHasTeam(email)) {
     return "User already has a team";
   }
 
@@ -24,6 +26,6 @@ const checkUserHasTeam = async (email: string) => {
 };
 
 const checkEmailFormat = (email: string) => {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
   return regex.test(email);
 };

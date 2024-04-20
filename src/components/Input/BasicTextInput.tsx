@@ -1,14 +1,30 @@
-import { TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 import { Controller } from "react-hook-form";
+import React from "react";
 
-export const BasicTextInput = ({ name, control, rules, placeholder }) => {
+interface BasicTextInputProps {
+  name: string;
+  control?: any;
+  rules?: any;
+  placeholder?: string;
+  style?: any;
+  multiline?: boolean;
+  errors: any;
+}
+
+export const BasicTextInput = (props: BasicTextInputProps) => {
+  const { name, control, rules, placeholder, style, multiline, errors } = props;
+
   return (
-    <View>
+    <>
       <Controller
         control={control}
         rules={rules}
         render={({ field }) => (
           <TextInput
+            showSoftInputOnFocus={true}
+            multiline={multiline}
+            style={style}
             placeholder={placeholder}
             onChangeText={field.onChange}
             value={field.value}
@@ -17,6 +33,15 @@ export const BasicTextInput = ({ name, control, rules, placeholder }) => {
         name={name}
         defaultValue=""
       />
-    </View>
+      {errors[name] && (
+        <Text style={styles.errorMsg}>{errors[name].message}</Text>
+      )}
+    </>
   );
 };
+
+const styles = StyleSheet.create({
+  errorMsg: {
+    color: "red",
+  },
+});
