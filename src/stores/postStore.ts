@@ -13,6 +13,8 @@ interface PostState {
     getTeamPosts: () => Promise<PostgrestError>;
     createPost: (content) => Promise<PostgrestError>;
     addComment: (content, postId) => Promise<PostgrestError>;
+    like: (id, entityType) => Promise<PostgrestError>;
+    unlike: (id, entityType) => Promise<PostgrestError>;
   };
 }
 
@@ -34,20 +36,22 @@ const usePostStore = create<PostState>((set, get) => ({
         .select(
           `
           *,
-          posterData:profiles ( username, avatar_url )
+          posterData:profiles ( username, avatar_url ),
+          postLikesData:post_likes!public_post_likes_post_id_fkey( profile_id )
         `,
         )
         .eq("team_id", me.team_id);
 
       const { data: commentData, error: commentDataError } = await supabase
-          .from("comments")
-          .select(
-              `
+        .from("comments")
+        .select(
+          `
           *,
-          commenterData:profiles ( username, avatar_url )
+          commenterData:profiles ( username, avatar_url ),
+          commentLikesData:comment_likes!public_comment_likes_comment_id_fkey( profile_id )
         `,
-          )
-          .eq("team_id", me.team_id);
+        )
+        .eq("team_id", me.team_id);
 
       if (postDataError) {
         console.error(postDataError);
@@ -60,7 +64,11 @@ const usePostStore = create<PostState>((set, get) => ({
       }
 
       const teamPostsData = buildPostsListData(postData, commentData);
-      set({ data: { teamPostsData: teamPostsData } });
+
+      set((state) => ({
+        ...state,
+        data: { ...state.data, teamPostsData: teamPostsData },
+      }));
     },
     createPost: async (content) => {
       const me = useProfileStore.getState().data.me;
@@ -96,12 +104,80 @@ const usePostStore = create<PostState>((set, get) => ({
         profile_id: me.id,
         post_id: postId,
         content: content,
-        team_id: me.team_id
+        team_id: me.team_id,
       });
 
       if (error) {
         console.error(error);
         return error;
+      }
+
+      // refresh
+      get().operations.getTeamPosts();
+    },
+    like: async (id, entityType) => {
+      const me = useProfileStore.getState().data.me;
+
+      if (!me) {
+        console.error("Error: Not authenticated");
+        return;
+      }
+
+      if (entityType === "post") {
+        const { error: postError } = await supabase.from("post_likes").insert({
+          profile_id: me.id,
+          post_id: id,
+        });
+
+        if (postError) {
+          console.error(postError);
+          return postError;
+        }
+      } else {
+        const { error: commentError } = await supabase
+          .from("comment_likes")
+          .insert({
+            profile_id: me.id,
+            comment_id: id,
+          });
+
+        if (commentError) {
+          console.error(commentError);
+          return commentError;
+        }
+      }
+
+      // refresh
+      get().operations.getTeamPosts();
+    },
+    unlike: async (id, entityType) => {
+      const me = useProfileStore.getState().data.me;
+
+      if (!me) {
+        console.error("Error: Not authenticated");
+        return;
+      }
+
+      if (entityType === "post") {
+        const { error: postError } = await supabase
+          .from("post_likes")
+          .delete()
+          .eq("post_id", id);
+
+        if (postError) {
+          console.error(postError);
+          return postError;
+        }
+      } else {
+        const { error: commentError } = await supabase
+          .from("comment_likes")
+          .delete()
+          .eq("comment_id", id);
+
+        if (commentError) {
+          console.error(commentError);
+          return commentError;
+        }
       }
 
       // refresh

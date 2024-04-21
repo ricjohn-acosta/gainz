@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef } from "react";
 import {
   FlatList,
   Keyboard,
+  RefreshControl,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -44,6 +45,8 @@ export const ActivityFeedScreen = () => {
   const giveHypeBottomSheetRef = useRef<BottomSheetModal>(null);
   const writePostBottomSheefRef = useRef<BottomSheetModal>(null);
 
+  const [refreshing, setRefreshing] = React.useState(false);
+
   useEffect(() => {
     if (!me) return;
     getTeamPosts();
@@ -66,12 +69,31 @@ export const ActivityFeedScreen = () => {
       const content = getValues("content");
 
       const res = await createPost(content);
+      hideWritePostBottomSheet();
     }
   };
+
+  const onRefresh = () => {
+    try {
+      setRefreshing(true);
+      setTimeout(() => {
+        getTeamPosts();
+        setRefreshing(false);
+      }, 1000);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  console.log(teamPostsData && teamPostsData[0]);
 
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAwareFlatList
+        extraData={teamPostsData}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         keyboardShouldPersistTaps
         enableResetScrollToCoords={false}
         extraScrollHeight={50}
@@ -121,6 +143,7 @@ export const ActivityFeedScreen = () => {
         renderItem={(data: any) => {
           return (
             <ActivityCard
+              likes={data.item.likes}
               postId={data.item.postId}
               posterDisplayName={data.item.username}
               avatar={data.item.avatar}
@@ -139,7 +162,7 @@ export const ActivityFeedScreen = () => {
             name={"content"}
             errors={errors}
             control={control}
-            rules={{ validate: postValidation }}
+            rules={{ validate: postValidation, required: "Required" }}
             placeholder={
               "Share your challenges, successes or spread positivity!"
             }

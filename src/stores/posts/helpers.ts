@@ -6,6 +6,7 @@ export const buildPostsListData = (postData, commentData) => {
       postId: post.post_id,
       username: post.posterData.username,
       avatar: post.posterData.avatar_url,
+      likes: post.postLikesData,
       datePosted: post.created_at,
       content: post.content,
       comments: [],
@@ -21,6 +22,7 @@ export const buildPostsListData = (postData, commentData) => {
       commentId: comment.comment_id,
       username: comment.commenterData.username,
       avatar: comment.commenterData.avatar_url,
+      likes: comment.commentLikesData,
       datePosted: comment.created_at,
       content: comment.content,
     });

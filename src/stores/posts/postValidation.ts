@@ -1,3 +1,5 @@
 export const postValidation = (post: string) => {
-    //todo
+    if (!post || !/\S/.test(post)) {
+        return "Required"
+    }
 }

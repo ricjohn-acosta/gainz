@@ -1,7 +1,8 @@
-import { Entypo, FontAwesome, Ionicons } from "@expo/vector-icons";
-import React from "react";
+import { AntDesign, Entypo, FontAwesome, Ionicons } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
 import {
-  FlatList, Keyboard,
+  FlatList,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
@@ -19,6 +20,7 @@ import { BasicTextInput } from "../../../components/Input/BasicTextInput";
 import { commentValidation } from "../../../stores/posts/commentValidation";
 import usePostStore from "../../../stores/postStore";
 import moment from "moment";
+import useProfileStore from "../../../stores/profileStore";
 
 interface ActivityCardProps {
   posterDisplayName: string;
@@ -27,15 +29,26 @@ interface ActivityCardProps {
   content: string;
   replies: any;
   postId?: any;
+  likes: any;
 }
 
 export const ActivityCard = (props: ActivityCardProps) => {
-  const { posterDisplayName, avatar, datePosted, content, replies, postId } =
-    props;
+  const {
+    posterDisplayName,
+    avatar,
+    datePosted,
+    content,
+    replies,
+    postId,
+    likes,
+  } = props;
 
   const {
+    data: { me },
+  } = useProfileStore();
+  const {
     data: { teamPostsData },
-    operations: { addComment },
+    operations: { addComment, unlike, like },
   } = usePostStore();
   const {
     getValues,
@@ -46,14 +59,19 @@ export const ActivityCard = (props: ActivityCardProps) => {
     formState: { errors },
   } = useForm<any>();
 
+  const [liked, setLiked] = useState<boolean>(
+    !!likes.find((item) => item.profile_id === me.id),
+  );
+  const [postLikesCount, setPostLikesCount] = useState<number>(likes.length);
+
+  console.log(content, likes.length, postLikesCount);
   const handleAddComment = async () => {
-    console.log("test");
     if (getValues() && getValues("comment")) {
       const content = getValues("comment");
 
       const res = await addComment(content, postId);
       reset();
-      Keyboard.dismiss()
+      Keyboard.dismiss();
     }
   };
 
@@ -70,9 +88,29 @@ export const ActivityCard = (props: ActivityCardProps) => {
           </Text>
         </View>
         <View style={styles.likeBtn}>
-          <Ionicons name="heart-outline" size={18} color="black" />
+          {!liked ? (
+            <TouchableOpacity
+              onPress={() => {
+                setLiked(true);
+                like(postId, "post");
+                setPostLikesCount(likes.length + 1);
+              }}
+            >
+              <Ionicons name={"heart-outline"} size={18} color={"#000000"} />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                setLiked(false);
+                unlike(postId, "post");
+                setPostLikesCount(likes.length - 1);
+              }}
+            >
+              <Ionicons name={"heart-sharp"} size={18} color={"#ff0074"} />
+            </TouchableOpacity>
+          )}
           <View style={styles.likeBtn}>
-            <Text>11</Text>
+            <Text>{likes.length}</Text>
           </View>
         </View>
       </View>
@@ -85,10 +123,12 @@ export const ActivityCard = (props: ActivityCardProps) => {
           renderItem={(data: any) => {
             return (
               <ActivityComment
+                likes={data.item.likes}
                 posterDisplayName={data.item.username}
                 avatar={data.item.avatar}
                 datePosted={data.item.datePosted}
                 content={data.item.content}
+                commentId={data.item.commentId}
               />
             );
           }}
