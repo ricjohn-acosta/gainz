@@ -1,6 +1,6 @@
 import moment from "moment/moment";
 
-export const buildPostsListData = (postData, commentData) => {
+export const buildPostsListData = (postData, commentData, hypeActivityData) => {
   const teamPostsData = postData.map((post) => {
     return {
       postId: post.post_id,
@@ -10,6 +10,17 @@ export const buildPostsListData = (postData, commentData) => {
       datePosted: post.created_at,
       content: post.content,
       comments: [],
+    };
+  });
+
+  const teamHypeActivityData = hypeActivityData.map((hypeActivity) => {
+    return {
+      senderUsername: hypeActivity.sender_username,
+      recipientUsername: hypeActivity.recipient_username,
+      hypeReceived: hypeActivity.hype_points_received,
+      hypeMessage: hypeActivity.hype_message,
+      datePosted: hypeActivity.created_at,
+      entityType: 'hypeActivity'
     };
   });
 
@@ -28,9 +39,11 @@ export const buildPostsListData = (postData, commentData) => {
     });
   });
 
-  teamPostsData.sort(
+  const activityData = [...teamPostsData, ...teamHypeActivityData]
+
+  activityData.sort(
     (a, b) => moment(b.datePosted).valueOf() - moment(a.datePosted).valueOf(),
   );
 
-  return teamPostsData;
+  return activityData;
 };

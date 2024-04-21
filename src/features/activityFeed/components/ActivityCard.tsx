@@ -62,9 +62,7 @@ export const ActivityCard = (props: ActivityCardProps) => {
   const [liked, setLiked] = useState<boolean>(
     !!likes.find((item) => item.profile_id === me.id),
   );
-  const [postLikesCount, setPostLikesCount] = useState<number>(likes.length);
 
-  console.log(content, likes.length, postLikesCount);
   const handleAddComment = async () => {
     if (getValues() && getValues("comment")) {
       const content = getValues("comment");
@@ -93,7 +91,6 @@ export const ActivityCard = (props: ActivityCardProps) => {
               onPress={() => {
                 setLiked(true);
                 like(postId, "post");
-                setPostLikesCount(likes.length + 1);
               }}
             >
               <Ionicons name={"heart-outline"} size={18} color={"#000000"} />
@@ -103,7 +100,6 @@ export const ActivityCard = (props: ActivityCardProps) => {
               onPress={() => {
                 setLiked(false);
                 unlike(postId, "post");
-                setPostLikesCount(likes.length - 1);
               }}
             >
               <Ionicons name={"heart-sharp"} size={18} color={"#ff0074"} />

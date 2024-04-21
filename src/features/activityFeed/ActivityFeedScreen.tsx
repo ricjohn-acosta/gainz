@@ -25,6 +25,7 @@ import { BasicBottomSheetTextInput } from "../../components/Input/BasicBottomShe
 import { PrimaryButton } from "../../components/Button/PrimaryButton";
 import { postValidation } from "../../stores/posts/postValidation";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
+import HypeActivityCard from "./components/HypeActivityCard";
 
 export const ActivityFeedScreen = () => {
   const {
@@ -85,8 +86,6 @@ export const ActivityFeedScreen = () => {
     }
   };
 
-  console.log(teamPostsData && teamPostsData[0]);
-
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAwareFlatList
@@ -141,6 +140,16 @@ export const ActivityFeedScreen = () => {
         }
         data={teamPostsData}
         renderItem={(data: any) => {
+          if (data.item.entityType === "hypeActivity") {
+            return (
+              <HypeActivityCard
+                hypeReceived={data.item.hypeReceived}
+                recipientUsername={data.item.recipientUsername}
+                senderUsername={data.item.senderUsername}
+              />
+            );
+          }
+
           return (
             <ActivityCard
               likes={data.item.likes}

@@ -31,9 +31,6 @@ export const ActivityComment = (props: ActivityCommentProps) => {
   const [liked, setLiked] = useState<boolean>(
     !!likes.find((item) => item.profile_id === me.id),
   );
-  const [commentLikesCount, setCommentLikesCount] = useState<number>(
-    likes.length,
-  );
 
   const getRelativeTime = () => {
     return moment(datePosted).fromNow(true);
@@ -56,7 +53,6 @@ export const ActivityComment = (props: ActivityCommentProps) => {
                 onPress={() => {
                   setLiked(true);
                   like(commentId, "comment");
-                  setCommentLikesCount(likes.length + 1);
                 }}
               >
                 <Ionicons name={"heart-outline"} size={18} />
@@ -66,7 +62,6 @@ export const ActivityComment = (props: ActivityCommentProps) => {
                 onPress={() => {
                   setLiked(false);
                   unlike(commentId, "comment");
-                  setCommentLikesCount(likes.length - 1);
                 }}
               >
                 <Ionicons name={"heart-sharp"} size={18} color={"#ff0074"} />

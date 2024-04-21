@@ -1,4 +1,4 @@
-import { create } from "zustand/esm/index";
+import { create } from "zustand/esm";
 import { PostgrestError } from "@supabase/supabase-js";
 import { supabase } from "../services/supabase";
 
@@ -7,7 +7,7 @@ interface HypeState {
     hypeActivity: any;
   };
   operations: {
-    getAllHypeActivity: () => Promise<PostgrestError>;
+    getTeamHypeActivity: (teamId: number) => Promise<PostgrestError | any>;
     getUserHypeActivity: (uid: string) => any;
   };
 }
@@ -17,26 +17,31 @@ const useHypeStore = create<HypeState>((set, get) => ({
     hypeActivity: null,
   },
   operations: {
-    getAllHypeActivity: async () => {
-      const { data, error } = await supabase.from("hype_activity").select("*");
+    getTeamHypeActivity: async (teamId) => {
+      const { data, error } = await supabase
+        .from("hype_activity")
+        .select("*")
+        .eq("team_id", teamId);
       if (error) {
         console.error(error);
         return error;
       }
+
       set({ data: { hypeActivity: data } });
+      return data;
     },
     getUserHypeActivity: async (username: string) => {
       const { data, error } = await supabase
         .from("hype_activity")
         .select("*")
-        .or(`sender_username.eq.${username},recipient_username.eq.${username}`)
+        .or(`sender_username.eq.${username},recipient_username.eq.${username}`);
 
       if (error) {
         console.error(error);
         return error;
       }
 
-      return data
+      return data;
     },
   },
 }));
