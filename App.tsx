@@ -28,6 +28,7 @@ import { Loading } from "./src/components/Progress/Loading";
 import { TextButton } from "./src/components/Button/TextButton";
 import useProfileStore from "./src/stores/profileStore";
 import { isLoading } from "expo-font";
+import useTeamStore from "./src/stores/teamStore";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -80,8 +81,8 @@ const HomeStack = () => {
 
 const RewardsStack = () => {
   const {
-    data: { me },
-  } = useProfileStore();
+    data: { meTeamData },
+  } = useTeamStore();
 
   return (
     <Stack.Navigator initialRouteName="RewardsScreen">
@@ -119,7 +120,7 @@ const RewardsStack = () => {
                   marginTop: 4,
                 }}
               >
-                {me.hype_redeemable}
+                {meTeamData.hype_redeemable}
               </Text>
               <MaterialIcons
                 name="local-fire-department"

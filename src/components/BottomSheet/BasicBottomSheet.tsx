@@ -12,6 +12,7 @@ interface BasicBottomSheetProps {
   detached?: boolean;
   bottomInset?: number;
   handleOnChange?: (index: number) => void;
+  style?: any;
 }
 
 const BasicBottomSheet = forwardRef(
@@ -19,12 +20,19 @@ const BasicBottomSheet = forwardRef(
     props: BasicBottomSheetProps,
     ref: React.MutableRefObject<BottomSheetModalMethods | any>,
   ) => {
-    const { children, _snapPoints, detached, bottomInset, handleOnChange } =
-      props;
+    const {
+      children,
+      _snapPoints,
+      detached,
+      bottomInset,
+      handleOnChange,
+      style,
+    } = props;
     const snapPoints = useMemo(() => [..._snapPoints], []);
 
     return (
       <BottomSheetModal
+        style={style}
         onChange={handleOnChange}
         detached={detached}
         bottomInset={bottomInset}
