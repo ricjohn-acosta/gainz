@@ -29,6 +29,7 @@ import { TextButton } from "./src/components/Button/TextButton";
 import useProfileStore from "./src/stores/profileStore";
 import { isLoading } from "expo-font";
 import useTeamStore from "./src/stores/teamStore";
+import { IconButton } from "./src/components/Button/IconButton";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -80,10 +81,6 @@ const HomeStack = () => {
 };
 
 const RewardsStack = () => {
-  const {
-    data: { meTeamData },
-  } = useTeamStore();
-
   return (
     <Stack.Navigator initialRouteName="RewardsScreen">
       <Stack.Screen
@@ -105,27 +102,15 @@ const RewardsStack = () => {
             </View>
           ),
           headerRight: () => (
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginRight: 16,
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  marginTop: 4,
+            <View style={{marginRight: 16}}>
+              <IconButton
+                IconComponent={Entypo}
+                iconProps={{
+                  name: "plus",
+                  size: 26,
+                  defaultColor: "#000000",
+                  pressedColor: "#a6a6a6",
                 }}
-              >
-                {meTeamData.hype_redeemable}
-              </Text>
-              <MaterialIcons
-                name="local-fire-department"
-                size={30}
-                color="#ff046d"
               />
             </View>
           ),

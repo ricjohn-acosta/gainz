@@ -4,12 +4,17 @@ import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { RewardCard } from "./components/RewardCard";
 import { useFocusEffect } from "@react-navigation/native";
 import useRewardStore from "../../stores/rewardStore";
+import { MaterialIcons } from "@expo/vector-icons";
+import useTeamStore from "../../stores/teamStore";
 
 export default function RewardsScreen() {
   const {
     data: { rewards },
     operations: { getRewards },
   } = useRewardStore();
+  const {
+    data: { meTeamData },
+  } = useTeamStore();
 
   useFocusEffect(
     useCallback(() => {
@@ -21,6 +26,29 @@ export default function RewardsScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.screenTitleContainer}>
         <Text style={styles.screenTitle}>Claim rewards!</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginRight: 16,
+          }}
+        >
+          <Text
+            style={{
+              textAlign: "center",
+              fontWeight: "bold",
+              fontSize: 16,
+              marginTop: 4,
+            }}
+          >
+            {meTeamData.hype_redeemable}
+          </Text>
+          <MaterialIcons
+            name="local-fire-department"
+            size={24}
+            color="#ff046d"
+          />
+        </View>
       </View>
       <FlatList
         numColumns={2}
@@ -53,6 +81,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   screenTitleContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     backgroundColor: "#f2f4ff",
     marginTop: 10,
     marginBottom: 20,
@@ -60,7 +90,7 @@ const styles = StyleSheet.create({
   },
   screenTitle: {
     fontWeight: "bold",
-    fontSize: 28,
+    fontSize: 22,
     color: "#000000",
   },
 });
