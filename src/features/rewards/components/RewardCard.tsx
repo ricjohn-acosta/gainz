@@ -5,6 +5,7 @@ import { PrimaryButton } from "../../../components/Button/PrimaryButton";
 import images from "../../../../assets";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { ConfirmRewardModal } from "./ConfirmRewardModal";
+import LottieView from "lottie-react-native";
 
 interface RewardCardProps {
   name: string;

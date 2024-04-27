@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { supabase } from "../services/supabase";
 import useProfileStore from "./profileStore";
 import { PostgrestError } from "@supabase/supabase-js";
+import useTeamStore from "./teamStore";
 
 interface TeamState {
   data: {
@@ -9,7 +10,7 @@ interface TeamState {
   };
   operations: {
     getRewards: () => Promise<PostgrestError>;
-    redeemReward: (rewardId, rewardName) => Promise<PostgrestError | Error>;
+    redeemReward: (rewardId, rewardName, rewardAmount) => Promise<PostgrestError | Error>;
   };
 }
 
@@ -26,7 +27,8 @@ const useRewardStore = create<TeamState>((set, get) => ({
       const { data: rewardsData, error } = await supabase
         .from("rewards")
         .select("*")
-        .or(`team_id.eq.${me.team_id},team_id.eq.${0}`);
+        .or(`team_id.eq.${me.team_id},team_id.eq.${0}`)
+        .order("id", { ascending: true });
 
       if (error) {
         console.error(error);
@@ -38,8 +40,17 @@ const useRewardStore = create<TeamState>((set, get) => ({
         data: { ...state.data, rewards: rewardsData },
       }));
     },
-    redeemReward: async (rewardId, rewardName) => {
+    redeemReward: async (rewardId, rewardName, rewardAmount) => {
       const me = useProfileStore.getState().data.me;
+
+      // Update team data so we have an updated hype points balance
+      useTeamStore.getState().operations.getMyTeam()
+      // Check if we have enough hype points balance to redeem item
+      const meTeamData = useTeamStore.getState().operations.getMember(me.id)
+      if (meTeamData.hype_redeemable < rewardAmount) {
+        console.error("Insufficient hype points")
+        return new Error("Insufficient hype points")
+      }
 
       // We make sure that there is stock available for the reward
       const { data: rewardData, error: rewardDataError } = await supabase
@@ -48,8 +59,8 @@ const useRewardStore = create<TeamState>((set, get) => ({
         .eq("id", rewardId);
 
       if (rewardData[0].quantity === 0) {
-        console.error('Stock depleted')
-        return new Error('Stock depleted');
+        console.error("Stock depleted");
+        return new Error("Stock depleted");
       }
 
       if (rewardDataError) {
@@ -57,7 +68,7 @@ const useRewardStore = create<TeamState>((set, get) => ({
         return rewardDataError;
       }
 
-      // A trigger will fire to decrement reward quantity by 1
+      // A trigger will fire to decrement reward quantity by 1 when redeemed
       const { error: insertError } = await supabase
         .from("rewards_activity")
         .insert({
@@ -65,6 +76,8 @@ const useRewardStore = create<TeamState>((set, get) => ({
           team_id: me.team_id,
           reward_name: rewardName,
           reward_id: rewardId,
+          amount: rewardAmount,
+          profile_id: me.id
         });
 
       if (insertError) {
