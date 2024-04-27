@@ -81,6 +81,10 @@ const HomeStack = () => {
 };
 
 const RewardsStack = () => {
+  const {
+    data: { meTeamData },
+  } = useTeamStore();
+
   return (
     <Stack.Navigator initialRouteName="RewardsScreen">
       <Stack.Screen
@@ -101,19 +105,22 @@ const RewardsStack = () => {
               />
             </View>
           ),
-          headerRight: () => (
-            <View style={{marginRight: 16}}>
-              <IconButton
-                IconComponent={Entypo}
-                iconProps={{
-                  name: "plus",
-                  size: 26,
-                  defaultColor: "#000000",
-                  pressedColor: "#a6a6a6",
-                }}
-              />
-            </View>
-          ),
+          headerRight: () => {
+            if (meTeamData.role === "member") return null;
+            return (
+              <View style={{ marginRight: 16 }}>
+                <IconButton
+                  IconComponent={Entypo}
+                  iconProps={{
+                    name: "plus",
+                    size: 26,
+                    defaultColor: "#000000",
+                    pressedColor: "#a6a6a6",
+                  }}
+                />
+              </View>
+            );
+          },
         })}
       />
     </Stack.Navigator>
