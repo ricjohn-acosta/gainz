@@ -10,7 +10,14 @@ interface TeamState {
   };
   operations: {
     getRewards: () => Promise<PostgrestError>;
-    redeemReward: (rewardId, rewardName, rewardAmount) => Promise<PostgrestError | Error>;
+    getTeamRewardsActivity: (
+      teamId: number,
+    ) => Promise<PostgrestError | Error | any>;
+    redeemReward: (
+      rewardId: number,
+      rewardName: string,
+      rewardAmount: number,
+    ) => Promise<PostgrestError | Error>;
   };
 }
 
@@ -40,16 +47,29 @@ const useRewardStore = create<TeamState>((set, get) => ({
         data: { ...state.data, rewards: rewardsData },
       }));
     },
+    getTeamRewardsActivity: async (teamId: number) => {
+      const { data: rewardsActivityData, error } = await supabase
+        .from("rewards_activity")
+        .select("*")
+        .eq("team_id", teamId);
+
+      if (error) {
+        console.error(error);
+        return error;
+      }
+
+      return rewardsActivityData;
+    },
     redeemReward: async (rewardId, rewardName, rewardAmount) => {
       const me = useProfileStore.getState().data.me;
 
       // Update team data so we have an updated hype points balance
-      useTeamStore.getState().operations.getMyTeam()
+      useTeamStore.getState().operations.getMyTeam();
       // Check if we have enough hype points balance to redeem item
-      const meTeamData = useTeamStore.getState().operations.getMember(me.id)
+      const meTeamData = useTeamStore.getState().operations.getMember(me.id);
       if (meTeamData.hype_redeemable < rewardAmount) {
-        console.error("Insufficient hype points")
-        return new Error("Insufficient hype points")
+        console.error("Insufficient hype points");
+        return new Error("Insufficient hype points");
       }
 
       // We make sure that there is stock available for the reward
@@ -77,7 +97,7 @@ const useRewardStore = create<TeamState>((set, get) => ({
           reward_name: rewardName,
           reward_id: rewardId,
           amount: rewardAmount,
-          profile_id: me.id
+          profile_id: me.id,
         });
 
       if (insertError) {

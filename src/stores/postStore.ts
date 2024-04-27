@@ -5,6 +5,7 @@ import { PostgrestError } from "@supabase/supabase-js";
 import { sortTeamBy } from "../helpers/teamSorter";
 import { buildPostsListData } from "./posts/helpers";
 import useHypeStore from "./hypeStore";
+import useRewardStore from "./rewardStore";
 
 interface PostState {
   data: {
@@ -64,8 +65,18 @@ const usePostStore = create<PostState>((set, get) => ({
         return commentDataError;
       }
 
-      const hypeActivityData = await useHypeStore.getState().operations.getTeamHypeActivity(me.team_id)
-      const teamPostsData = buildPostsListData(postData, commentData, hypeActivityData);
+      const hypeActivityData = await useHypeStore
+        .getState()
+        .operations.getTeamHypeActivity(me.team_id);
+      const redeemActivityData = await useRewardStore
+        .getState()
+        .operations.getTeamRewardsActivity(me.team_id);
+      const teamPostsData = buildPostsListData(
+        postData,
+        commentData,
+        hypeActivityData,
+        redeemActivityData,
+      );
 
       set((state) => ({
         ...state,

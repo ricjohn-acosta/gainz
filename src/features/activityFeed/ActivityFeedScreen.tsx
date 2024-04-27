@@ -26,6 +26,7 @@ import { PrimaryButton } from "../../components/Button/PrimaryButton";
 import { postValidation } from "../../stores/posts/postValidation";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import HypeActivityCard from "./components/HypeActivityCard";
+import RedeemActivityCard from "./components/RedeemActivityCard";
 
 export const ActivityFeedScreen = () => {
   const {
@@ -140,6 +141,16 @@ export const ActivityFeedScreen = () => {
         }
         data={teamPostsData}
         renderItem={(data: any) => {
+          if (data.item.entityType === "redeemActivity") {
+            return (
+              <RedeemActivityCard
+                redeemerUsername={data.item.redeemerUsername}
+                rewardName={data.item.rewardName}
+                amount={data.item.amount}
+              />
+            );
+          }
+
           if (data.item.entityType === "hypeActivity") {
             return (
               <HypeActivityCard
