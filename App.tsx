@@ -31,6 +31,7 @@ import { isLoading } from "expo-font";
 import useTeamStore from "./src/stores/teamStore";
 import { IconButton } from "./src/components/Button/IconButton";
 import { AddRewardScreen } from "./src/features/rewards/AddRewardScreen";
+import { RewardModalScreen } from "./src/features/rewards/RewardModalScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -113,7 +114,7 @@ const RewardsStack = () => {
             return (
               <View style={{ marginRight: 16 }}>
                 <IconButton
-                  onPress={() => navigation.navigate("AddReward")}
+                  onPress={() => navigation.navigate("RewardModal")}
                   IconComponent={Entypo}
                   iconProps={{
                     name: "plus",
@@ -166,14 +167,59 @@ const ActivityFeedStack = () => {
   );
 };
 
-const ChatStack = () => {
+const RewardModalStack = () => {
   return (
-    <Stack.Navigator initialRouteName="Chat">
+    <Stack.Navigator initialRouteName="RewardModalScreen">
       <Stack.Screen
         name="Rewards"
-        component={RewardsScreen}
-        options={() => ({
-          headerShown: false,
+        component={RewardModalScreen}
+        options={({ navigation }) => ({
+          headerTitle: "Rewards",
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: "#f2f4ff",
+          },
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <View style={{ marginLeft: 16 }}>
+              <TextButton
+                onPress={() => {
+                  navigation.goBack();
+                }}
+                textStyle={{ color: "#1f30fb" }}
+                text={"Cancel"}
+              />
+            </View>
+          ),
+          headerRight: () => <></>,
+        })}
+      />
+      <Stack.Screen
+        name="AddReward"
+        component={AddRewardScreen}
+        options={({ navigation }) => ({
+          headerTitle: "Create reward",
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: "#f2f4ff",
+          },
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <View style={{ marginLeft: 16 }}>
+              <TextButton
+                onPress={() => {
+                  navigation.goBack();
+                }}
+                textStyle={{ color: "#1f30fb" }}
+                text={"Back"}
+              />
+            </View>
+          ),
+          headerRight: () => (
+            <View style={{ marginRight: 16 }}>
+              <TextButton textStyle={{ color: "#1f30fb" }} text={"Save"} />
+            </View>
+          ),
         })}
       />
     </Stack.Navigator>
@@ -308,35 +354,16 @@ export default function App() {
                   options={() => ({ headerShown: false })}
                 />
                 <Stack.Screen
-                  name="AddReward"
-                  component={AddRewardScreen}
+                  name="RewardModal"
+                  component={RewardModalStack}
                   options={({ navigation }) => ({
                     presentation: "modal",
-                    headerTitle: "Add reward",
-                    headerShown: true,
+                    headerTitle: "Rewards",
+                    headerShown: false,
                     headerStyle: {
                       backgroundColor: "#f2f4ff",
                     },
                     headerShadowVisible: false,
-                    headerLeft: () => (
-                      <View style={{ marginLeft: 16 }}>
-                        <TextButton
-                          onPress={() => {
-                            navigation.goBack();
-                          }}
-                          textStyle={{ color: "#1f30fb" }}
-                          text={"Cancel"}
-                        />
-                      </View>
-                    ),
-                    headerRight: () => (
-                      <View style={{ marginRight: 16 }}>
-                        <TextButton
-                          textStyle={{ color: "#1f30fb" }}
-                          text={"Save"}
-                        />
-                      </View>
-                    ),
                   })}
                 />
               </>

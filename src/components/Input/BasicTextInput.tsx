@@ -9,7 +9,7 @@ interface BasicTextInputProps {
   placeholder?: string;
   style?: any;
   multiline?: boolean;
-  errors: any;
+  errors?: any;
 }
 
 export const BasicTextInput = (props: BasicTextInputProps) => {

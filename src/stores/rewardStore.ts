@@ -18,6 +18,12 @@ interface TeamState {
       rewardName: string,
       rewardAmount: number,
     ) => Promise<PostgrestError | Error>;
+    // addreward: (
+    //   rewardName,
+    //   rewardDescription,
+    //   rewardAmount,
+    //   quantity
+    // ) => Promise<PostgrestError | Error>;
   };
 }
 
@@ -60,6 +66,8 @@ const useRewardStore = create<TeamState>((set, get) => ({
 
       return rewardsActivityData;
     },
+    // addreward: async (rewardName, rewardDescription, rewardAmount, quantity) => {
+    // },
     redeemReward: async (rewardId, rewardName, rewardAmount) => {
       const me = useProfileStore.getState().data.me;
 

@@ -1,12 +1,18 @@
 import React from 'react';
-import {View} from "react-native";
+import {StyleSheet, View} from "react-native";
 import {AddRewardForm} from "./components/AddRewardForm";
 
 export const AddRewardScreen = () => {
     return (
-        <View>
+        <View style={styles.container}>
             <AddRewardForm/>
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        margin: 12
+    }
+})
 
