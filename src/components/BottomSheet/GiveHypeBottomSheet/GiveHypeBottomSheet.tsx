@@ -164,6 +164,8 @@ export const GiveHypeBottomSheet = forwardRef(
       for (let i = 0; i < usernames.length; i++) {
         const recipientUsername = usernames[i];
         const hypeToGiveData: any = values[i];
+        // Skip insert for counters equal to 0
+        if (hypeToGiveData.counter === 0) continue
 
         // This will trigger:
         // increment_redeemable_points
