@@ -30,6 +30,7 @@ import useProfileStore from "./src/stores/profileStore";
 import { isLoading } from "expo-font";
 import useTeamStore from "./src/stores/teamStore";
 import { IconButton } from "./src/components/Button/IconButton";
+import { AddRewardScreen } from "./src/features/rewards/AddRewardScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -85,6 +86,8 @@ const RewardsStack = () => {
     data: { meTeamData },
   } = useTeamStore();
 
+  const navigation = useNavigation<any>();
+
   return (
     <Stack.Navigator initialRouteName="RewardsScreen">
       <Stack.Screen
@@ -110,6 +113,7 @@ const RewardsStack = () => {
             return (
               <View style={{ marginRight: 16 }}>
                 <IconButton
+                  onPress={() => navigation.navigate("AddReward")}
                   IconComponent={Entypo}
                   iconProps={{
                     name: "plus",
@@ -302,6 +306,38 @@ export default function App() {
                   name="AuthStack"
                   component={AuthNavigatorStack}
                   options={() => ({ headerShown: false })}
+                />
+                <Stack.Screen
+                  name="AddReward"
+                  component={AddRewardScreen}
+                  options={({ navigation }) => ({
+                    presentation: "modal",
+                    headerTitle: "Add reward",
+                    headerShown: true,
+                    headerStyle: {
+                      backgroundColor: "#f2f4ff",
+                    },
+                    headerShadowVisible: false,
+                    headerLeft: () => (
+                      <View style={{ marginLeft: 16 }}>
+                        <TextButton
+                          onPress={() => {
+                            navigation.goBack();
+                          }}
+                          textStyle={{ color: "#1f30fb" }}
+                          text={"Cancel"}
+                        />
+                      </View>
+                    ),
+                    headerRight: () => (
+                      <View style={{ marginRight: 16 }}>
+                        <TextButton
+                          textStyle={{ color: "#1f30fb" }}
+                          text={"Save"}
+                        />
+                      </View>
+                    ),
+                  })}
                 />
               </>
             ) : (
