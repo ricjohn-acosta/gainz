@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { BasicTextInput } from "../../../components/Input/BasicTextInput";
 import { useForm } from "react-hook-form";
+import { useNavigation } from "@react-navigation/native";
+import { TextButton } from "../../../components/Button/TextButton";
+import useRewardStore from "../../../stores/rewardStore";
 
 export const AddRewardForm = () => {
+  const {
+    operations: { addReward },
+  } = useRewardStore();
+
   const {
     getValues,
     control,
@@ -11,6 +18,37 @@ export const AddRewardForm = () => {
     clearErrors,
     formState: { errors },
   } = useForm<any>();
+
+  const navigation = useNavigation<any>();
+
+  const handleSave = async () => {
+    if (getValues()) {
+      const name = getValues("rewardName");
+      const description = getValues("rewardDescription");
+      const quantity = getValues("rewardQuantity");
+      const amount = getValues("rewardAmount");
+
+      const res = await addReward(name, description, amount, quantity);
+
+      if (!res) {
+        navigation.getParent().goBack()
+      }
+    }
+  };
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={{ marginRight: 16 }}>
+          <TextButton
+            onPress={handleSubmit(handleSave)}
+            textStyle={{ color: "#1f30fb" }}
+            text={"Save"}
+          />
+        </View>
+      ),
+    });
+  }, []);
 
   return (
     <View>
@@ -47,7 +85,7 @@ export const AddRewardForm = () => {
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.inputLabel}>Hype amount</Text>
+        <Text style={styles.inputLabel}>Hype points required</Text>
         <BasicTextInput
           rules={{ required: "Please enter an amount" }}
           placeholder={"e.g: 100"}
@@ -61,12 +99,12 @@ export const AddRewardForm = () => {
       <View style={styles.inputContainer}>
         <Text style={styles.inputLabel}>Quantity</Text>
         <BasicTextInput
-            rules={{ required: "Please enter an amount" }}
-            placeholder={"e.g: 5"}
-            style={styles.textInput}
-            control={control}
-            name={"rewardQuantity"}
-            errors={errors}
+          rules={{ required: "Please enter a quantity" }}
+          placeholder={"e.g: 5"}
+          style={styles.textInput}
+          control={control}
+          name={"rewardQuantity"}
+          errors={errors}
         />
       </View>
     </View>

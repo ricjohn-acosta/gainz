@@ -179,7 +179,7 @@ const RewardModalStack = () => {
           headerStyle: {
             backgroundColor: "#f2f4ff",
           },
-          headerShadowVisible: false,
+          headerShadowVisible: true,
           headerLeft: () => (
             <View style={{ marginLeft: 16 }}>
               <TextButton
@@ -203,7 +203,7 @@ const RewardModalStack = () => {
           headerStyle: {
             backgroundColor: "#f2f4ff",
           },
-          headerShadowVisible: false,
+          headerShadowVisible: true,
           headerLeft: () => (
             <View style={{ marginLeft: 16 }}>
               <TextButton
@@ -213,11 +213,6 @@ const RewardModalStack = () => {
                 textStyle={{ color: "#1f30fb" }}
                 text={"Back"}
               />
-            </View>
-          ),
-          headerRight: () => (
-            <View style={{ marginRight: 16 }}>
-              <TextButton textStyle={{ color: "#1f30fb" }} text={"Save"} />
             </View>
           ),
         })}
@@ -363,7 +358,6 @@ export default function App() {
                     headerStyle: {
                       backgroundColor: "#f2f4ff",
                     },
-                    headerShadowVisible: false,
                   })}
                 />
               </>

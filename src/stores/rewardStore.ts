@@ -18,12 +18,12 @@ interface TeamState {
       rewardName: string,
       rewardAmount: number,
     ) => Promise<PostgrestError | Error>;
-    // addreward: (
-    //   rewardName,
-    //   rewardDescription,
-    //   rewardAmount,
-    //   quantity
-    // ) => Promise<PostgrestError | Error>;
+    addReward: (
+      rewardName,
+      rewardDescription,
+      rewardAmount,
+      quantity,
+    ) => Promise<PostgrestError | Error>;
   };
 }
 
@@ -66,8 +66,28 @@ const useRewardStore = create<TeamState>((set, get) => ({
 
       return rewardsActivityData;
     },
-    // addreward: async (rewardName, rewardDescription, rewardAmount, quantity) => {
-    // },
+    addReward: async (
+      rewardName,
+      rewardDescription,
+      rewardAmount,
+      quantity,
+    ) => {
+      const meTeamData = useTeamStore.getState().data.meTeamData
+
+      const { error: insertError } = await supabase.from("rewards").insert({
+        name: rewardName,
+        description: rewardDescription,
+        quantity,
+        amount: rewardAmount,
+        sponsor: meTeamData.username,
+        team_id: meTeamData.team_id
+      });
+
+      if (insertError) {
+        console.error(insertError);
+        return insertError;
+      }
+    },
     redeemReward: async (rewardId, rewardName, rewardAmount) => {
       const me = useProfileStore.getState().data.me;
 
