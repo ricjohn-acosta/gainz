@@ -14,7 +14,7 @@ const images = {
   x4Combo: require("./icons/x4-combo.png"),
   x5Combo: require("./icons/x5-combo.png"),
   kapaiiLogo: require("./logo/kapaii-horizontal-logo.png"),
-  kapaiiSquareLogo: require("./logo/kapaii-square-logo.png"),
+  kapaiiSquareLogo: require("./logo/kapaii-square-logo.jpeg"),
   cashReward: require("./cash-reward-placeholder.jpg"),
   fbIcon: require("./icons/fb-icon.png"),
   googleIcon: require("./icons/google-icon.png"),

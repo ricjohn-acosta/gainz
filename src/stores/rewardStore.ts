@@ -24,6 +24,7 @@ interface TeamState {
       rewardAmount,
       quantity,
     ) => Promise<PostgrestError | Error>;
+    deleteReward: (ids) => Promise<PostgrestError | Error>;
   };
 }
 
@@ -72,7 +73,7 @@ const useRewardStore = create<TeamState>((set, get) => ({
       rewardAmount,
       quantity,
     ) => {
-      const meTeamData = useTeamStore.getState().data.meTeamData
+      const meTeamData = useTeamStore.getState().data.meTeamData;
 
       const { error: insertError } = await supabase.from("rewards").insert({
         name: rewardName,
@@ -80,12 +81,23 @@ const useRewardStore = create<TeamState>((set, get) => ({
         quantity,
         amount: rewardAmount,
         sponsor: meTeamData.username,
-        team_id: meTeamData.team_id
+        team_id: meTeamData.team_id,
       });
 
       if (insertError) {
         console.error(insertError);
         return insertError;
+      }
+    },
+    deleteReward: async (ids) => {
+      const { error: rewardDataError } = await supabase
+        .from("rewards")
+        .delete()
+        .in("id", ids);
+
+      if (rewardDataError) {
+        console.error(rewardDataError)
+        return rewardDataError
       }
     },
     redeemReward: async (rewardId, rewardName, rewardAmount) => {

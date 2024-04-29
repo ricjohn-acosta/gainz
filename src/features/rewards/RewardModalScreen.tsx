@@ -22,7 +22,7 @@ export const RewardModalScreen = () => {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate("AddReward")}>
+      <TouchableOpacity onPress={() => navigation.navigate("DeleteReward")}>
         <View style={styles.optionContainer}>
           <Text style={styles.title}>Delete a reward</Text>
           <Entypo name="chevron-small-right" size={30} color={"#1f30fb"} />

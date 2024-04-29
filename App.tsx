@@ -32,6 +32,7 @@ import useTeamStore from "./src/stores/teamStore";
 import { IconButton } from "./src/components/Button/IconButton";
 import { AddRewardScreen } from "./src/features/rewards/AddRewardScreen";
 import { RewardModalScreen } from "./src/features/rewards/RewardModalScreen";
+import {DeleteRewardScreen} from "./src/features/rewards/DeleteRewardScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -199,6 +200,29 @@ const RewardModalStack = () => {
         component={AddRewardScreen}
         options={({ navigation }) => ({
           headerTitle: "Create reward",
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: "#f2f4ff",
+          },
+          headerShadowVisible: true,
+          headerLeft: () => (
+            <View style={{ marginLeft: 16 }}>
+              <TextButton
+                onPress={() => {
+                  navigation.goBack();
+                }}
+                textStyle={{ color: "#1f30fb" }}
+                text={"Back"}
+              />
+            </View>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="DeleteReward"
+        component={DeleteRewardScreen}
+        options={({ navigation }) => ({
+          headerTitle: "Delete reward",
           headerShown: true,
           headerStyle: {
             backgroundColor: "#f2f4ff",

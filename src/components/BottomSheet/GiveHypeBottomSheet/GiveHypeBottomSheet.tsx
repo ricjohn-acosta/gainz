@@ -186,7 +186,11 @@ export const GiveHypeBottomSheet = forwardRef(
       }
 
       getMeProfile().then((error) => {
-        if (error) return;
+        if (error) {
+          console.error(error)
+          return
+        }
+
         getMyTeam();
         resetPoints();
         setSubmitLoading(false);
