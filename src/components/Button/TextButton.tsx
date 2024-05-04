@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import BasicText from "../Text/BasicText";
 
 interface PrimaryButtonProps {
   text: string;
@@ -13,9 +14,9 @@ export const TextButton = (props: PrimaryButtonProps) => {
 
   return (
     <TouchableOpacity disabled={disabled} onPress={onPress}>
-      <Text style={[styles.btnText, textStyle, disabled && styles.disabled]}>
+      <BasicText style={{...styles.btnText, ...textStyle, ...(disabled && styles.disabled)}}>
         {text}
-      </Text>
+      </BasicText>
     </TouchableOpacity>
   );
 };

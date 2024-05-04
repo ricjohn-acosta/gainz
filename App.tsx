@@ -9,7 +9,7 @@ import {
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
-import { Alert, Image, Text, View } from "react-native";
+import { Alert, Image, StatusBar, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { ActivityFeedScreen } from "./src/features/activityFeed/ActivityFeedScreen";
@@ -32,7 +32,9 @@ import useTeamStore from "./src/stores/teamStore";
 import { IconButton } from "./src/components/Button/IconButton";
 import { AddRewardScreen } from "./src/features/rewards/AddRewardScreen";
 import { RewardModalScreen } from "./src/features/rewards/RewardModalScreen";
-import {DeleteRewardScreen} from "./src/features/rewards/DeleteRewardScreen";
+import { DeleteRewardScreen } from "./src/features/rewards/DeleteRewardScreen";
+import { registerRootComponent } from "expo";
+import { useExpoFont } from "./src/theme/useFonts";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -176,6 +178,9 @@ const RewardModalStack = () => {
         component={RewardModalScreen}
         options={({ navigation }) => ({
           headerTitle: "Rewards",
+          headerTitleStyle: {
+            fontFamily: "Poppins-SemiBold",
+          },
           headerShown: true,
           headerStyle: {
             backgroundColor: "#f2f4ff",
@@ -200,6 +205,9 @@ const RewardModalStack = () => {
         component={AddRewardScreen}
         options={({ navigation }) => ({
           headerTitle: "Create reward",
+          headerTitleStyle: {
+            fontFamily: "Poppins-SemiBold",
+          },
           headerShown: true,
           headerStyle: {
             backgroundColor: "#f2f4ff",
@@ -223,6 +231,9 @@ const RewardModalStack = () => {
         component={DeleteRewardScreen}
         options={({ navigation }) => ({
           headerTitle: "Delete reward",
+          headerTitleStyle: {
+            fontFamily: "Poppins-SemiBold",
+          },
           headerShown: true,
           headerStyle: {
             backgroundColor: "#f2f4ff",
@@ -303,6 +314,7 @@ export default function App() {
     data: { me },
   } = useProfileStore();
 
+  StatusBar.setBackgroundColor("#f2f4ff");
   const [hasUserSkippedInviteCode, setHasUserSkippedInviteCode] =
     useState<string>(null);
   const [notLoaded, setNotLoaded] = useState(true);
@@ -327,8 +339,18 @@ export default function App() {
       });
   }, []);
 
+  useEffect(() => {
+    if (!notLoaded) {
+      loadFont();
+    }
+  }, [notLoaded]);
+
+  const loadFont = async () => {
+    await useExpoFont();
+  };
+
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#f2f4ff" }}>
       <BottomSheetModalProvider>
         <NavigationContainer theme={theme}>
           <Stack.Navigator>

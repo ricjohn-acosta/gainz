@@ -4,6 +4,7 @@ import LottieView from "lottie-react-native";
 import images from "../../../../assets";
 import { Ionicons } from "@expo/vector-icons";
 import { TextButton } from "../../../components/Button/TextButton";
+import BasicText from "../../../components/Text/BasicText";
 
 interface RedeemSuccessProps {
   handleCloseModal: () => void;
@@ -36,11 +37,11 @@ export const RedeemSuccess = (props: RedeemSuccessProps) => {
           />
         </View>
         <View style={styles.messageContainer}>
-          <Text style={styles.successMsg}>Success!</Text>
-          <Text style={styles.infoMsg}>
+          <BasicText style={styles.successMsg}>Success!</BasicText>
+          <BasicText style={styles.infoMsg}>
             Well deserved! Your team leader will be in contact with you shortly.
             💪
-          </Text>
+          </BasicText>
         </View>
         <View style={{ marginTop: 50 }}>
           <TextButton

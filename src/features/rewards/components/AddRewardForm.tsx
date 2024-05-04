@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import { TextButton } from "../../../components/Button/TextButton";
 import useRewardStore from "../../../stores/rewardStore";
+import BasicText from "../../../components/Text/BasicText";
 
 export const AddRewardForm = () => {
   const {
@@ -53,14 +54,14 @@ export const AddRewardForm = () => {
   return (
     <View>
       <View style={styles.messageContainer}>
-        <Text style={styles.title}>Create a reward</Text>
-        <Text style={styles.subtitle}>
+        <BasicText style={styles.title}>Create a reward</BasicText>
+        <BasicText style={styles.subtitle}>
           Motivate your clients with your own custom rewards!
-        </Text>
+        </BasicText>
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.inputLabel}>Reward name</Text>
+        <BasicText style={styles.inputLabel}>Reward name</BasicText>
         <BasicTextInput
           rules={{ required: "Please enter a name" }}
           placeholder={"e.g: Free coaching session"}
@@ -72,7 +73,7 @@ export const AddRewardForm = () => {
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.inputLabel}>Reward description</Text>
+        <BasicText style={styles.inputLabel}>Reward description</BasicText>
         <BasicTextInput
           rules={{ required: "Please enter a description" }}
           multiline
@@ -85,7 +86,7 @@ export const AddRewardForm = () => {
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.inputLabel}>Hype points required</Text>
+        <BasicText style={styles.inputLabel}>Hype points required</BasicText>
         <BasicTextInput
           rules={{ required: "Please enter an amount" }}
           placeholder={"e.g: 100"}
@@ -97,7 +98,7 @@ export const AddRewardForm = () => {
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.inputLabel}>Quantity</Text>
+        <BasicText style={styles.inputLabel}>Quantity</BasicText>
         <BasicTextInput
           rules={{ required: "Please enter a quantity" }}
           placeholder={"e.g: 5"}
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     marginBottom: 8,
-    fontSize: 16,
+    fontSize: 14,
   },
   textInput: {
     backgroundColor: "#ffffff",

@@ -6,6 +6,7 @@ import images from "../../../../assets";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { ConfirmRewardModal } from "./ConfirmRewardModal";
 import LottieView from "lottie-react-native";
+import BasicText from "../../../components/Text/BasicText";
 
 interface RewardCardProps {
   name: string;
@@ -36,16 +37,16 @@ export const RewardCard = (props: RewardCardProps) => {
       <View style={styles.cardDetails}>
         <View>
           {sponsor && (
-            <Text style={styles.extraDetail}>
+            <BasicText style={styles.extraDetail}>
               Sponsored by{" "}
-              <Text style={{ color: "#1f30fb", fontWeight: "bold" }}>
+              <BasicText style={{ color: "#1f30fb", fontWeight: "bold" }}>
                 {sponsor}
-              </Text>
-            </Text>
+              </BasicText>
+            </BasicText>
           )}
-          <Text style={styles.title}>{name}</Text>
-          <Text style={styles.description}>{description}</Text>
-          <Text style={styles.itemStock}>Quantity: {quantity}</Text>
+          <BasicText style={styles.title}>{name}</BasicText>
+          <BasicText style={styles.description}>{description}</BasicText>
+          <BasicText style={styles.itemStock}>Quantity: {quantity}</BasicText>
         </View>
         <PrimaryButton
           onPress={showConfirmRewardModal}

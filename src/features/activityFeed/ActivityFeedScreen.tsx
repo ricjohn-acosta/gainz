@@ -27,6 +27,7 @@ import { postValidation } from "../../stores/posts/postValidation";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import HypeActivityCard from "./components/HypeActivityCard";
 import RedeemActivityCard from "./components/RedeemActivityCard";
+import BasicText from "../../components/Text/BasicText";
 
 export const ActivityFeedScreen = () => {
   const {
@@ -107,9 +108,9 @@ export const ActivityFeedScreen = () => {
               style={styles.actionButton}
             >
               <View style={styles.actionButtonContent}>
-                <Text style={{ color: "black", fontWeight: "bold" }}>
+                <BasicText style={{ color: "black", fontWeight: "bold" }}>
                   Write post
-                </Text>
+                </BasicText>
                 <FontAwesome
                   style={{ marginLeft: 10 }}
                   name="pencil-square-o"
@@ -126,9 +127,9 @@ export const ActivityFeedScreen = () => {
               style={styles.actionButton}
             >
               <View style={styles.actionButtonContent}>
-                <Text style={{ color: "black", fontWeight: "bold" }}>
+                <BasicText style={{ color: "black", fontWeight: "bold" }}>
                   Give Hype
-                </Text>
+                </BasicText>
                 <MaterialIcons
                   style={{ marginLeft: 4 }}
                   name="local-fire-department"
@@ -176,7 +177,7 @@ export const ActivityFeedScreen = () => {
       />
       <BasicBottomSheet ref={writePostBottomSheefRef} _snapPoints={["50%"]}>
         <View style={{ padding: 20 }}>
-          <Text style={styles.modalTitle}>Write a post ✏️</Text>
+          <BasicText style={styles.modalTitle}>Write a post ✏️</BasicText>
           <BasicBottomSheetTextInput
             maxLength={1000}
             name={"content"}
@@ -248,7 +249,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 28,
-    fontWeight: "900",
+    fontWeight: "bold",
   },
   modalInput: {
     height: 130,

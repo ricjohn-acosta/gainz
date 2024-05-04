@@ -16,6 +16,7 @@ import { useInviteMember } from "../../../features/welcome/hooks/useInviteMember
 import { BasicBottomSheetTextInput } from "../../Input/BasicBottomSheetTextInput";
 import { useForm } from "react-hook-form";
 import { inviteValidation } from "./inviteValidation";
+import BasicText from "../../Text/BasicText";
 
 interface AddMemberBottomSheetProps {}
 
@@ -70,13 +71,13 @@ export const AddMemberBottomSheet = forwardRef(
           _snapPoints={["30%"]}
         >
           <View style={{ padding: 20 }}>
-            <Text style={styles.addMemberMessage}>Invite a member!</Text>
+            <BasicText style={styles.addMemberMessage}>Invite a member!</BasicText>
             <BasicBottomSheetTextInput
               name={"email"}
               errors={errors}
               control={control}
               rules={{ validate: inviteValidation }}
-              placeholder={"Enter their email"}
+              placeholder={"Enter email"}
               inputStyle={styles.addMemberInput}
             />
             <View style={styles.addBtnContainer}>
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
   },
   addMemberMessage: {
     fontSize: 28,
-    fontWeight: "900",
+    fontWeight: "bold",
   },
   addMemberInput: {
     marginTop: 20,
@@ -114,9 +115,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: "#8d8d8d",
     fontSize: 16,
-    lineHeight: 20,
+    lineHeight: 24,
     padding: 8,
     backgroundColor: "#f2f4ff",
+    fontFamily: 'Poppins-Regular'
   },
   addBtnContainer: {
     display: "flex",

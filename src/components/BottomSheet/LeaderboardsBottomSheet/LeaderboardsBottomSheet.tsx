@@ -14,6 +14,7 @@ import useProfileStore from "../../../stores/profileStore";
 import { LeaderboardItem } from "./LeaderboardsItem";
 import { sortTeamBy } from "../../../helpers/teamSorter";
 import useTeamStore from "../../../stores/teamStore";
+import BasicText from "../../Text/BasicText";
 
 interface LeaderboardsBottomSheetProps {}
 
@@ -46,10 +47,10 @@ export const LeaderboardsBottomSheet = forwardRef(
         <BasicBottomSheet ref={ref} _snapPoints={["95%"]}>
           <View style={styles.container}>
             <View style={styles.headerContainer}>
-              <Text style={styles.teamsTitle}>Leaderboards</Text>
+              <BasicText style={styles.teamsTitle}>Leaderboards</BasicText>
             </View>
 
-            <Text style={styles.subtitle}>See who gets the most Hype!</Text>
+            <BasicText style={styles.subtitle}>See who gets the most Hype!</BasicText>
             <View style={styles.giveHypeItemContainer}>
               <FlatList
                 data={sortedTeam}
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 22,
     color: "#000000",
-    marginBottom: 8,
+    marginBottom: 2,
   },
   subtitle: {
     color: "grey",

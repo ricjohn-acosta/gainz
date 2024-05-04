@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { Controller } from "react-hook-form";
 import React from "react";
+import BasicText from "../Text/BasicText";
 
 interface BasicTextInputProps {
   name: string;
@@ -24,7 +25,7 @@ export const BasicTextInput = (props: BasicTextInputProps) => {
           <TextInput
             showSoftInputOnFocus={true}
             multiline={multiline}
-            style={style}
+            style={{...style, fontFamily: 'Poppins-Regular'}}
             placeholder={placeholder}
             onChangeText={field.onChange}
             value={field.value}
@@ -34,7 +35,7 @@ export const BasicTextInput = (props: BasicTextInputProps) => {
         defaultValue=""
       />
       {errors[name] && (
-        <Text style={styles.errorMsg}>{errors[name].message}</Text>
+        <BasicText style={styles.errorMsg}>{errors[name].message}</BasicText>
       )}
     </>
   );

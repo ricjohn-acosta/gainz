@@ -20,6 +20,7 @@ import useTeamStore from "../../stores/teamStore";
 import images from "../../../assets";
 import { AddMemberBottomSheet } from "../../components/BottomSheet/AddMemberBottomSheet/AddMemberBottomSheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import BasicText from "../../components/Text/BasicText";
 
 export default function GymScreen({ props }) {
   const {
@@ -75,8 +76,8 @@ export default function GymScreen({ props }) {
             />
           </View>
           <View style={styles.titleContainer}>
-            <Text style={styles.subtitle}>Let's spread appreciation,</Text>
-            <Text style={styles.title}>{me.username} 💪</Text>
+            <BasicText style={styles.subtitle}>Let's spread appreciation,</BasicText>
+            <BasicText style={styles.title}>{me.username} 💪</BasicText>
           </View>
           <View>
             <TouchableOpacity>
@@ -88,7 +89,7 @@ export default function GymScreen({ props }) {
           <MyStats />
         </View>
         <View style={styles.teamsTitleContainer}>
-          <Text style={styles.teamsTitle}>Your team</Text>
+          <BasicText style={styles.teamsTitle}>Your team</BasicText>
           <AcceptInvitation />
           {canInvite && (
             <TouchableOpacity onPress={showAddMemberBottomSheet}>
@@ -103,7 +104,7 @@ export default function GymScreen({ props }) {
                   source={images.add}
                 />
                 <View style={{ marginTop: 4 }}>
-                  <Text style={{ color: "#808080" }}>Invite</Text>
+                  <BasicText style={{ color: "#808080" }}>Invite</BasicText>
                 </View>
               </View>
             </TouchableOpacity>
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "bold",
     color: "black",
-    fontSize: 28,
+    fontSize: 24,
     flexGrow: 1,
   },
   avatar: {

@@ -7,6 +7,7 @@ import moment from "moment";
 import { IconButton } from "../../../components/Button/IconButton";
 import usePostStore from "../../../stores/postStore";
 import useProfileStore from "../../../stores/profileStore";
+import BasicText from "../../../components/Text/BasicText";
 
 interface ActivityCommentProps {
   likes: any;
@@ -43,8 +44,8 @@ export const ActivityComment = (props: ActivityCommentProps) => {
           <Avatar sm url={avatar} />
         </View>
         <View style={styles.nameAndDate}>
-          <Text style={styles.displayName}>{posterDisplayName}</Text>
-          <Text style={styles.datePosted}>{getRelativeTime()}</Text>
+          <BasicText style={styles.displayName}>{posterDisplayName}</BasicText>
+          <BasicText style={styles.datePosted}>{getRelativeTime()}</BasicText>
         </View>
         <View style={styles.likeContainer}>
           <View style={styles.likeBtn}>
@@ -69,12 +70,12 @@ export const ActivityComment = (props: ActivityCommentProps) => {
             )}
           </View>
           <View style={styles.likeBtn}>
-            <Text>{likes.length}</Text>
+            <BasicText>{likes.length}</BasicText>
           </View>
         </View>
       </View>
       <View style={styles.postContent}>
-        <Text>{content}</Text>
+        <BasicText>{content}</BasicText>
       </View>
     </View>
   );
@@ -97,6 +98,7 @@ const styles = StyleSheet.create({
   datePosted: {
     color: "grey",
     marginLeft: 4,
+    fontSize: 12
   },
   nameAndDate: {
     flex: 1,

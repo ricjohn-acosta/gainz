@@ -61,25 +61,25 @@ export default function MyStats() {
         end={{ x: 2, y: 2 }}
         style={styles.container}
       >
-        <Text style={styles.title}>My Hype 📈</Text>
+        <BasicText style={styles.title}>My Hype 📈</BasicText>
         <View style={styles.statsContainer}>
           <View style={styles.singleStatContainer}>
-            <Text style={styles.counter}>
+            <BasicText style={styles.counter}>
               {meTeamData ? meTeamData.hype_received : me.total_hype_received}
-            </Text>
-            <Text style={styles.label}>Received</Text>
+            </BasicText>
+            <BasicText style={styles.label}>Received</BasicText>
           </View>
           <View style={styles.singleStatContainer}>
-            <Text style={styles.counter}>
+            <BasicText style={styles.counter}>
               {meTeamData ? meTeamData.hype_given : me.total_hype_given}
-            </Text>
-            <Text style={styles.label}>Given</Text>
+            </BasicText>
+            <BasicText style={styles.label}>Given</BasicText>
           </View>
           <View style={styles.singleStatContainer}>
-            <Text style={styles.counter}>
+            <BasicText style={styles.counter}>
               {meTeamData ? meTeamData.hype_redeemable : 0}
-            </Text>
-            <Text style={styles.label}>Redeemable</Text>
+            </BasicText>
+            <BasicText style={styles.label}>Redeemable</BasicText>
           </View>
         </View>
       </LinearGradient>
@@ -97,12 +97,12 @@ export default function MyStats() {
           </View>
           <View style={styles.rightContainer}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={styles.subtitle}>Give Hype</Text>
+              <BasicText style={styles.subtitle}>Give Hype</BasicText>
               <Entypo name="chevron-small-right" size={20} color="grey" />
             </View>
-            <Text style={{ fontSize: 28, color: "#ff046d", fontWeight: "900" }}>
+            <BasicText style={{ fontSize: 26, color: "#ff046d", fontWeight: "bold" }}>
               {meTeamData ? meTeamData.hype_givable : "5"}
-            </Text>
+            </BasicText>
           </View>
         </TouchableOpacity>
         <TouchableOpacity
@@ -114,12 +114,12 @@ export default function MyStats() {
           </View>
           <View style={styles.rightContainer}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={styles.subtitle}>Hype rank</Text>
+              <BasicText style={styles.subtitle}>Hype rank</BasicText>
               <Entypo name="chevron-small-right" size={20} color="grey" />
             </View>
-            <Text style={{ fontSize: 28, color: "#eccb15", fontWeight: "900" }}>
+            <BasicText style={{ fontSize: 26, color: "#eccb15", fontWeight: "bold" }}>
               {displayHypeRank()}
-            </Text>
+            </BasicText>
           </View>
         </TouchableOpacity>
       </View>
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 14,
     color: "white",
   },
   subtitle: {
@@ -158,11 +158,10 @@ const styles = StyleSheet.create({
   },
   label: {
     color: "white",
-    fontWeight: "600",
   },
   counter: {
-    fontSize: 20,
-    fontWeight: "900",
+    fontSize: 18,
+    fontWeight: "bold",
     color: "white",
   },
   halfCardContainer: {

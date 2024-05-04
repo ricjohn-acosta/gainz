@@ -12,6 +12,7 @@ import {
 import images from "../../../../assets";
 import Avatar from "../../Avatar/Avatar";
 import { IconButton } from "../../Button/IconButton";
+import BasicText from "../../Text/BasicText";
 
 interface GiveHypeItemProps {
   userId: string;
@@ -39,7 +40,7 @@ export const GiveHypeItem = (props: GiveHypeItemProps) => {
       <View style={styles.container}>
         <View style={styles.item}>
           <Avatar md url={images.mockProfilePic1} />
-          <Text style={styles.memberName}>{username}</Text>
+          <BasicText style={styles.memberName}>{username}</BasicText>
         </View>
         <View style={styles.giveHypeControls}>
           {hypeToGive?.counter > 0 && (
@@ -56,9 +57,9 @@ export const GiveHypeItem = (props: GiveHypeItemProps) => {
               />
             </View>
           )}
-          <Text style={styles.hypeToGiveCounter}>
+          <BasicText style={styles.hypeToGiveCounter}>
             {hypeToGive?.counter ?? 0}
-          </Text>
+          </BasicText>
           <View style={styles.countAdjustor}>
             <IconButton
                 onPress={() => addHype(userId)}
@@ -88,7 +89,7 @@ export const GiveHypeItem = (props: GiveHypeItemProps) => {
 
       {hypeToGive?.counter > 0 && showMessage && (
         <View style={styles.messageContainer}>
-          <Text style={styles.sendMsgLabel}>Send {username} a message</Text>
+          <BasicText style={styles.sendMsgLabel}>Send {username} a message</BasicText>
           <TextInput
             defaultValue={hypeToGive?.message}
             onChangeText={(text) => writeHypeMessage(userId, text)}
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   memberName: {
-    fontSize: 16,
+    fontSize: 14,
     marginLeft: 4,
   },
   giveHypeControls: {
@@ -145,6 +146,7 @@ const styles = StyleSheet.create({
   },
   messageInput: {
     marginTop: 4,
+    fontFamily: 'Poppins-Regular'
   },
   sendMsgLabel: {
     fontWeight: "bold",

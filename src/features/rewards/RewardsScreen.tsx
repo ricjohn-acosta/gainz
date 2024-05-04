@@ -6,6 +6,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import useRewardStore from "../../stores/rewardStore";
 import { MaterialIcons } from "@expo/vector-icons";
 import useTeamStore from "../../stores/teamStore";
+import BasicText from "../../components/Text/BasicText";
 
 export default function RewardsScreen() {
   const {
@@ -25,7 +26,7 @@ export default function RewardsScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.screenTitleContainer}>
-        <Text style={styles.screenTitle}>Claim rewards!</Text>
+        <BasicText style={styles.screenTitle}>Claim rewards!</BasicText>
         <View
           style={{
             flexDirection: "row",
@@ -33,16 +34,16 @@ export default function RewardsScreen() {
             marginRight: 16,
           }}
         >
-          <Text
+          <BasicText
             style={{
               textAlign: "center",
-              fontWeight: "bold",
+              fontWeight: "600",
               fontSize: 16,
               marginTop: 4,
             }}
           >
             {meTeamData.hype_redeemable}
-          </Text>
+          </BasicText>
           <MaterialIcons
             name="local-fire-department"
             size={24}

@@ -21,6 +21,7 @@ import { commentValidation } from "../../../stores/posts/commentValidation";
 import usePostStore from "../../../stores/postStore";
 import moment from "moment";
 import useProfileStore from "../../../stores/profileStore";
+import BasicText from "../../../components/Text/BasicText";
 
 interface ActivityCardProps {
   posterDisplayName: string;
@@ -80,10 +81,10 @@ export const ActivityCard = (props: ActivityCardProps) => {
           <Avatar md url={avatar} />
         </View>
         <View style={styles.postDetails}>
-          <Text style={styles.displayName}>{posterDisplayName}</Text>
-          <Text style={styles.datePosted}>
+          <BasicText style={styles.displayName}>{posterDisplayName}</BasicText>
+          <BasicText style={styles.datePosted}>
             {moment(datePosted).format("D MMM")}
-          </Text>
+          </BasicText>
         </View>
         <View style={styles.likeBtn}>
           {!liked ? (
@@ -106,12 +107,12 @@ export const ActivityCard = (props: ActivityCardProps) => {
             </TouchableOpacity>
           )}
           <View style={styles.likeBtn}>
-            <Text>{likes.length}</Text>
+            <BasicText>{likes.length}</BasicText>
           </View>
         </View>
       </View>
       <View style={styles.postContent}>
-        <Text>{content}</Text>
+        <BasicText>{content}</BasicText>
       </View>
       <View>
         <FlatList
@@ -188,9 +189,12 @@ const styles = StyleSheet.create({
   displayName: {
     fontWeight: "bold",
     color: "#000000",
+    marginLeft: 4,
   },
   datePosted: {
     color: "grey",
+    fontSize: 12,
+    marginLeft: 4,
   },
   commentBtnContainer: {
     alignItems: "center",

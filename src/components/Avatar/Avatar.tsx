@@ -6,6 +6,7 @@ import {
   Text,
 } from "react-native";
 import images from "../../../assets";
+import BasicText from "../Text/BasicText";
 
 export type UserStatus = "offline" | "online" | "in-gym";
 
@@ -62,7 +63,7 @@ export default function Avatar(props: AvatarProps) {
       )}
       <View>
         {username && (
-          <Text style={styles.displayName}>{displayTruncatedUsername()}</Text>
+          <BasicText style={styles.displayName}>{displayTruncatedUsername()}</BasicText>
         )}
       </View>
     </View>
@@ -100,6 +101,7 @@ const styles = StyleSheet.create({
   },
   displayName: {
     marginTop: 4,
+    fontSize: 12
   },
   onlineBorder: {
     borderColor: "#43d15b",

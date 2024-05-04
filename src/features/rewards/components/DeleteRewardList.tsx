@@ -4,6 +4,7 @@ import useRewardStore from "../../../stores/rewardStore";
 import { Checkbox } from "expo-checkbox";
 import { TextButton } from "../../../components/Button/TextButton";
 import { useNavigation } from "@react-navigation/native";
+import BasicText from "../../../components/Text/BasicText";
 
 export const DeleteRewardList = () => {
   const {
@@ -53,18 +54,18 @@ export const DeleteRewardList = () => {
   return (
     <View style={styles.container}>
       <View style={styles.messageContainer}>
-        <Text style={styles.title}>Delete rewards</Text>
-        <Text style={styles.subtitle}>
+        <BasicText style={styles.title}>Delete rewards</BasicText>
+        <BasicText style={styles.subtitle}>
           Select rewards that you wish to be deleted.
-        </Text>
+        </BasicText>
       </View>
 
       {rewards.map((reward) => {
         return (
           <View style={styles.parentContainer}>
             <View style={styles.rewardItemContainer}>
-              <Text style={styles.rewardName}>{reward.name}</Text>
-              <Text style={styles.rewardDescription}>{reward.description}</Text>
+              <BasicText style={styles.rewardName}>{reward.name}</BasicText>
+              <BasicText style={styles.rewardDescription}>{reward.description}</BasicText>
             </View>
             <View style={styles.checkboxContainer}>
               <Checkbox
@@ -90,13 +91,14 @@ const styles = StyleSheet.create({
   rewardItemContainer: { marginBottom: 20 },
   rewardName: {
     fontWeight: "bold",
-    fontSize: 18,
+    fontSize: 16,
     color: "#000000",
     marginBottom: 4,
   },
   rewardDescription: {
     color: "grey",
     marginBottom: 6,
+    fontSize: 14
   },
   checkboxContainer: {
     alignItems: "center",

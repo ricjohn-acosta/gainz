@@ -16,6 +16,7 @@ import useProfileStore from "../../../stores/profileStore";
 import { supabase } from "../../../services/supabase";
 import { GiveHypeSuccess } from "./GiveHypeSuccess";
 import useTeamStore from "../../../stores/teamStore";
+import BasicText from "../../Text/BasicText";
 
 interface GiveHypeBottomSheetProps {
   snapPoints?: any;
@@ -231,9 +232,9 @@ export const GiveHypeBottomSheet = forwardRef(
           ) : (
             <View style={styles.container}>
               <View style={styles.headerContainer}>
-                <Text style={styles.teamsTitle}>{memberUsername ? "Hype up " + memberUsername : "Hype your team" }</Text>
+                <BasicText style={styles.teamsTitle}>{memberUsername ? "Hype up " + memberUsername : "Hype your team" }</BasicText>
                 <View style={styles.hypeCounter}>
-                  <Text style={styles.count}>{givableHype}</Text>
+                  <BasicText style={styles.count}>{givableHype}</BasicText>
                   <MaterialIcons
                     name="local-fire-department"
                     size={22}
@@ -242,10 +243,10 @@ export const GiveHypeBottomSheet = forwardRef(
                 </View>
               </View>
 
-              <Text style={styles.subtitle}>
-                {memberUsername ? `Send ${memberUsername} some hype points!` : "Choose which members to hype up!"}
+              <BasicText style={styles.subtitle}>
+                {memberUsername ? `Send ${memberUsername} hype points!` : "Choose which members to hype up!"}
 
-              </Text>
+              </BasicText>
               <View style={styles.giveHypeItemContainer}>
                 <FlatList
                   keyExtractor={(item) => item.id}
@@ -285,7 +286,7 @@ export const GiveHypeBottomSheet = forwardRef(
                           : "#1f30fb",
                       }}
                     >
-                      <Text style={styles.hypeBtnText}>Hype them up!</Text>
+                      <BasicText style={styles.hypeBtnText}>Hype them up!</BasicText>
                     </View>
                   </TouchableOpacity>
                 ) : (
@@ -318,14 +319,14 @@ const styles = StyleSheet.create({
   },
   count: {
     marginTop: 2,
-    fontWeight: "bold",
+    fontWeight: "600",
     fontSize: 16,
   },
   teamsTitle: {
     fontWeight: "bold",
     fontSize: 22,
     color: "#000000",
-    marginBottom: 8,
+    marginBottom: 2,
   },
   subtitle: {
     color: "grey",
@@ -343,7 +344,7 @@ const styles = StyleSheet.create({
   hypeBtnText: {
     textAlign: "center",
     color: "white",
-    fontWeight: "900",
+    fontWeight: "bold",
     fontSize: 16,
   },
   hypeBtnViewContainer: {

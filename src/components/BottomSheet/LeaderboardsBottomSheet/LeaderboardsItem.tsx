@@ -4,6 +4,7 @@ import { Image, StyleSheet, Text, View } from "react-native";
 
 import images from "../../../../assets";
 import Avatar from "../../Avatar/Avatar";
+import BasicText from "../../Text/BasicText";
 
 interface LeaderboardItemProps {
   username: string;
@@ -28,25 +29,25 @@ export const LeaderboardItem = (props: LeaderboardItemProps) => {
         teamHasPoints ? (
           <Image style={styles.trophyIcon} source={images.trophy} />
         ) : (
-          <Text style={styles.rank}>-</Text>
+          <BasicText style={styles.rank}>-</BasicText>
         )
       ) : (
-        <Text style={styles.rank}>{teamHasPoints ? leaderboardRank : "-"}</Text>
+          <BasicText style={styles.rank}>{teamHasPoints ? leaderboardRank : "-"}</BasicText>
       )}
       <View style={styles.item}>
         <Avatar md url={images.mockProfilePic1} />
-        <Text style={styles.memberName}>{username}</Text>
+        <BasicText style={styles.memberName}>{username}</BasicText>
       </View>
       <View>
         <View style={styles.giveHypeControls}>
-          <Text style={styles.hypeToGiveCounter}>{hypeData}</Text>
+          <BasicText style={styles.hypeToGiveCounter}>{hypeData}</BasicText>
           <MaterialIcons
             name="local-fire-department"
             size={30}
             color="#ff046d"
           />
         </View>
-        <Text style={styles.receivedLabel}>Received</Text>
+        <BasicText style={styles.receivedLabel}>Received</BasicText>
       </View>
     </View>
   );
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   memberName: {
-    fontSize: 16,
+    fontSize: 14,
     marginLeft: 4,
   },
   giveHypeControls: {
@@ -77,12 +78,11 @@ const styles = StyleSheet.create({
   hypeToGiveCounter: {
     marginLeft: 10,
     marginRight: 2,
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "bold",
   },
   receivedLabel: {
     textAlign: "center",
-    fontWeight: "600",
   },
   trophyIcon: {
     width: 34,

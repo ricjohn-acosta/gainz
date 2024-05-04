@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import BasicText from "../Text/BasicText";
 
 interface PrimaryButtonProps {
   text?: string;
@@ -30,9 +31,9 @@ export const PrimaryButton = (props: PrimaryButtonProps) => {
           disabled && { backgroundColor: "grey" },
         ]}
       >
-        <Text style={{ ...styles.btnText, ...textStyle }}>
+        <BasicText style={{ ...styles.btnText, ...textStyle }}>
           {text}
-        </Text>
+        </BasicText>
         {endAdornment}
       </View>
     </TouchableOpacity>
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
   btnText: {
     textAlign: "center",
     color: "white",
-    fontWeight: "900",
-    fontSize: 16,
+    fontWeight: "bold",
+    fontSize: 14,
   },
 });

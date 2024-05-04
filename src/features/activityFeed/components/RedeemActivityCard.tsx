@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
+import BasicText from "../../../components/Text/BasicText";
 
 interface RedeemActivityCardProps {
   redeemerUsername: string;
@@ -19,15 +20,15 @@ export const RedeemActivityCard = (props: RedeemActivityCardProps) => {
         size={25}
         color={"#9b8722"}
       />
-      <Text>
-        <Text style={{ color: "#c5a70a", fontWeight: "bold" }}>
+      <BasicText style={{fontSize: 12}}>
+        <BasicText style={{ color: "#c5a70a", fontWeight: "bold" }}>
           {redeemerUsername}
-        </Text>
-        <Text style={{ color: "#c5a70a" }}> redeemed </Text>
-        <Text style={{ color: "#c5a70a", fontWeight: "bold" }}>
+        </BasicText>
+        <BasicText style={{ color: "#c5a70a" }}> redeemed </BasicText>
+        <BasicText style={{ color: "#c5a70a", fontWeight: "bold" }}>
           {rewardName}!
-        </Text>
-      </Text>
+        </BasicText>
+      </BasicText>
     </View>
   );
 };

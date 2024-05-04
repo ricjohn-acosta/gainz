@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import BasicText from "../Text/BasicText";
 
 interface DividerProps {
   title: string;
@@ -12,7 +13,9 @@ const Divider = (props: DividerProps) => {
     <View style={styles.container}>
       <View style={styles.divider} />
       <View>
-        <Text style={[styles.title, titleStyle]}>{title}</Text>
+        <BasicText style={{ ...styles.title, ...titleStyle }}>
+          {title}
+        </BasicText>
       </View>
       <View style={styles.divider} />
     </View>
@@ -32,8 +35,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#adadad",
   },
   title: {
-    width: 100,
+    width: 60,
     textAlign: "center",
-    fontWeight: "bold",
+    fontWeight: "600",
+    fontSize: 12,
   },
 });

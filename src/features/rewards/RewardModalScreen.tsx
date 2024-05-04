@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Entypo } from "@expo/vector-icons";
+import BasicText from "../../components/Text/BasicText";
 
 export const RewardModalScreen = () => {
   const navigation = useNavigation<any>();
@@ -9,22 +10,22 @@ export const RewardModalScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.messageContainer}>
-        <Text style={styles.messageTitle}>Manage rewards</Text>
-        <Text style={styles.subtitle}>
+        <BasicText style={styles.messageTitle}>Manage rewards</BasicText>
+        <BasicText style={styles.subtitle}>
           Leaders can create or delete rewards here!
-        </Text>
+        </BasicText>
       </View>
 
       <TouchableOpacity onPress={() => navigation.navigate("AddReward")}>
         <View style={styles.optionContainer}>
-          <Text style={styles.title}>Create a reward</Text>
+          <BasicText style={styles.title}>Create a reward</BasicText>
           <Entypo name="chevron-small-right" size={30} color={"#1f30fb"} />
         </View>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate("DeleteReward")}>
         <View style={styles.optionContainer}>
-          <Text style={styles.title}>Delete a reward</Text>
+          <BasicText style={styles.title}>Delete a reward</BasicText>
           <Entypo name="chevron-small-right" size={30} color={"#1f30fb"} />
         </View>
       </TouchableOpacity>
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#d9d9d9"
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     color: "#000000",
     marginBottom: 8,
   },

@@ -5,6 +5,7 @@ import images from "../../../../assets";
 import { AntDesign } from "@expo/vector-icons";
 import { PrimaryButton } from "../../Button/PrimaryButton";
 import { TextButton } from "../../Button/TextButton";
+import BasicText from "../../Text/BasicText";
 
 interface GiveHypeSuccessProps {
   onClose: () => void;
@@ -32,9 +33,9 @@ export const GiveHypeSuccess = (props: GiveHypeSuccessProps) => {
         <View>
           <AntDesign name="checkcircle" size={80} color="green" />
         </View>
-        <Text style={styles.title}>Nice one!</Text>
-        <Text style={styles.subtitle}>Hype points have been sent.</Text>
-        <Text style={styles.message}>Your team will love you for this 🔥</Text>
+        <BasicText style={styles.title}>Nice one!</BasicText>
+        <BasicText style={styles.subtitle}>Hype points have been sent.</BasicText>
+        <BasicText style={styles.message}>Your team will love you for this 🔥</BasicText>
         <View style={styles.actionButtons}>
           <PrimaryButton onPress={onBack} text={"Give more hype"} />
           <TextButton onPress={onClose} text={"Close"} textStyle={{ color: "grey" }} />

@@ -43,7 +43,7 @@ export const BasicBottomSheetTextInput = (
             placeholder={placeholder}
             multiline
             numberOfLines={numberOfLines}
-            style={{ ...inputStyle }}
+            style={{ ...inputStyle, fontFamily: 'Poppins-Regular' }}
           />
         )}
         name={name}

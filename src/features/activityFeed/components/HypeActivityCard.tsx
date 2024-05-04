@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import {Entypo, MaterialIcons} from "@expo/vector-icons";
+import BasicText from "../../../components/Text/BasicText";
 
 interface HypeActivityCardProps {
   senderUsername: string;
@@ -14,17 +15,17 @@ export const HypeActivityCard = (props: HypeActivityCardProps) => {
   return (
     <View style={styles.container}>
       <Entypo style={{marginRight: 10}} name="megaphone" size={25} color={"#be4b4b"} />
-      <Text>
-        <Text style={{ color: "#ff046d", fontWeight: "bold" }}>
+      <BasicText style={{fontSize: 12}}>
+        <BasicText style={{ color: "#ff046d", fontWeight: "bold" }}>
           {senderUsername}
-        </Text>
-        <Text style={{ color: "#ff046d" }}> hyped up </Text>
-        <Text style={{ color: "#ff046d", fontWeight: "bold" }}>
+        </BasicText>
+        <BasicText style={{ color: "#ff046d" }}> hyped </BasicText>
+        <BasicText style={{ color: "#ff046d", fontWeight: "bold" }}>
           {recipientUsername}!
-        </Text>
-      </Text>
+        </BasicText>
+      </BasicText>
       <View style={styles.hypeReceivedContainer}>
-          <Text style={{ color: "#ff046d", fontWeight: "bold" }}> {hypeReceived}</Text>
+          <BasicText style={{ color: "#ff046d", fontWeight: "bold" }}> {hypeReceived}</BasicText>
         <MaterialIcons
           name="local-fire-department"
           size={16}

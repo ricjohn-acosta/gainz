@@ -21,6 +21,7 @@ import moment from "moment";
 import useProfileStore from "../../stores/profileStore";
 import { GiveHypeBottomSheet } from "../../components/BottomSheet/GiveHypeBottomSheet/GiveHypeBottomSheet";
 import { MaterialIcons } from "@expo/vector-icons";
+import BasicText from "../../components/Text/BasicText";
 
 export default function ProfileScreen({ route }) {
   const { uid } = route.params;
@@ -54,9 +55,13 @@ export default function ProfileScreen({ route }) {
     giveHypeBottomSheetRef.current?.present();
   }, []);
 
-  const displayHypeButton = () => {
+  const isMyProfile = () => {
     if (!me) return;
-    return uid !== me.id;
+    return uid === me.id;
+  }
+
+  const displayHypeButton = () => {
+    return !isMyProfile()
   };
 
   const onRefresh = () => {
@@ -124,41 +129,48 @@ export default function ProfileScreen({ route }) {
         <Avatar url={images.mockProfilePic3} status="online" lg />
       </View>
       <View>
-        <Text style={styles.displayName}>{getMember(uid)?.username}</Text>
+        <BasicText style={styles.displayName}>
+          {getMember(uid)?.username}
+        </BasicText>
+        {isMyProfile() && <BasicText style={{textAlign: 'center', fontSize: 12, color: 'grey'}}>(you)</BasicText>}
       </View>
       <View style={styles.statContainer}>
         <View style={styles.halfCard}>
           <View style={{ flexDirection: "row" }}>
-            <Text style={styles.counter}>{getMember(uid)?.hype_received}</Text>
+            <BasicText style={styles.counter}>
+              {getMember(uid)?.hype_received}
+            </BasicText>
             <MaterialIcons
               name="local-fire-department"
               size={24}
               color="#ff046d"
             />
           </View>
-          <Text style={styles.label}>Received</Text>
+          <BasicText style={styles.label}>Received</BasicText>
         </View>
         <View style={styles.halfCard}>
           <View style={{ flexDirection: "row" }}>
-            <Text style={styles.counter}>{getMember(uid)?.hype_given}</Text>
+            <BasicText style={styles.counter}>
+              {getMember(uid)?.hype_given}
+            </BasicText>
             <MaterialIcons
               name="local-fire-department"
               size={24}
               color="#ff046d"
             />
           </View>
-          <Text style={styles.label}>Given</Text>
+          <BasicText style={styles.label}>Given</BasicText>
         </View>
         <View style={styles.halfCard}>
           <View style={{ flexDirection: "row" }}>
-            <Text style={styles.counter}>{getHypeRank(uid)}</Text>
+            <BasicText style={styles.counter}>{getHypeRank(uid)}</BasicText>
             <MaterialIcons
               name="local-fire-department"
               size={24}
               color="#ff046d"
             />
           </View>
-          <Text style={styles.label}>Hype rank</Text>
+          <BasicText style={styles.label}>Hype rank</BasicText>
         </View>
       </View>
 
@@ -171,7 +183,7 @@ export default function ProfileScreen({ route }) {
         </View>
       )}
 
-      <Text style={styles.h2}>Activity</Text>
+      <BasicText style={styles.h2}>Activity</BasicText>
       <SafeAreaView style={styles.activityContainer}>
         <SectionList
           refreshControl={
@@ -188,6 +200,7 @@ export default function ProfileScreen({ route }) {
                   recipient={item.recipient_username}
                   time={item.time}
                   donorMessage={item.hype_message}
+                  hypeReceived={item.hype_points_received}
                 />
               </>
             );
@@ -237,20 +250,20 @@ const styles = StyleSheet.create({
   },
   counter: {
     fontSize: 20,
-    fontWeight: "900",
+    fontWeight: "bold",
     color: "#000000",
   },
   displayName: {
     textAlign: "center",
     fontWeight: "bold",
     color: "#000000",
-    fontSize: 28,
+    fontSize: 26,
     flexGrow: 1,
     marginTop: 10,
   },
   h2: {
     fontWeight: "bold",
-    fontSize: 22,
+    fontSize: 20,
     color: "#000000",
     marginBottom: 10,
     marginTop: 14,

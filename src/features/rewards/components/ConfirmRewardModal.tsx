@@ -7,6 +7,7 @@ import useRewardStore from "../../../stores/rewardStore";
 import LottieView from "lottie-react-native";
 import images from "../../../../assets";
 import { RedeemSuccess } from "./RedeemSuccess";
+import BasicText from "../../../components/Text/BasicText";
 
 interface ConfirmRewardModalProps {
   rewardId: number;
@@ -61,12 +62,12 @@ export const ConfirmRewardModal = forwardRef(
               <View style={styles.infoIcon}>
                 <Ionicons name="gift-outline" size={30} color={"#348529"} />
               </View>
-              <Text style={styles.confirmTitle}>Confirm redemption</Text>
-              <Text style={styles.confirmItem}>{name}</Text>
+              <BasicText style={styles.confirmTitle}>Confirm redemption</BasicText>
+              <BasicText style={styles.confirmItem}>{name}</BasicText>
               <View style={styles.confirmItemHypeAmountContainer}>
-                <Text style={styles.confirmItemHypeAmount}>
-                  for <Text style={{ fontWeight: "bold" }}>{amount}</Text>
-                </Text>
+                <BasicText style={styles.confirmItemHypeAmount}>
+                  for <BasicText style={{ fontWeight: "bold" }}>{amount}</BasicText>
+                </BasicText>
                 <MaterialIcons
                   name="local-fire-department"
                   size={22}
@@ -76,7 +77,7 @@ export const ConfirmRewardModal = forwardRef(
               <View
                 style={{
                   width: "100%",
-                  marginTop: "14%",
+                  marginTop: 20,
                   flexDirection: "row",
                   alignItems: "center",
                   justifyContent: "center",
