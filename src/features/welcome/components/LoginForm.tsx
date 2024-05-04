@@ -17,6 +17,7 @@ import Divider from "../../../components/Divider/Divider";
 import useAuthStore from "../../../stores/authStore";
 import useProfileStore from "../../../stores/profileStore";
 import { Loading } from "../../../components/Progress/Loading";
+import BasicText from "../../../components/Text/BasicText";
 
 interface LoginFormProps {
   setForm?: (form: string) => void;
@@ -56,7 +57,7 @@ export const LoginForm = (props: LoginFormProps) => {
             <Image style={styles.logo} source={images.kapaiiSquareLogo} />
           </View>
 
-          <Text style={styles.title}>Log in!</Text>
+          <BasicText style={styles.title}>Log in!</BasicText>
           <View style={styles.inputContainer}>
             <View style={styles.icon}>
               <MaterialCommunityIcons
@@ -106,7 +107,7 @@ export const LoginForm = (props: LoginFormProps) => {
           </View>
         </View>
         <View style={styles.signupContainer}>
-          <Text>Don't have an account? </Text>
+          <BasicText>Don't have an account? </BasicText>
           <TextButton
             onPress={() => navigation.navigate("Signup")}
             textStyle={{ color: "#1f30fb" }}
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
   },
   dividerLabel: {
     fontWeight: "normal",
-    fontSize: 12,
+    fontSize: 10,
     color: "grey",
     marginLeft: 10,
     marginRight: 10,
@@ -194,6 +195,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderTopRightRadius: 20,
     borderBottomRightRadius: 20,
+    fontFamily: 'Poppins-Regular'
   },
   ctaBtn: {
     marginTop: 20,
@@ -205,5 +207,6 @@ const styles = StyleSheet.create({
   forgotPasswordText: {
     color: "#1f30fb",
     fontWeight: "normal",
+    fontFamily: 'Poppins-Regular',
   },
 });

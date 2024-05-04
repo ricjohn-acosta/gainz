@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   btnText: {
     textAlign: "center",
     color: "white",
-    fontWeight: "bold",
     fontSize: 14,
+    fontFamily: 'Poppins-Bold'
   },
 });

@@ -16,6 +16,7 @@ import { PrimaryButton } from "../../../components/Button/PrimaryButton";
 import { TextButton } from "../../../components/Button/TextButton";
 import Divider from "../../../components/Divider/Divider";
 import useAuthStore from "../../../stores/authStore";
+import BasicText from "../../../components/Text/BasicText";
 
 interface SignupFormProps {
   setForm?: (form: string) => void;
@@ -56,7 +57,7 @@ export const SignupForm = (props: SignupFormProps) => {
         <View style={styles.logoContainer}>
           <Image style={styles.logo} source={images.kapaiiSquareLogo} />
         </View>
-        <Text style={styles.title}>Sign up!</Text>
+        <BasicText style={styles.title}>Sign up!</BasicText>
         <View style={styles.inputContainer}>
           <View style={styles.icon}>
             <MaterialCommunityIcons
@@ -114,7 +115,7 @@ export const SignupForm = (props: SignupFormProps) => {
         </View>
       </View>
       <View style={styles.signupContainer}>
-        <Text>Already have an account? </Text>
+        <BasicText>Already have an account? </BasicText>
         <TextButton
           onPress={() => {
             navigation.navigate("Login");
@@ -167,6 +168,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
   },
   input: {
+    fontFamily: 'Poppins-Regular',
     flex: 1,
     backgroundColor: "#ffffff",
     height: 50,
@@ -196,7 +198,7 @@ const styles = StyleSheet.create({
   },
   dividerLabel: {
     fontWeight: "normal",
-    fontSize: 12,
+    fontSize: 10,
     color: "grey",
     marginLeft: 10,
     marginRight: 10,
