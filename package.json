@@ -7,6 +7,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "build:ios-simulator": "eas build -p ios --profile preview",
+    "build": "eas build -p all",
     "eas-build-pre-install": "npm config set legacy-peer-deps true",
     "web": "expo start --web",
     "start-emulator": "firebase emulators:start",
