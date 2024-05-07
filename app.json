@@ -4,7 +4,7 @@
     "slug": "gainz",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo/kapaii-square-logo.jpeg",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -24,7 +24,7 @@
         "backgroundColor": "#f2f4ff"
       },
       "package": "com.mookentooken.gainz",
-      "versionCode": 3
+      "versionCode": 5
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -34,6 +34,9 @@
         "projectId": "5e691b73-1835-4d26-b194-92598169c577"
       }
     },
-    "owner": "mookentooken"
+    "owner": "mookentooken",
+    "plugins": [
+      "expo-font"
+    ]
   }
 }

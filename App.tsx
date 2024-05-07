@@ -1,4 +1,4 @@
-import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Entypo, Ionicons } from "@expo/vector-icons";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -8,7 +8,7 @@ import {
   useNavigation,
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Alert, Image, StatusBar, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
@@ -19,22 +19,20 @@ import ProfileScreen from "./src/features/profile/ProfileScreen";
 import RewardsScreen from "./src/features/rewards/RewardsScreen";
 
 import images from "./assets";
-import { InvitationForm } from "./src/features/welcome/components/InvitationForm";
 import { LoginForm } from "./src/features/welcome/components/LoginForm";
 import { SignupForm } from "./src/features/welcome/components/SignupForm";
 import { supabase } from "./src/services/supabase";
 import useAuthStore from "./src/stores/authStore";
-import { Loading } from "./src/components/Progress/Loading";
 import { TextButton } from "./src/components/Button/TextButton";
 import useProfileStore from "./src/stores/profileStore";
-import { isLoading } from "expo-font";
 import useTeamStore from "./src/stores/teamStore";
 import { IconButton } from "./src/components/Button/IconButton";
 import { AddRewardScreen } from "./src/features/rewards/AddRewardScreen";
 import { RewardModalScreen } from "./src/features/rewards/RewardModalScreen";
 import { DeleteRewardScreen } from "./src/features/rewards/DeleteRewardScreen";
-import { registerRootComponent } from "expo";
 import { useExpoFont } from "./src/theme/useFonts";
+import * as Notifications from "expo-notifications";
+import { useNotifications } from "./src/services/notifications/useNotifications";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -313,17 +311,52 @@ export default function App() {
   const {
     data: { me },
   } = useProfileStore();
+  const {
+    operations: { registerForPushNotificationsAsync },
+  } = useNotifications();
 
   StatusBar.setBackgroundColor("#f2f4ff");
+
   const [hasUserSkippedInviteCode, setHasUserSkippedInviteCode] =
     useState<string>(null);
   const [notLoaded, setNotLoaded] = useState(true);
+  const [expoPushToken, setExpoPushToken] = useState("");
+  const [notification, setNotification] = useState<
+    Notifications.Notification | undefined
+  >(undefined);
+  const notificationListener = useRef<Notifications.Subscription>();
+  const responseListener = useRef<Notifications.Subscription>();
 
   const checkIfUserSkippedInviteCode = async () => {
     // await AsyncStorage.removeItem('has_skipped_invite_code');
     const result = await AsyncStorage.getItem("has_skipped_invite_code");
     setHasUserSkippedInviteCode(result);
   };
+
+  useEffect(() => {
+    registerForPushNotificationsAsync()
+      .then((token) => setExpoPushToken(token ?? ""))
+      .catch((error: any) => setExpoPushToken(`${error}`));
+
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        setNotification(notification);
+      });
+
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
+
+    return () => {
+      notificationListener.current &&
+        Notifications.removeNotificationSubscription(
+          notificationListener.current,
+        );
+      responseListener.current &&
+        Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
 
   useEffect(() => {
     supabase.auth
@@ -349,6 +382,7 @@ export default function App() {
     await useExpoFont();
   };
 
+  console.log(expoPushToken)
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#f2f4ff" }}>
       <BottomSheetModalProvider>
