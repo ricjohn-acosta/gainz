@@ -22,14 +22,15 @@ export const GiveHypeSuccess = (props: GiveHypeSuccessProps) => {
 
   return (
     <View style={styles.container}>
-      <LottieView
-        style={styles.animationContainer}
-        source={images.confettiAnimation}
-        ref={confettiAnimationRef}
-        loop={false}
-        autoPlay={false}
-      />
       <View style={styles.messageContainer}>
+        <LottieView
+            resizeMode={'cover'}
+            style={{ position: "absolute", width: 500, height: 500}}
+            source={images.confettiAnimation}
+            ref={confettiAnimationRef}
+            loop={false}
+            autoPlay={false}
+        />
         <View>
           <AntDesign name="checkcircle" size={80} color="green" />
         </View>
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
     paddingBottom: 150,
   },
   title: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     fontSize: 30,
     marginTop: 10,
   },

@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   screenTitle: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     fontSize: 22,
     color: "#000000",
   },

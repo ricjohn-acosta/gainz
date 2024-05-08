@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     fontSize: 22,
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
   },
   messageContainer: {
     borderRadius: 10,
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular'
   },
   sendMsgLabel: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
   },
   countAdjustor: {
     flexDirection: "column",

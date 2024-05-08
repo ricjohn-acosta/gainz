@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   displayName: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     color: "#000000",
     marginLeft: 4,
   },

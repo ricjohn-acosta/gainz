@@ -39,7 +39,7 @@ export const RewardCard = (props: RewardCardProps) => {
           {sponsor && (
             <BasicText style={styles.extraDetail}>
               Sponsored by{" "}
-              <BasicText style={{ color: "#1f30fb", fontWeight: "bold" }}>
+              <BasicText style={{ color: "#1f30fb", fontFamily: "Poppins-Bold" }}>
                 {sponsor}
               </BasicText>
             </BasicText>
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     marginBottom: 4,
   },
   description: {

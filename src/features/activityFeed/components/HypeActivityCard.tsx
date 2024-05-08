@@ -16,16 +16,16 @@ export const HypeActivityCard = (props: HypeActivityCardProps) => {
     <View style={styles.container}>
       <Entypo style={{marginRight: 10}} name="megaphone" size={25} color={"#be4b4b"} />
       <BasicText style={{fontSize: 12}}>
-        <BasicText style={{ color: "#ff046d", fontWeight: "bold" }}>
+        <BasicText style={{ color: "#ff046d", fontFamily: "Poppins-Bold" }}>
           {senderUsername}
         </BasicText>
         <BasicText style={{ color: "#ff046d" }}> hyped </BasicText>
-        <BasicText style={{ color: "#ff046d", fontWeight: "bold" }}>
+        <BasicText style={{ color: "#ff046d", fontFamily: "Poppins-Bold" }}>
           {recipientUsername}!
         </BasicText>
       </BasicText>
       <View style={styles.hypeReceivedContainer}>
-          <BasicText style={{ color: "#ff046d", fontWeight: "bold" }}> {hypeReceived}</BasicText>
+          <BasicText style={{ color: "#ff046d", fontFamily: "Poppins-Bold" }}> {hypeReceived}</BasicText>
         <MaterialIcons
           name="local-fire-department"
           size={16}

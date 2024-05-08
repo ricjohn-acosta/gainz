@@ -250,19 +250,19 @@ const styles = StyleSheet.create({
   },
   counter: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     color: "#000000",
   },
   displayName: {
     textAlign: "center",
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     color: "#000000",
     fontSize: 26,
     flexGrow: 1,
     marginTop: 10,
   },
   h2: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     fontSize: 20,
     color: "#000000",
     marginBottom: 10,

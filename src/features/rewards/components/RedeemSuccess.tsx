@@ -20,13 +20,6 @@ export const RedeemSuccess = (props: RedeemSuccessProps) => {
 
   return (
     <View style={styles.container}>
-      <LottieView
-        style={{ position: "absolute", top: -50, width: 500 }}
-        source={images.confettiAnimation}
-        ref={confettiAnimationRef}
-        loop={false}
-        autoPlay={false}
-      />
       <View style={styles.detailContainer}>
         <View style={styles.infoIcon}>
           <Ionicons
@@ -37,6 +30,14 @@ export const RedeemSuccess = (props: RedeemSuccessProps) => {
           />
         </View>
         <View style={styles.messageContainer}>
+          <LottieView
+              resizeMode={'cover'}
+              style={{ position: "absolute", width: 500, height: 500}}
+              source={images.confettiAnimation}
+              ref={confettiAnimationRef}
+              loop={false}
+              autoPlay={false}
+          />
           <BasicText style={styles.successMsg}>Success!</BasicText>
           <BasicText style={styles.infoMsg}>
             Well deserved! Your team leader will be in contact with you shortly.
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
   },
   successMsg: {
     fontSize: 30,
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     marginTop: 14,
   },
   infoMsg: {

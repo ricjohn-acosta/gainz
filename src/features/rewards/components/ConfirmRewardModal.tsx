@@ -66,7 +66,7 @@ export const ConfirmRewardModal = forwardRef(
               <BasicText style={styles.confirmItem}>{name}</BasicText>
               <View style={styles.confirmItemHypeAmountContainer}>
                 <BasicText style={styles.confirmItemHypeAmount}>
-                  for <BasicText style={{ fontWeight: "bold" }}>{amount}</BasicText>
+                  for <BasicText style={{ fontFamily: "Poppins-Bold" }}>{amount}</BasicText>
                 </BasicText>
                 <MaterialIcons
                   name="local-fire-department"
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   },
   confirmItem: {
     fontSize: 28,
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     marginBottom: 4,
   },
   confirmItemHypeAmountContainer: {

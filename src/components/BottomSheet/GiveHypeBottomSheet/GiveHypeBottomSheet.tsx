@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   teamsTitle: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     fontSize: 22,
     color: "#000000",
     marginBottom: 2,
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
   hypeBtnText: {
     textAlign: "center",
     color: "white",
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     fontSize: 16,
   },
   hypeBtnViewContainer: {

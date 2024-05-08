@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   title: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     fontSize: 22,
     color: "#000000",
     marginBottom: 8,

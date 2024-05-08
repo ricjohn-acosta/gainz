@@ -21,11 +21,11 @@ export const RedeemActivityCard = (props: RedeemActivityCardProps) => {
         color={"#9b8722"}
       />
       <BasicText style={{fontSize: 12}}>
-        <BasicText style={{ color: "#c5a70a", fontWeight: "bold" }}>
+        <BasicText style={{ color: "#c5a70a", fontFamily: "Poppins-Bold" }}>
           {redeemerUsername}
         </BasicText>
         <BasicText style={{ color: "#c5a70a" }}> redeemed </BasicText>
-        <BasicText style={{ color: "#c5a70a", fontWeight: "bold" }}>
+        <BasicText style={{ color: "#c5a70a", fontFamily: "Poppins-Bold" }}>
           {rewardName}!
         </BasicText>
       </BasicText>

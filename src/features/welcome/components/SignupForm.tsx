@@ -120,7 +120,7 @@ export const SignupForm = (props: SignupFormProps) => {
           onPress={() => {
             navigation.navigate("Login");
           }}
-          textStyle={{ color: "#1f30fb" }}
+          textStyle={{ color: "#1f30fb", paddingBottom: 4 }}
           text="Log in!"
         />
       </View>
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     height: 80,
   },
   title: {
-    fontWeight: "bold",
+    fontFamily: 'Poppins-Bold',
     fontSize: 40,
   },
   inputContainer: {

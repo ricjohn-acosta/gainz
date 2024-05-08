@@ -66,7 +66,7 @@ const HomeStack = () => {
             backgroundColor: "#f2f4ff",
           },
           headerTitleStyle: {
-            fontWeight: "bold",
+              fontFamily: "Poppins-Bold",
           },
           headerShadowVisible: false,
           headerLeft: () => (

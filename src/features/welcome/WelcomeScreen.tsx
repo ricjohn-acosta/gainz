@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   },
   skipBtn: {
     color: "grey",
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     fontSize: 13,
   },
   dividerContainer: {

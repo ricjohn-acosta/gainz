@@ -91,11 +91,11 @@ const styles = StyleSheet.create({
   },
   count: {
     marginTop: 2,
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     fontSize: 16,
   },
   teamsTitle: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     fontSize: 22,
     color: "#000000",
     marginBottom: 2,

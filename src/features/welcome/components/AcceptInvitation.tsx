@@ -60,8 +60,8 @@ export const AcceptInvitation = () => {
       <View style={styles.message}>
         <Text style={styles.textContainer}>
           You've been invited to team{" "}
-          <Text style={{ fontWeight: "bold" }}>{invitation.team_name}</Text> by{" "}
-          <Text style={{ fontWeight: "bold" }}>
+          <Text style={{ fontFamily: "Poppins-Bold" }}>{invitation.team_name}</Text> by{" "}
+          <Text style={{ fontFamily: "Poppins-Bold" }}>
             {invitation.username}
           </Text>
           !

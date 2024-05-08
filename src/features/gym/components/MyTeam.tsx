@@ -81,7 +81,8 @@ const styles = StyleSheet.create({
     paddingRight: 16,
   },
   title: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
+    fontFamily: "Poppins-Bold",
     fontSize: 22,
     color: "#000000",
     marginBottom: 10,

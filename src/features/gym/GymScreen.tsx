@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     color: "black",
     fontSize: 24,
     flexGrow: 1,
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   teamsTitle: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     fontSize: 22,
     color: "#000000",
     marginBottom: 6,

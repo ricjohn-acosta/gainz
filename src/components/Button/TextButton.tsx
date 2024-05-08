@@ -23,7 +23,7 @@ export const TextButton = (props: PrimaryButtonProps) => {
 
 const styles = StyleSheet.create({
   btnText: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     fontSize: 13,
     color: "#1f30fb",
   },

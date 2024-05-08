@@ -47,7 +47,7 @@ export default function HypeNotification(props: HypeNotificationProps) {
             <View style={styles.detailsContainer}>
               <BasicText
                 style={{
-                  fontWeight: "bold",
+                  fontFamily: "Poppins-Bold",
                   fontSize: 12,
                   color: "#1f30fb",
                 }}
@@ -67,7 +67,7 @@ export default function HypeNotification(props: HypeNotificationProps) {
               <BasicText style={{ fontSize: 12 }}> hyped </BasicText>
               <BasicText
                 style={{
-                  fontWeight: "bold",
+                  fontFamily: "Poppins-Bold",
                   fontSize: 12,
                   color: "#1f30fb",
                 }}
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   displayName: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     color: "#1f30fb",
   },
   defaultMessage: {},

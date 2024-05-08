@@ -100,7 +100,7 @@ export default function MyStats() {
               <BasicText style={styles.subtitle}>Give Hype</BasicText>
               <Entypo name="chevron-small-right" size={20} color="grey" />
             </View>
-            <BasicText style={{ fontSize: 26, color: "#ff046d", fontWeight: "bold" }}>
+            <BasicText style={{ fontSize: 26, color: "#ff046d", fontFamily: "Poppins-Bold" }}>
               {meTeamData ? meTeamData.hype_givable : "5"}
             </BasicText>
           </View>
@@ -117,7 +117,7 @@ export default function MyStats() {
               <BasicText style={styles.subtitle}>Hype rank</BasicText>
               <Entypo name="chevron-small-right" size={20} color="grey" />
             </View>
-            <BasicText style={{ fontSize: 26, color: "#eccb15", fontWeight: "bold" }}>
+            <BasicText style={{ fontSize: 26, color: "#eccb15", fontFamily: "Poppins-Bold" }}>
               {displayHypeRank()}
             </BasicText>
           </View>
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     padding: 22,
   },
   title: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     fontSize: 14,
     color: "white",
   },
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   },
   counter: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     color: "white",
   },
   halfCardContainer: {

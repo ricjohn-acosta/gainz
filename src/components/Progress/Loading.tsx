@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
   brand: {
     textAlign: "center",
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
   },
   slogan: {
     textAlign: "center",

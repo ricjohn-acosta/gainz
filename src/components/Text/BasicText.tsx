@@ -7,6 +7,7 @@ const BasicText = (props) => {
   let fontFamily = "Poppins-Regular";
 
   if (style) {
+    // android doesnt support fontweight
     if (style.fontWeight === "bold") {
       fontFamily = "Poppins-Bold";
     }

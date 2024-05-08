@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     height: 80,
   },
   welcomeMessage: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     fontSize: 40,
   },
   subtitle: {

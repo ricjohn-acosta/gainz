@@ -110,7 +110,7 @@ export const LoginForm = (props: LoginFormProps) => {
           <BasicText>Don't have an account? </BasicText>
           <TextButton
             onPress={() => navigation.navigate("Signup")}
-            textStyle={{ color: "#1f30fb" }}
+            textStyle={{ color: "#1f30fb", paddingBottom: 4 }}
             text="Sign up!"
           />
         </View>
@@ -170,7 +170,8 @@ const styles = StyleSheet.create({
     height: 80,
   },
   title: {
-    fontWeight: "bold",
+    fontFamily: 'Poppins-Bold',
+    // fontFamily: "Poppins-Bold",
     fontSize: 40,
   },
   inputContainer: {

@@ -108,7 +108,7 @@ export const ActivityFeedScreen = () => {
               style={styles.actionButton}
             >
               <View style={styles.actionButtonContent}>
-                <BasicText style={{ color: "black", fontWeight: "bold" }}>
+                <BasicText style={{ color: "black", fontFamily: "Poppins-Bold" }}>
                   Write post
                 </BasicText>
                 <FontAwesome
@@ -127,7 +127,7 @@ export const ActivityFeedScreen = () => {
               style={styles.actionButton}
             >
               <View style={styles.actionButtonContent}>
-                <BasicText style={{ color: "black", fontWeight: "bold" }}>
+                <BasicText style={{ color: "black", fontFamily: "Poppins-Bold" }}>
                   Give Hype
                 </BasicText>
                 <MaterialIcons
@@ -188,7 +188,7 @@ export const ActivityFeedScreen = () => {
               "Share your challenges, successes or spread positivity!"
             }
             inputStyle={styles.modalInput}
-            numberOfLines={20}
+            numberOfLines={50}
           />
           <View style={styles.modalCtaBtnContainer}>
             <PrimaryButton
@@ -249,10 +249,10 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 28,
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
   },
   modalInput: {
-    height: 130,
+    height: 100,
     marginTop: 20,
     marginBottom: 10,
     borderStyle: "solid",
@@ -260,7 +260,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: "#8d8d8d",
     fontSize: 16,
-    lineHeight: 20,
     padding: 8,
     backgroundColor: "#f2f4ff",
   },

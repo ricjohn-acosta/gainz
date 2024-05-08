@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     borderColor: "#f2f4ff",
   },
   displayName: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     color: "#000000",
     marginLeft: 4,
   },

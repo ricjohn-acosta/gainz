@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 2,
     fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
   },
   receivedLabel: {
     textAlign: "center",
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   rank: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     fontSize: 22,
     marginRight: 12,
     marginLeft: 12,

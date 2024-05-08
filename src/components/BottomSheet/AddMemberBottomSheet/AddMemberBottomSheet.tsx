@@ -40,13 +40,13 @@ export const AddMemberBottomSheet = forwardRef(
     const [index, setIndex] = useState(null);
 
     // Detect if we've closed the bottom sheet
-    useEffect(() => {
-      if (!index) return;
-      if (index === -1) {
-        setInviteSent(false);
-        clearErrors();
-      }
-    }, [index]);
+    // useEffect(() => {
+    //   if (!index) return;
+    //   if (index === -1) {
+    //     setInviteSent(false);
+    //     clearErrors();
+    //   }
+    // }, [index]);
 
     const handleOnChange = (index) => {
       setIndex(index);
@@ -68,7 +68,7 @@ export const AddMemberBottomSheet = forwardRef(
         <BasicBottomSheet
           handleOnChange={handleOnChange}
           ref={ref}
-          _snapPoints={["30%"]}
+          _snapPoints={["50%"]}
         >
           <View style={{ padding: 20 }}>
             <BasicText style={styles.addMemberMessage}>Invite a member!</BasicText>
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   },
   addMemberMessage: {
     fontSize: 28,
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
   },
   addMemberInput: {
     marginTop: 20,
@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     padding: 8,
     backgroundColor: "#f2f4ff",
-    fontFamily: 'Poppins-Regular'
   },
   addBtnContainer: {
     display: "flex",
@@ -139,10 +138,11 @@ const styles = StyleSheet.create({
     marginRight: 8,
     textAlign: "center",
     fontWeight: "900",
+    fontFamily: "Poppins-Bold",
     color: "white",
   },
   inviteSentMsg: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
     color: "#1f30fb",
   },
 });

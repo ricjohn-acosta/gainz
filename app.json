@@ -24,7 +24,7 @@
         "backgroundColor": "#f2f4ff"
       },
       "package": "com.mookentooken.gainz",
-      "versionCode": 5
+      "versionCode": 10
     },
     "web": {
       "favicon": "./assets/favicon.png"
