@@ -51,7 +51,7 @@ export const ConfirmRewardModal = forwardRef(
           ref={ref}
           _snapPoints={["50%"]}
           detached
-          bottomInset={150}
+          bottomInset={120}
         >
           {redeemSuccess ? (
             <View style={styles.container}>
@@ -127,7 +127,6 @@ const styles = StyleSheet.create({
   confirmItem: {
     fontSize: 28,
     fontFamily: "Poppins-Bold",
-    marginBottom: 4,
   },
   confirmItemHypeAmountContainer: {
     flexDirection: "row",

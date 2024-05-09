@@ -3,8 +3,14 @@ import { Platform } from "react-native";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
+import { supabase } from "../supabase.ts";
+import useProfileStore from "../../stores/profileStore.ts";
 
 export const useNotifications = () => {
+  const {
+    data: { me },
+  } = useProfileStore();
+
   useEffect(() => {
     Notifications.setNotificationHandler({
       handleNotification: async () => ({
@@ -88,10 +94,21 @@ export const useNotifications = () => {
     throw new Error(errorMessage);
   };
 
+  const savePushTokenToDB = async (pushToken: string) => {
+    if (!me) return;
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        expo_push_token: pushToken,
+      })
+      .eq("id", me.id);
+  };
+
   return {
     operations: {
       registerForPushNotificationsAsync,
       sendPushNotification,
+      savePushTokenToDB,
     },
   };
 };

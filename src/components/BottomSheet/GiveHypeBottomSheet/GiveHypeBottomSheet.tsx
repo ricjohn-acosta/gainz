@@ -17,6 +17,7 @@ import { supabase } from "../../../services/supabase";
 import { GiveHypeSuccess } from "./GiveHypeSuccess";
 import useTeamStore from "../../../stores/teamStore";
 import BasicText from "../../Text/BasicText";
+import { useNotifications } from "../../../services/notifications/useNotifications.ts";
 
 interface GiveHypeBottomSheetProps {
   snapPoints?: any;
@@ -33,6 +34,9 @@ export const GiveHypeBottomSheet = forwardRef(
       data: { myTeam, meTeamData },
       operations: { getMyTeam },
     } = useTeamStore();
+
+    const { operations: sendPushNotification } = useNotifications();
+
     const [givableHype, setGivableHype] = useState(5);
     const [hypeToGiveCounter, setHypeToGiveCounter] = useState(null);
     const [hypeTeamList, setHypeTeamList] = useState(null);
@@ -64,13 +68,13 @@ export const GiveHypeBottomSheet = forwardRef(
 
       if (memberUsername) {
         // If giving hype to individual user through their profile
-        const filteredList = list.filter(item => item.username === memberUsername)
+        const filteredList = list.filter(
+          (item) => item.username === memberUsername,
+        );
         setHypeTeamList(filteredList);
-
       } else {
         setHypeTeamList(list);
       }
-
     }, [myTeam, meTeamData]);
 
     useEffect(() => {
@@ -166,7 +170,7 @@ export const GiveHypeBottomSheet = forwardRef(
         const recipientUsername = usernames[i];
         const hypeToGiveData: any = values[i];
         // Skip insert for counters equal to 0
-        if (hypeToGiveData.counter === 0) continue
+        if (hypeToGiveData.counter === 0) continue;
 
         // This will trigger:
         // increment_redeemable_points
@@ -177,7 +181,7 @@ export const GiveHypeBottomSheet = forwardRef(
           recipient_username: recipientUsername,
           hype_message: hypeToGiveData.message,
           hype_points_received: hypeToGiveData.counter,
-          team_id: me.team_id
+          team_id: me.team_id,
         });
 
         if (error) {
@@ -188,8 +192,8 @@ export const GiveHypeBottomSheet = forwardRef(
 
       getMeProfile().then((error) => {
         if (error) {
-          console.error(error)
-          return
+          console.error(error);
+          return;
         }
 
         getMyTeam();
@@ -232,7 +236,11 @@ export const GiveHypeBottomSheet = forwardRef(
           ) : (
             <View style={styles.container}>
               <View style={styles.headerContainer}>
-                <BasicText style={styles.teamsTitle}>{memberUsername ? "Hype up " + memberUsername : "Hype your team" }</BasicText>
+                <BasicText style={styles.teamsTitle}>
+                  {memberUsername
+                    ? "Hype up " + memberUsername
+                    : "Hype your team"}
+                </BasicText>
                 <View style={styles.hypeCounter}>
                   <BasicText style={styles.count}>{givableHype}</BasicText>
                   <MaterialIcons
@@ -244,8 +252,9 @@ export const GiveHypeBottomSheet = forwardRef(
               </View>
 
               <BasicText style={styles.subtitle}>
-                {memberUsername ? `Send ${memberUsername} hype points!` : "Choose which members to hype up!"}
-
+                {memberUsername
+                  ? `Send ${memberUsername} hype points!`
+                  : "Choose which members to hype up!"}
               </BasicText>
               <View style={styles.giveHypeItemContainer}>
                 <FlatList
@@ -286,7 +295,9 @@ export const GiveHypeBottomSheet = forwardRef(
                           : "#1f30fb",
                       }}
                     >
-                      <BasicText style={styles.hypeBtnText}>Hype them up!</BasicText>
+                      <BasicText style={styles.hypeBtnText}>
+                        Hype them up!
+                      </BasicText>
                     </View>
                   </TouchableOpacity>
                 ) : (

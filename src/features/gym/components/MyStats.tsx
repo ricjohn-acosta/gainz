@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#ffffff",
     borderRadius: 25,
-    height: 120,
+    height: 130,
     padding: 22,
   },
   title: {
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: 16,
+    paddingTop: 12,
   },
   singleStatContainer: {
     width: "33%",

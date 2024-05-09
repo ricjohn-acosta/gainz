@@ -110,7 +110,7 @@ export const LoginForm = (props: LoginFormProps) => {
           <BasicText>Don't have an account? </BasicText>
           <TextButton
             onPress={() => navigation.navigate("Signup")}
-            textStyle={{ color: "#1f30fb", paddingBottom: 4 }}
+            textStyle={{ color: "#1f30fb" }}
             text="Sign up!"
           />
         </View>

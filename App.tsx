@@ -66,7 +66,7 @@ const HomeStack = () => {
             backgroundColor: "#f2f4ff",
           },
           headerTitleStyle: {
-              fontFamily: "Poppins-Bold",
+            fontFamily: "Poppins-Bold",
           },
           headerShadowVisible: false,
           headerLeft: () => (
@@ -312,7 +312,7 @@ export default function App() {
     data: { me },
   } = useProfileStore();
   const {
-    operations: { registerForPushNotificationsAsync },
+    operations: { registerForPushNotificationsAsync, savePushTokenToDB },
   } = useNotifications();
 
   StatusBar.setBackgroundColor("#f2f4ff");
@@ -320,6 +320,7 @@ export default function App() {
   const [hasUserSkippedInviteCode, setHasUserSkippedInviteCode] =
     useState<string>(null);
   const [notLoaded, setNotLoaded] = useState(true);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
   const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState<
     Notifications.Notification | undefined
@@ -327,6 +328,7 @@ export default function App() {
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
 
+  console.log(expoPushToken);
   const checkIfUserSkippedInviteCode = async () => {
     // await AsyncStorage.removeItem('has_skipped_invite_code');
     const result = await AsyncStorage.getItem("has_skipped_invite_code");
@@ -335,7 +337,12 @@ export default function App() {
 
   useEffect(() => {
     registerForPushNotificationsAsync()
-      .then((token) => setExpoPushToken(token ?? ""))
+      .then((token) => {
+          setExpoPushToken(token ?? "")
+          if (token) {
+              savePushTokenToDB(token);
+          }
+      })
       .catch((error: any) => setExpoPushToken(`${error}`));
 
     notificationListener.current =
@@ -373,16 +380,20 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (!notLoaded) {
+    if (!fontsLoaded) {
       loadFont();
+      setFontsLoaded(true);
     }
-  }, [notLoaded]);
+  }, []);
 
   const loadFont = async () => {
     await useExpoFont();
   };
 
-  console.log(expoPushToken)
+  if (!fontsLoaded) {
+    return <></>;
+  }
+
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#f2f4ff" }}>
       <BottomSheetModalProvider>

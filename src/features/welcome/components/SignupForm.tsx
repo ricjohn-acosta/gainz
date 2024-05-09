@@ -120,7 +120,7 @@ export const SignupForm = (props: SignupFormProps) => {
           onPress={() => {
             navigation.navigate("Login");
           }}
-          textStyle={{ color: "#1f30fb", paddingBottom: 4 }}
+          textStyle={{ color: "#1f30fb" }}
           text="Log in!"
         />
       </View>

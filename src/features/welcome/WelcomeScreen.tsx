@@ -39,7 +39,7 @@ export const WelcomeScreen = () => {
           <Text>Don't have an account? </Text>
           <TextButton
             onPress={() => setForm("signup-form")}
-            textStyle={{ color: "#1f30fb" }}
+            textStyle={{ color: "#1f30fb", marginTop: 10}}
             text="Sign up!"
           />
         </View>
