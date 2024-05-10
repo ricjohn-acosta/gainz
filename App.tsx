@@ -328,7 +328,6 @@ export default function App() {
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
 
-  console.log(expoPushToken);
   const checkIfUserSkippedInviteCode = async () => {
     // await AsyncStorage.removeItem('has_skipped_invite_code');
     const result = await AsyncStorage.getItem("has_skipped_invite_code");
@@ -338,10 +337,7 @@ export default function App() {
   useEffect(() => {
     registerForPushNotificationsAsync()
       .then(async (token) => {
-          setExpoPushToken(token ?? "")
-          if (token) {
-              await savePushTokenToDB(token);
-          }
+        setExpoPushToken(token ?? "");
       })
       .catch((error: any) => setExpoPushToken(`${error}`));
 
@@ -385,6 +381,15 @@ export default function App() {
       setFontsLoaded(true);
     }
   }, []);
+
+  useEffect(() => {
+    savePushToken()
+  }, [expoPushToken]);
+
+  const savePushToken = async () => {
+    if (!expoPushToken) return;
+    await savePushTokenToDB(expoPushToken);
+  };
 
   const loadFont = async () => {
     await useExpoFont();

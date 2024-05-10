@@ -77,7 +77,6 @@ export const useNotifications = () => {
             projectId,
           })
         ).data;
-        console.log(pushTokenString);
         return pushTokenString;
       } catch (e: unknown) {
         handleRegistrationError(`${e}`);
@@ -95,14 +94,17 @@ export const useNotifications = () => {
   };
 
   const savePushTokenToDB = async (pushToken: string) => {
-    if (!me) return;
+    if (!pushToken) return;
     const { error } = await supabase
       .from("profiles")
       .update({
         expo_push_token: pushToken,
       })
       .eq("id", me.id);
-    console.error(error)
+
+    if (error) {
+      console.error(error);
+    }
   };
 
   return {
