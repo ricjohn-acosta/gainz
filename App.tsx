@@ -337,7 +337,7 @@ export default function App() {
 
   useEffect(() => {
     registerForPushNotificationsAsync()
-      .then((token) => {
+      .then(async (token) => {
           setExpoPushToken(token ?? "")
           if (token) {
               await savePushTokenToDB(token);
