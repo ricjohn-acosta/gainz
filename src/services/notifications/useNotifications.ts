@@ -102,6 +102,7 @@ export const useNotifications = () => {
         expo_push_token: pushToken,
       })
       .eq("id", me.id);
+    console.error(error)
   };
 
   return {

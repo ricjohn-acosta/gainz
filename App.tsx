@@ -340,7 +340,7 @@ export default function App() {
       .then((token) => {
           setExpoPushToken(token ?? "")
           if (token) {
-              savePushTokenToDB(token);
+              await savePushTokenToDB(token);
           }
       })
       .catch((error: any) => setExpoPushToken(`${error}`));

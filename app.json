@@ -16,7 +16,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.mookentooken.gainz"
+      "bundleIdentifier": "com.mookentooken.gainz",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
