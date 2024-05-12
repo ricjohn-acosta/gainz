@@ -334,10 +334,27 @@ export default function App() {
     setHasUserSkippedInviteCode(result);
   };
 
+  // Load user data
+  useEffect(() => {
+    supabase.auth
+      .refreshSession()
+      .then(async (session) => {
+        setSession(session.data.session);
+        checkIfUserSkippedInviteCode();
+        setNotLoaded(false);
+        if (session.error) await logout();
+      })
+      .catch(async (error) => {
+        Alert.alert(error);
+      });
+  }, []);
+
+  // Listen for push notifications
   useEffect(() => {
     registerForPushNotificationsAsync()
       .then(async (token) => {
         setExpoPushToken(token ?? "");
+        await savePushTokenToDB(token)
       })
       .catch((error: any) => setExpoPushToken(`${error}`));
 
@@ -359,37 +376,15 @@ export default function App() {
       responseListener.current &&
         Notifications.removeNotificationSubscription(responseListener.current);
     };
-  }, []);
+  }, [me, session]);
 
-  useEffect(() => {
-    supabase.auth
-      .refreshSession()
-      .then(async (session) => {
-        setSession(session.data.session);
-        checkIfUserSkippedInviteCode();
-        setNotLoaded(false);
-        if (session.error) await logout();
-      })
-      .catch(async (error) => {
-        Alert.alert(error);
-      });
-  }, []);
-
+  // Load fonts
   useEffect(() => {
     if (!fontsLoaded) {
       loadFont();
       setFontsLoaded(true);
     }
   }, []);
-
-  useEffect(() => {
-    savePushToken()
-  }, [expoPushToken]);
-
-  const savePushToken = async () => {
-    if (!expoPushToken) return;
-    await savePushTokenToDB(expoPushToken);
-  };
 
   const loadFont = async () => {
     await useExpoFont();

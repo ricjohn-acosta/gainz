@@ -94,7 +94,7 @@ export const useNotifications = () => {
   };
 
   const savePushTokenToDB = async (pushToken: string) => {
-    if (!pushToken) return;
+    if (!me) return
     const { error } = await supabase
       .from("profiles")
       .update({
