@@ -2,7 +2,7 @@ import { create } from "zustand/esm";
 import { supabase } from "../services/supabase";
 import useAuthStore from "./authStore";
 import { parseProfileQueryResult } from "./profile/helpers";
-import {PostgrestError} from "@supabase/supabase-js";
+import { PostgrestError } from "@supabase/supabase-js";
 
 interface ProfileState {
   data: {
@@ -10,7 +10,8 @@ interface ProfileState {
     team?: any;
   };
   operations: {
-    getMeProfile: () => Promise<PostgrestError>;
+    getMeProfile: () => Promise<PostgrestError | any>;
+    getUserProfileByUsername: (username: string) => Promise<PostgrestError>;
     getTeamProfiles: () => Promise<any>;
   };
 }
@@ -38,6 +39,19 @@ const useProfileStore = create<ProfileState>((set, get) => ({
         set({ data: { me: data[0] } });
         get().operations.getTeamProfiles();
       }
+    },
+    getUserProfileByUsername: async (username: string) => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select(`*`)
+        .eq("username", username);
+
+      if (error) {
+        console.error(error);
+        return error;
+      }
+
+      return data[0];
     },
     getTeamProfiles: async () => {
       const me = get().data.me;

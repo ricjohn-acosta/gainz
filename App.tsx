@@ -354,7 +354,7 @@ export default function App() {
     registerForPushNotificationsAsync()
       .then(async (token) => {
         setExpoPushToken(token ?? "");
-        await savePushTokenToDB(token)
+        await savePushTokenToDB(token);
       })
       .catch((error: any) => setExpoPushToken(`${error}`));
 
@@ -364,9 +364,7 @@ export default function App() {
       });
 
     responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
-      });
+      Notifications.addNotificationResponseReceivedListener((response) => {});
 
     return () => {
       notificationListener.current &&

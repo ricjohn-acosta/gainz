@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.mookentooken.gainz",
-      "buildNumber": "10"
+      "buildNumber": "12"
     },
     "android": {
       "adaptiveIcon": {

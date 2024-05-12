@@ -21,13 +21,12 @@ export const useNotifications = () => {
     });
   }, []);
 
-  const sendPushNotification = async (expoPushToken: string) => {
+  const sendPushNotification = async (expoPushToken: string, data: any) => {
     const message = {
       to: expoPushToken,
       sound: "default",
-      title: "Original Title",
-      body: "And here is the body!",
-      data: { someData: "goes here" },
+      title: data.title,
+      body: data.body,
     };
 
     await fetch("https://exp.host/--/api/v2/push/send", {

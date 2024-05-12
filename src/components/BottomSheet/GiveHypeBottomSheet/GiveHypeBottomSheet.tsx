@@ -28,14 +28,16 @@ export const GiveHypeBottomSheet = forwardRef(
   ({ snapPoints, memberUsername }: GiveHypeBottomSheetProps, ref: any) => {
     const {
       data: { me },
-      operations: { getMeProfile, getTeamProfiles },
+      operations: { getMeProfile, getUserProfileByUsername },
     } = useProfileStore();
     const {
       data: { myTeam, meTeamData },
       operations: { getMyTeam },
     } = useTeamStore();
 
-    const { operations: sendPushNotification } = useNotifications();
+    const {
+      operations: { sendPushNotification },
+    } = useNotifications();
 
     const [givableHype, setGivableHype] = useState(5);
     const [hypeToGiveCounter, setHypeToGiveCounter] = useState(null);
@@ -182,6 +184,13 @@ export const GiveHypeBottomSheet = forwardRef(
           hype_message: hypeToGiveData.message,
           hype_points_received: hypeToGiveData.counter,
           team_id: me.team_id,
+        });
+
+        const recipientProfile =
+          await getUserProfileByUsername(recipientUsername);
+        sendPushNotification(recipientProfile.expo_push_token, {
+          title: `${me.username} hyped you up!`,
+          body: `You have received ${hypeToGiveData.counter} hype point${hypeToGiveData.counter > 1 ? "s" : ""} from ${me.username}`,
         });
 
         if (error) {
