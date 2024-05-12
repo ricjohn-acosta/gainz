@@ -25,7 +25,8 @@
         "backgroundColor": "#f2f4ff"
       },
       "package": "com.mookentooken.gainz",
-      "versionCode": 12
+      "versionCode": 13,
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
