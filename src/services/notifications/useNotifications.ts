@@ -68,14 +68,13 @@ export const useNotifications = () => {
       const projectId =
         Constants?.expoConfig?.extra?.eas?.projectId ??
         Constants?.easConfig?.projectId;
-      console.log(Constants?.expoConfig?.extra?.eas?.projectId, Constants?.easConfig?.projectId)
-      // if (!projectId) {
-      //   handleRegistrationError("Project ID not found");
-      // }
+      if (!projectId) {
+        handleRegistrationError("Project ID not found");
+      }
       try {
         const pushTokenString = (
           await Notifications.getExpoPushTokenAsync({
-            projectId: '5e691b73-1835-4d26-b194-92598169c577'
+            projectId,
           })
         ).data;
         return pushTokenString;
