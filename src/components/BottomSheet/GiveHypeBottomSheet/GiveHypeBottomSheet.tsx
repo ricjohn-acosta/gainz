@@ -191,10 +191,12 @@ export const GiveHypeBottomSheet = forwardRef(
           await getUserProfileByUsername(recipientUsername);
 
         sendPushNotification(recipientProfile.expo_push_token, {
-          title: `${me.username} hyped you up!`,
-          body: `You have received ${hypeToGiveData.counter} hype point${hypeToGiveData.counter > 1 ? "s" : ""} from ${me.username}`,
+          title: `You have received ${hypeToGiveData.counter} hype point${hypeToGiveData.counter > 1 ? "s" : ""} from ${me.username}`,
+          body: hypeToGiveData.message
+            ? `${me.username}: ${hypeToGiveData.message}`
+            : `${me.username} hyped you up!`,
           extraData: {
-            event: 'hype_activity',
+            event: "hype_activity",
             recipient_uid: recipientProfile.id,
           },
         });
