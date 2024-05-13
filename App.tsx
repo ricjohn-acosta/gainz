@@ -385,7 +385,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (navigationRef.isReady()) {
+    if (navigationRef.isReady() && notificationPressed) {
       if (
         notificationPressed.request.content.data.event ===
         "hype_activity"
