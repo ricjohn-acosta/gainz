@@ -89,8 +89,7 @@ export const useNotifications = () => {
   };
 
   const handleRegistrationError = (errorMessage: string) => {
-    alert(errorMessage);
-    throw new Error(errorMessage);
+    // console.error(errorMessage);
   };
 
   const savePushTokenToDB = async (pushToken: string) => {

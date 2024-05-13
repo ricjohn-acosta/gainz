@@ -353,6 +353,9 @@ export default function App() {
 
   // Listen for push notifications
   useEffect(() => {
+      if (me) {
+          navigationRef.navigate("Profile", {uid: me.id});
+      }
     registerForPushNotificationsAsync()
       .then(async (token) => {
         setExpoPushToken(token ?? "");

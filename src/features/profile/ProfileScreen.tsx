@@ -43,13 +43,15 @@ export default function ProfileScreen({ route }) {
   const [hypeActivityListData, setHypeActivityListData] = useState<any>(null);
 
   useEffect(() => {
-    getMyTeam();
-    const username = getMember(uid)?.username;
-    getUserHypeActivity(username).then((hypeActivityData) => {
-      const formattedHypeActivityData = createListData(hypeActivityData);
-      setHypeActivityListData(formattedHypeActivityData);
-    });
-  }, [uid, isFocused]);
+    if (!hypeActivityListData || hypeActivityListData.length === 0) {
+      getMyTeam();
+      const username = getMember(uid)?.username;
+      getUserHypeActivity(username).then((hypeActivityData) => {
+        const formattedHypeActivityData = createListData(hypeActivityData);
+        setHypeActivityListData(formattedHypeActivityData);
+      });
+    }
+  }, [uid, isFocused, hypeActivityListData]);
 
   const showGiveHypeBottomSheet = useCallback(() => {
     giveHypeBottomSheetRef.current?.present();
