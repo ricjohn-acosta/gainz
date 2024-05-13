@@ -327,6 +327,9 @@ export default function App() {
   const [notification, setNotification] = useState<
     Notifications.Notification | undefined
   >(undefined);
+  const [notificationPressed, setNotificationPressed] = useState<
+    Notifications.Notification | undefined
+  >(undefined);
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
 
@@ -353,9 +356,6 @@ export default function App() {
 
   // Listen for push notifications
   useEffect(() => {
-      if (me) {
-          navigationRef.navigate("Profile", {uid: me.id});
-      }
     registerForPushNotificationsAsync()
       .then(async (token) => {
         setExpoPushToken(token ?? "");
@@ -371,16 +371,7 @@ export default function App() {
     // Fires when user taps on push notification
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        if (navigationRef.isReady()) {
-          if (
-            response.notification.request.content.data.extraData.event ===
-            "hype_activity"
-          ) {
-            navigationRef.navigate("Profile", {
-              uid: response.notification.request.content.data.recipient_uid,
-            });
-          }
-        }
+        setNotificationPressed(response);
       });
 
     return () => {
@@ -391,7 +382,7 @@ export default function App() {
       responseListener.current &&
         Notifications.removeNotificationSubscription(responseListener.current);
     };
-  }, [me, session, navigationRef]);
+  }, []);
 
   // Load fonts
   useEffect(() => {
@@ -400,6 +391,17 @@ export default function App() {
       setFontsLoaded(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (navigationRef.isReady()) {
+      if (notificationPressed === "hype_activity") {
+        navigationRef.navigate("Profile", {
+          uid: notificationPressed.notification.request.content.data
+            .recipient_uid,
+        });
+      }
+    }
+  }, [navigationRef, notificationPressed]);
 
   const loadFont = async () => {
     await useExpoFont();
