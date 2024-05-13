@@ -178,6 +178,7 @@ export const GiveHypeBottomSheet = forwardRef(
         // increment_redeemable_points
         // increment_given_points
         // increment_received_points
+        // decrement_givable_points
         const { error } = await supabase.from("hype_activity").insert({
           sender_username: me.username,
           recipient_username: recipientUsername,
@@ -188,9 +189,14 @@ export const GiveHypeBottomSheet = forwardRef(
 
         const recipientProfile =
           await getUserProfileByUsername(recipientUsername);
+
         sendPushNotification(recipientProfile.expo_push_token, {
           title: `${me.username} hyped you up!`,
           body: `You have received ${hypeToGiveData.counter} hype point${hypeToGiveData.counter > 1 ? "s" : ""} from ${me.username}`,
+          extraData: {
+            event: 'hype_activity',
+            recipient_uid: recipientProfile.id,
+          },
         });
 
         if (error) {

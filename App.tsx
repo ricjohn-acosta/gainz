@@ -3,6 +3,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
+  createNavigationContainerRef,
   DefaultTheme,
   NavigationContainer,
   useNavigation,
@@ -314,6 +315,7 @@ export default function App() {
   const {
     operations: { registerForPushNotificationsAsync, savePushTokenToDB },
   } = useNotifications();
+  const navigationRef = createNavigationContainerRef();
 
   StatusBar.setBackgroundColor("#f2f4ff");
 
@@ -363,8 +365,20 @@ export default function App() {
         setNotification(notification);
       });
 
+    // Fires when user taps on push notification
     responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {});
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        if (navigationRef.isReady()) {
+          if (
+            response.notification.request.content.data.extraData.event ===
+            "hype_activity"
+          ) {
+            navigationRef.navigate("Profile", {
+              uid: response.notification.request.content.data.recipient_uid,
+            });
+          }
+        }
+      });
 
     return () => {
       notificationListener.current &&
@@ -374,7 +388,7 @@ export default function App() {
       responseListener.current &&
         Notifications.removeNotificationSubscription(responseListener.current);
     };
-  }, [me, session]);
+  }, [me, session, navigationRef]);
 
   // Load fonts
   useEffect(() => {
@@ -395,7 +409,7 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#f2f4ff" }}>
       <BottomSheetModalProvider>
-        <NavigationContainer theme={theme}>
+        <NavigationContainer ref={navigationRef} theme={theme}>
           <Stack.Navigator>
             {session && me && !notLoaded ? (
               <>
