@@ -384,6 +384,17 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (navigationRef.isReady()) {
+      if (notificationPressed === "hype_activity") {
+        navigationRef.navigate("Profile", {
+          uid: notificationPressed.request.content.data.recipient_uid,
+        });
+      }
+    }
+    setNotificationPressed(undefined);
+  }, [navigationRef, notificationPressed]);
+
   // Load fonts
   useEffect(() => {
     if (!fontsLoaded) {
@@ -391,18 +402,6 @@ export default function App() {
       setFontsLoaded(true);
     }
   }, []);
-
-  useEffect(() => {
-    if (navigationRef.isReady()) {
-      if (notificationPressed === "hype_activity") {
-        navigationRef.navigate("Profile", {
-          uid: notificationPressed.notification.request.content.data
-            .recipient_uid,
-        });
-      }
-    }
-  }, [navigationRef, notificationPressed]);
-
   const loadFont = async () => {
     await useExpoFont();
   };
