@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.mookentooken.gainz",
-      "buildNumber": "19"
+      "buildNumber": "20"
     },
     "android": {
       "package": "com.mookentooken.gainz",

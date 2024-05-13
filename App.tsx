@@ -385,16 +385,22 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (navigationRef.isReady() && notificationPressed) {
-      if (
-        notificationPressed.request.content.data.event ===
-        "hype_activity"
-      ) {
-        navigationRef.navigate("Profile", {
-          uid: notificationPressed.request.content.data.recipient_uid,
-        });
-      }
+    if (notificationPressed) {
+      navigationRef.navigate("Profile", {
+        uid: me.id,
+      });
     }
+
+    // if (navigationRef.isReady() && notificationPressed) {
+    //   if (
+    //     notificationPressed.request.content.data.event ===
+    //     "hype_activity"
+    //   ) {
+    //     navigationRef.navigate("Profile", {
+    //       uid: notificationPressed.request.content.data.recipient_uid,
+    //     });
+    //   }
+    // }
 
     setNotificationPressed(undefined);
   }, [navigationRef, notificationPressed]);
