@@ -330,6 +330,8 @@ export default function App() {
   const [notificationPressed, setNotificationPressed] = useState<
     Notifications.Notification | undefined
   >(undefined);
+  const lastNotificationResponse = Notifications.useLastNotificationResponse();
+
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
 
@@ -385,25 +387,20 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (notificationPressed) {
+    if (!lastNotificationResponse) return;
+    if (!navigationRef.isReady()) return;
+
+    if (
+      lastNotificationResponse.notification.request.content.data.event ===
+      "hype_activity"
+    ) {
       navigationRef.navigate("Profile", {
-        uid: me.id,
+        uid: lastNotificationResponse.notification.request.content.data
+          .recipient_uid,
       });
     }
+  }, [navigationRef, lastNotificationResponse]);
 
-    // if (navigationRef.isReady() && notificationPressed) {
-    //   if (
-    //     notificationPressed.request.content.data.event ===
-    //     "hype_activity"
-    //   ) {
-    //     navigationRef.navigate("Profile", {
-    //       uid: notificationPressed.request.content.data.recipient_uid,
-    //     });
-    //   }
-    // }
-
-    setNotificationPressed(undefined);
-  }, [navigationRef, notificationPressed]);
 
   // Load fonts
   useEffect(() => {
