@@ -386,7 +386,10 @@ export default function App() {
 
   useEffect(() => {
     if (navigationRef.isReady()) {
-      if (notificationPressed === "hype_activity") {
+      if (
+        notificationPressed.request.content.data.event ===
+        "hype_activity"
+      ) {
         navigationRef.navigate("Profile", {
           uid: notificationPressed.request.content.data.recipient_uid,
         });
