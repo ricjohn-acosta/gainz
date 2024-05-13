@@ -395,6 +395,7 @@ export default function App() {
         });
       }
     }
+
     setNotificationPressed(undefined);
   }, [navigationRef, notificationPressed]);
 

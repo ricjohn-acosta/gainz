@@ -27,7 +27,7 @@ export const useNotifications = () => {
       sound: "default",
       title: data.title,
       body: data.body,
-      data: {...data.extraData}
+      data: data.extraData
     };
 
     await fetch("https://exp.host/--/api/v2/push/send", {
