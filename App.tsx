@@ -333,7 +333,6 @@ export default function App() {
   const lastNotificationResponse = Notifications.useLastNotificationResponse();
 
   const notificationListener = useRef<Notifications.Subscription>();
-  const responseListener = useRef<Notifications.Subscription>();
 
   const checkIfUserSkippedInviteCode = async () => {
     // await AsyncStorage.removeItem('has_skipped_invite_code');
@@ -370,19 +369,11 @@ export default function App() {
         setNotification(notification);
       });
 
-    // Fires when user taps on push notification
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        setNotificationPressed(response);
-      });
-
     return () => {
       notificationListener.current &&
         Notifications.removeNotificationSubscription(
           notificationListener.current,
         );
-      responseListener.current &&
-        Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
 
@@ -400,7 +391,6 @@ export default function App() {
       });
     }
   }, [navigationRef, lastNotificationResponse]);
-
 
   // Load fonts
   useEffect(() => {

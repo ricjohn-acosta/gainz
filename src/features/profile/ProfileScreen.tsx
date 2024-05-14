@@ -60,10 +60,10 @@ export default function ProfileScreen({ route }) {
   const isMyProfile = () => {
     if (!me) return;
     return uid === me.id;
-  }
+  };
 
   const displayHypeButton = () => {
-    return !isMyProfile()
+    return !isMyProfile();
   };
 
   const onRefresh = () => {
@@ -71,6 +71,11 @@ export default function ProfileScreen({ route }) {
       setRefreshing(true);
       setTimeout(() => {
         getMyTeam();
+        const username = getMember(uid)?.username;
+        getUserHypeActivity(username).then((hypeActivityData) => {
+          const formattedHypeActivityData = createListData(hypeActivityData);
+          setHypeActivityListData(formattedHypeActivityData);
+        });
         setRefreshing(false);
       }, 1000);
     } catch (e) {
@@ -134,7 +139,13 @@ export default function ProfileScreen({ route }) {
         <BasicText style={styles.displayName}>
           {getMember(uid)?.username}
         </BasicText>
-        {isMyProfile() && <BasicText style={{textAlign: 'center', fontSize: 12, color: 'grey'}}>(you)</BasicText>}
+        {isMyProfile() && (
+          <BasicText
+            style={{ textAlign: "center", fontSize: 12, color: "grey" }}
+          >
+            (you)
+          </BasicText>
+        )}
       </View>
       <View style={styles.statContainer}>
         <View style={styles.halfCard}>
