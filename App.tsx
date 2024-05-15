@@ -31,9 +31,10 @@ import { IconButton } from "./src/components/Button/IconButton";
 import { AddRewardScreen } from "./src/features/rewards/AddRewardScreen";
 import { RewardModalScreen } from "./src/features/rewards/RewardModalScreen";
 import { DeleteRewardScreen } from "./src/features/rewards/DeleteRewardScreen";
-import { useExpoFont } from "./src/theme/useFonts";
 import * as Notifications from "expo-notifications";
 import { useNotifications } from "./src/services/notifications/useNotifications";
+import { useFonts } from "expo-font";
+import { Loading } from "./src/components/Progress/Loading.tsx";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -322,12 +323,7 @@ export default function App() {
   const [hasUserSkippedInviteCode, setHasUserSkippedInviteCode] =
     useState<string>(null);
   const [notLoaded, setNotLoaded] = useState(true);
-  const [fontsLoaded, setFontsLoaded] = useState(false);
-  const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState<
-    Notifications.Notification | undefined
-  >(undefined);
-  const [notificationPressed, setNotificationPressed] = useState<
     Notifications.Notification | undefined
   >(undefined);
   const lastNotificationResponse = Notifications.useLastNotificationResponse();
@@ -359,7 +355,6 @@ export default function App() {
   useEffect(() => {
     registerForPushNotificationsAsync()
       .then(async (token) => {
-        setExpoPushToken(token ?? "");
         await savePushTokenToDB(token);
       })
       .catch((error: any) => setExpoPushToken(`${error}`));
@@ -392,19 +387,16 @@ export default function App() {
     }
   }, [navigationRef, lastNotificationResponse]);
 
-  // Load fonts
-  useEffect(() => {
-    if (!fontsLoaded) {
-      loadFont();
-      setFontsLoaded(true);
-    }
-  }, []);
-  const loadFont = async () => {
-    await useExpoFont();
-  };
+  const [isLoaded] = useFonts({
+    "Poppins-Regular": require("./assets/fonts/Poppins/Poppins-Regular.ttf"),
+    "Poppins-Bold": require("./assets/fonts/Poppins/Poppins-Bold.ttf"),
+    "Poppins-Medium": require("./assets/fonts/Poppins/Poppins-Medium.ttf"),
+    "Poppins-SemiBold": require("./assets/fonts/Poppins/Poppins-SemiBold.ttf"),
+    "Poppins-BoldItalic": require("./assets/fonts/Poppins/Poppins-BoldItalic.ttf"),
+  });
 
-  if (!fontsLoaded) {
-    return <></>;
+  if (!isLoaded) {
+    return <Loading/>;
   }
 
   return (

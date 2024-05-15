@@ -17,7 +17,8 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.mookentooken.gainz",
-      "buildNumber": "22"
+      "buildNumber": "22",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "package": "com.mookentooken.gainz",
@@ -34,7 +35,8 @@
     },
     "owner": "mookentooken",
     "plugins": [
-      "expo-font"
+      "expo-font",
+      "@react-native-google-signin/google-signin"
     ],
     "runtimeVersion": "1.0.0",
     "updates": {
