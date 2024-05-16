@@ -108,7 +108,9 @@ export const ActivityFeedScreen = () => {
               style={styles.actionButton}
             >
               <View style={styles.actionButtonContent}>
-                <BasicText style={{ color: "black", fontFamily: "Poppins-Bold" }}>
+                <BasicText
+                  style={{ color: "black", fontFamily: "Poppins-Bold" }}
+                >
                   Write post
                 </BasicText>
                 <FontAwesome
@@ -127,7 +129,9 @@ export const ActivityFeedScreen = () => {
               style={styles.actionButton}
             >
               <View style={styles.actionButtonContent}>
-                <BasicText style={{ color: "black", fontFamily: "Poppins-Bold" }}>
+                <BasicText
+                  style={{ color: "black", fontFamily: "Poppins-Bold" }}
+                >
                   Give Hype
                 </BasicText>
                 <MaterialIcons

@@ -12,8 +12,6 @@
     "build:ios": "eas build -p ios",
     "build:ios-locally": "eas build -p ios --local",
     "build:all": "eas build -p all",
-    "eas-build-pre-install": "npm config set legacy-peer-deps true",
-    "web": "expo start --web",
     "start-emulator": "firebase emulators:start",
     "lint": "eslint ."
   },
@@ -54,7 +52,8 @@
     "react-native-screens": "~3.29.0",
     "react-native-url-polyfill": "^2.0.0",
     "typescript": "^5.1.3",
-    "zustand": "5.0.0-alpha.6"
+    "zustand": "5.0.0-alpha.6",
+    "expo-crypto": "~12.8.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

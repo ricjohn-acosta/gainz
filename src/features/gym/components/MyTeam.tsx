@@ -48,7 +48,7 @@ export default function MyTeam() {
           }}
           scrollEnabled={false}
           horizontal={false}
-          key={getListData().length}
+          key={getListData()?.length}
           data={getListData()}
           numColumns={3}
           renderItem={(data: any) => {

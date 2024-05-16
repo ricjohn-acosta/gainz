@@ -18,6 +18,7 @@ import useAuthStore from "../../../stores/authStore";
 import useProfileStore from "../../../stores/profileStore";
 import { Loading } from "../../../components/Progress/Loading";
 import BasicText from "../../../components/Text/BasicText";
+import { GoogleSignUpButton } from "../../../components/Auth/GoogleSignUpButton.tsx";
 
 interface LoginFormProps {
   setForm?: (form: string) => void;
@@ -103,7 +104,8 @@ export const LoginForm = (props: LoginFormProps) => {
           <Divider title="or continue with" titleStyle={styles.dividerLabel} />
           <View style={styles.thirdPartyAuthContainer}>
             <Image style={styles.thirdPartyIcon} source={images.fbIcon} />
-            <Image style={styles.thirdPartyIcon} source={images.googleIcon} />
+            {/*<Image style={styles.thirdPartyIcon} source={images.googleIcon} />*/}
+            <GoogleSignUpButton />
           </View>
         </View>
         <View style={styles.signupContainer}>
@@ -170,7 +172,7 @@ const styles = StyleSheet.create({
     height: 80,
   },
   title: {
-    fontFamily: 'Poppins-Bold',
+    fontFamily: "Poppins-Bold",
     // fontFamily: "Poppins-Bold",
     fontSize: 40,
   },
@@ -179,7 +181,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 10,
-    marginTop: 10
+    marginTop: 10,
   },
   icon: {
     backgroundColor: "#ffffff",
@@ -196,7 +198,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderTopRightRadius: 20,
     borderBottomRightRadius: 20,
-    fontFamily: 'Poppins-Regular'
+    fontFamily: "Poppins-Regular",
   },
   ctaBtn: {
     marginTop: 20,
@@ -208,6 +210,6 @@ const styles = StyleSheet.create({
   forgotPasswordText: {
     color: "#1f30fb",
     fontWeight: "normal",
-    fontFamily: 'Poppins-Regular',
+    fontFamily: "Poppins-Regular",
   },
 });

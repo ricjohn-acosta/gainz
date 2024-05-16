@@ -50,13 +50,16 @@ const useAuthStore = create<AuthState>((set) => ({
     if (!email) return Promise.reject("Email is required");
     if (!password) return Promise.reject("Password is required");
 
+    const teamId = parseInt(customAlphabet('0123456789', 6)())
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           username,
-          email: email
+          email: email,
+          team_id: teamId,
         },
       },
     });

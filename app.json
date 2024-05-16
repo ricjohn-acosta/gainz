@@ -18,7 +18,12 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.mookentooken.gainz",
       "buildNumber": "22",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "com.googleusercontent.apps.307561343933-38nip8bflo65ves9dgb2jbennrhobl25"
+        }
+      }
     },
     "android": {
       "package": "com.mookentooken.gainz",

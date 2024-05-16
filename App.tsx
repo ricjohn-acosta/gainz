@@ -113,7 +113,7 @@ const RewardsStack = () => {
             </View>
           ),
           headerRight: () => {
-            if (meTeamData.role === "member") return null;
+            if (!meTeamData || meTeamData.role === "member") return null;
             return (
               <View style={{ marginRight: 16 }}>
                 <IconButton
@@ -396,7 +396,7 @@ export default function App() {
   });
 
   if (!isLoaded) {
-    return <Loading/>;
+    return <Loading />;
   }
 
   return (
