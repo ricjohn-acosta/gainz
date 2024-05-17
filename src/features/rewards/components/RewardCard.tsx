@@ -1,12 +1,13 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useCallback, useRef } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import {Alert, Image, StyleSheet, Text, View} from "react-native";
 import { PrimaryButton } from "../../../components/Button/PrimaryButton";
 import images from "../../../../assets";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { ConfirmRewardModal } from "./ConfirmRewardModal";
 import LottieView from "lottie-react-native";
 import BasicText from "../../../components/Text/BasicText";
+import useTeamStore from "../../../stores/teamStore.ts";
 
 interface RewardCardProps {
   name: string;
@@ -19,6 +20,10 @@ interface RewardCardProps {
 }
 
 export const RewardCard = (props: RewardCardProps) => {
+  const {
+    data: { meTeamData },
+  } = useTeamStore();
+
   const { name, description, rewardId, imageUrl, quantity, amount, sponsor } =
     props;
   const confirmRewardModal = useRef<BottomSheetModal>(null);
@@ -30,6 +35,14 @@ export const RewardCard = (props: RewardCardProps) => {
   const hideConfirmRewardModal = useCallback(() => {
     confirmRewardModal.current?.dismiss();
   }, []);
+
+  const handleShowConfirmRewardModal = () => {
+    if (!meTeamData || meTeamData.hype_redeemable === 0) {
+      Alert.alert('Reward unavailable', 'You do not have sufficient hype points to redeem this reward.')
+      return
+    }
+    showConfirmRewardModal()
+  }
 
   return (
     <View style={styles.container}>
@@ -49,7 +62,7 @@ export const RewardCard = (props: RewardCardProps) => {
           <BasicText style={styles.itemStock}>Quantity: {quantity}</BasicText>
         </View>
         <PrimaryButton
-          onPress={showConfirmRewardModal}
+          onPress={handleShowConfirmRewardModal}
           disablePadding
           textStyle={{ fontSize: 14, padding: 6 }}
           text={`${amount}`}

@@ -41,7 +41,7 @@ const useRewardStore = create<TeamState>((set, get) => ({
       const { data: rewardsData, error } = await supabase
         .from("rewards")
         .select("*")
-        .or(`team_id.eq.${me.team_id},team_id.eq.${0}`)
+        .or(`team_id.eq.${me.team_id},team_id.is.null`)
         .order("id", { ascending: true });
 
       if (error) {

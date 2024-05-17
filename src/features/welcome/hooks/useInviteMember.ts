@@ -45,7 +45,7 @@ export const useInviteMember = () => {
       const { data, error } = await supabase
         .from("teams")
         .select(
-          `team_name, user_invites!public_user_invites_team_id_fkey( username, recipient_email, team_id, sender_id, status )
+          `team_name, user_invites!user_invites_team_id_fkey( username, recipient_email, team_id, sender_id, status )
       `,
         )
         .eq("user_invites.recipient_email", me.email)
@@ -55,7 +55,8 @@ export const useInviteMember = () => {
         console.error(error);
         return [];
       }
-      if (data && data[0].user_invites[0]) {
+
+      if (data.length > 0 && data[0].user_invites[0]) {
         return { ...data[0].user_invites[0], team_name: data[0].team_name };
       }
     } catch (error) {

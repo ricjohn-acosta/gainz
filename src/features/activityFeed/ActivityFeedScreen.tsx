@@ -28,6 +28,7 @@ import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import HypeActivityCard from "./components/HypeActivityCard";
 import RedeemActivityCard from "./components/RedeemActivityCard";
 import BasicText from "../../components/Text/BasicText";
+import {GeneralMessage} from "../../components/Message/GeneralMessage.tsx";
 
 export const ActivityFeedScreen = () => {
   const {
@@ -142,6 +143,13 @@ export const ActivityFeedScreen = () => {
                 />
               </View>
             </TouchableOpacity>
+
+            {!teamPostsData || teamPostsData.length === 0 &&
+              <GeneralMessage
+                title={"No posts yet"}
+                subtitle={"Share your successes, challenges or spread positivity!"}
+              />
+            }
           </View>
         }
         data={teamPostsData}
@@ -189,7 +197,7 @@ export const ActivityFeedScreen = () => {
             control={control}
             rules={{ validate: postValidation, required: "Required" }}
             placeholder={
-              "Share your challenges, successes or spread positivity!"
+              "Share your successes, challenges or spread positivity!"
             }
             inputStyle={styles.modalInput}
             numberOfLines={50}

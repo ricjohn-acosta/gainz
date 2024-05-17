@@ -15,6 +15,7 @@ import { LeaderboardItem } from "./LeaderboardsItem";
 import { sortTeamBy } from "../../../helpers/teamSorter";
 import useTeamStore from "../../../stores/teamStore";
 import BasicText from "../../Text/BasicText";
+import { GeneralMessage } from "../../Message/GeneralMessage.tsx";
 
 interface LeaderboardsBottomSheetProps {}
 
@@ -50,7 +51,16 @@ export const LeaderboardsBottomSheet = forwardRef(
               <BasicText style={styles.teamsTitle}>Leaderboards</BasicText>
             </View>
 
-            <BasicText style={styles.subtitle}>See who gets the most Hype!</BasicText>
+            <BasicText style={styles.subtitle}>
+              See who gets the most Hype!
+            </BasicText>
+            {!sortedTeam ||
+              (sortedTeam.length === 0 && (
+                <GeneralMessage
+                  title={"No team members"}
+                  subtitle={"Invite members and see who gets the most hype!"}
+                />
+              ))}
             <View style={styles.giveHypeItemContainer}>
               <FlatList
                 data={sortedTeam}

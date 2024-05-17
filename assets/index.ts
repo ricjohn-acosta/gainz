@@ -21,7 +21,8 @@ const images = {
   defaultUser: require("./icons/default-user.png"),
   add: require("./icons/add.png"),
   trophy: require("./icons/trophy.png"),
-  confettiAnimation: require("./animations/confetti-animation.json")
+  confettiAnimation: require("./animations/confetti-animation.json"),
+  team: require("./illustrations/team.png"),
 };
 
 export default images;

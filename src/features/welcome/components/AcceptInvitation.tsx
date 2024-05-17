@@ -53,7 +53,7 @@ export const AcceptInvitation = () => {
     fetchInvitesData();
   }, [me]);
 
-  if (!invitation) return null;
+  if (!invitation || invitation.length === 0) return null;
   return (
     <View style={styles.container}>
       <FontAwesome5 name="info-circle" size={16} color="black" />

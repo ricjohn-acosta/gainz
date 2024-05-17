@@ -5,7 +5,6 @@ import {
 } from "@react-native-google-signin/google-signin";
 import { supabase } from "../../services/supabase.ts";
 import { Platform } from "react-native";
-import * as Crypto from 'expo-crypto';
 
 export const GoogleSignUpButton = () => {
   const clientId =
@@ -18,9 +17,6 @@ export const GoogleSignUpButton = () => {
     iosClientId: clientId,
   });
 
-  const teamId = Crypto.randomUUID();
-
-  console.log(teamId)
   return (
     <GoogleSigninButton
       size={GoogleSigninButton.Size.Wide}
@@ -33,11 +29,6 @@ export const GoogleSignUpButton = () => {
             const { data, error } = await supabase.auth.signInWithIdToken({
               provider: "google",
               token: userInfo.idToken,
-              options: {
-                username: userInfo.user.givenName,
-                email: email,
-                team_id: teamId,
-              },
             });
             console.log(error, data);
           } else {

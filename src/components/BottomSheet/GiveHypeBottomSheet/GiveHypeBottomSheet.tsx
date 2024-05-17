@@ -18,6 +18,7 @@ import { GiveHypeSuccess } from "./GiveHypeSuccess";
 import useTeamStore from "../../../stores/teamStore";
 import BasicText from "../../Text/BasicText";
 import { useNotifications } from "../../../services/notifications/useNotifications.ts";
+import { GeneralMessage } from "../../Message/GeneralMessage.tsx";
 
 interface GiveHypeBottomSheetProps {
   snapPoints?: any;
@@ -273,6 +274,17 @@ export const GiveHypeBottomSheet = forwardRef(
                   ? `Send ${memberUsername} hype points!`
                   : "Choose which members to hype up!"}
               </BasicText>
+
+              {!hypeTeamList ||
+                (hypeTeamList.length === 0 && (
+                  <GeneralMessage
+                    title={"No team members"}
+                    subtitle={
+                      "Invite members and hype them up!"
+                    }
+                  />
+                ))}
+
               <View style={styles.giveHypeItemContainer}>
                 <FlatList
                   keyExtractor={(item) => item.id}

@@ -42,15 +42,13 @@ export default function RewardsScreen() {
               marginTop: 4,
             }}
           >
-            {meTeamData?.hype_redeemable}
+            {meTeamData?.hype_redeemable ?? 0}
           </BasicText>
-          { meTeamData &&
-            <MaterialIcons
-              name="local-fire-department"
-              size={24}
-              color="#ff046d"
-            />
-          }
+          <MaterialIcons
+            name="local-fire-department"
+            size={24}
+            color="#ff046d"
+          />
         </View>
       </View>
       <FlatList
