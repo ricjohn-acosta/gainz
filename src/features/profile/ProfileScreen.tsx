@@ -22,6 +22,7 @@ import useProfileStore from "../../stores/profileStore";
 import { GiveHypeBottomSheet } from "../../components/BottomSheet/GiveHypeBottomSheet/GiveHypeBottomSheet";
 import { MaterialIcons } from "@expo/vector-icons";
 import BasicText from "../../components/Text/BasicText";
+import { GeneralMessage } from "../../components/Message/GeneralMessage.tsx";
 
 export default function ProfileScreen({ route }) {
   const { uid } = route.params;
@@ -46,12 +47,15 @@ export default function ProfileScreen({ route }) {
     if (!hypeActivityListData || hypeActivityListData.length === 0) {
       getMyTeam();
       const username = getMember(uid)?.username;
+
+      if (!username) return;
+
       getUserHypeActivity(username).then((hypeActivityData) => {
         const formattedHypeActivityData = createListData(hypeActivityData);
         setHypeActivityListData(formattedHypeActivityData);
       });
     }
-  }, [uid, isFocused, hypeActivityListData]);
+  }, [uid, isFocused]);
 
   const showGiveHypeBottomSheet = useCallback(() => {
     giveHypeBottomSheetRef.current?.present();
@@ -72,6 +76,9 @@ export default function ProfileScreen({ route }) {
       setTimeout(() => {
         getMyTeam();
         const username = getMember(uid)?.username;
+
+        if (!username) return;
+
         getUserHypeActivity(username).then((hypeActivityData) => {
           const formattedHypeActivityData = createListData(hypeActivityData);
           setHypeActivityListData(formattedHypeActivityData);
@@ -197,6 +204,18 @@ export default function ProfileScreen({ route }) {
       )}
 
       <BasicText style={styles.h2}>Activity</BasicText>
+
+      {!hypeActivityListData ||
+        (hypeActivityListData.length === 0 && (
+          <View style={{height: 150}}>
+            <GeneralMessage
+              imageStyle={{ width: 200, height: 200 }}
+              title={"No activity yet..."}
+              subtitle={"It's quiet in here. Go hype people up!"}
+            />
+          </View>
+        ))}
+
       <SafeAreaView style={styles.activityContainer}>
         <SectionList
           refreshControl={

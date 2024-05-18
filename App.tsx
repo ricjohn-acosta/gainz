@@ -370,7 +370,7 @@ export default function App() {
           notificationListener.current,
         );
     };
-  }, []);
+  }, [me, session, navigationRef]);
 
   useEffect(() => {
     if (!lastNotificationResponse) return;

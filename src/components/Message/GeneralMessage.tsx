@@ -6,13 +6,14 @@ import BasicText from "../Text/BasicText.tsx";
 interface GeneralMessageProps {
   title: string;
   subtitle?: string;
+  imageStyle: any;
 }
 
 export const GeneralMessage = (props) => {
-  const { title, subtitle } = props;
+  const { title, subtitle, imageStyle } = props;
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={images.team} />
+      <Image style={[styles.image, imageStyle]} source={images.team} />
       <BasicText style={styles.title}>{title}</BasicText>
       <BasicText style={styles.subtitle}>{subtitle}</BasicText>
     </View>

@@ -86,7 +86,7 @@ export const GiveHypeBottomSheet = forwardRef(
       } else {
         setGivableHype(5);
       }
-    }, [meTeamData]);
+    }, []);
 
     const handleAddHype = (userId: string) => {
       if (givableHype <= 0) return;
@@ -276,7 +276,7 @@ export const GiveHypeBottomSheet = forwardRef(
               </BasicText>
 
               {!hypeTeamList ||
-                (hypeTeamList.length === 1 && (
+                (!memberUsername && hypeTeamList.length === 1 && (
                   <GeneralMessage
                     title={"No team members"}
                     subtitle={
