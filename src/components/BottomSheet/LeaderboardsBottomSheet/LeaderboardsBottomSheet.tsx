@@ -55,7 +55,8 @@ export const LeaderboardsBottomSheet = forwardRef(
               See who gets the most Hype!
             </BasicText>
             {!sortedTeam ||
-              (sortedTeam.length === 0 && (
+              // the owner of the team is included in the team so show message if no other member is in the team
+              (sortedTeam.length <= 1 && (
                 <GeneralMessage
                   title={"No team members"}
                   subtitle={"Invite members and see who gets the most hype!"}
@@ -63,7 +64,7 @@ export const LeaderboardsBottomSheet = forwardRef(
               ))}
             <View style={styles.giveHypeItemContainer}>
               <FlatList
-                data={sortedTeam}
+                data={sortedTeam?.length <= 1 ? [] : sortedTeam}
                 renderItem={(data) => {
                   return (
                     <LeaderboardItem

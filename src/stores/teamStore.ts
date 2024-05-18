@@ -10,6 +10,7 @@ interface TeamState {
     myTeam?: any;
   };
   operations: {
+    createTeam: () => Promise<PostgrestError>;
     getMyTeam: () => Promise<PostgrestError>;
     getHypeRank: (uid: string) => number;
     getMember: (uid: string) => any;
@@ -30,7 +31,7 @@ const useTeamStore = create<TeamState>((set, get) => ({
       const { data, error } = await supabase
         .from("team_members")
         .select("*")
-        .eq("team_id", me.team_id);
+        .eq("team_id", me.team_id)
       if (error) {
         console.error(error);
         return error;
@@ -53,9 +54,14 @@ const useTeamStore = create<TeamState>((set, get) => ({
     },
     getMember: (uid: string) => {
       const team = get().data.myTeam;
-      if (!team) return null
-      return team.find(user => user.profile_id === uid)
-    }
+      if (!team) return null;
+      return team.find((user) => user.profile_id === uid);
+    },
+    createTeam: (uid: string) => {
+      const team = get().data.myTeam;
+      if (!team) return null;
+      return team.find((user) => user.profile_id === uid);
+    },
   },
 }));
 

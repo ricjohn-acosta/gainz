@@ -28,7 +28,7 @@ import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import HypeActivityCard from "./components/HypeActivityCard";
 import RedeemActivityCard from "./components/RedeemActivityCard";
 import BasicText from "../../components/Text/BasicText";
-import {GeneralMessage} from "../../components/Message/GeneralMessage.tsx";
+import { GeneralMessage } from "../../components/Message/GeneralMessage.tsx";
 
 export const ActivityFeedScreen = () => {
   const {
@@ -101,56 +101,60 @@ export const ActivityFeedScreen = () => {
         extraScrollHeight={50}
         stickyHeaderIndices={[0]}
         ListHeaderComponent={
-          <View style={styles.actionButtonsContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                showWritePostBottomSheet();
-              }}
-              style={styles.actionButton}
-            >
-              <View style={styles.actionButtonContent}>
-                <BasicText
-                  style={{ color: "black", fontFamily: "Poppins-Bold" }}
-                >
-                  Write post
-                </BasicText>
-                <FontAwesome
-                  style={{ marginLeft: 10 }}
-                  name="pencil-square-o"
-                  size={22}
-                  color="#1f30fb"
+          <>
+            <View style={styles.actionButtonsContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  showWritePostBottomSheet();
+                }}
+                style={styles.actionButton}
+              >
+                <View style={styles.actionButtonContent}>
+                  <BasicText
+                    style={{ color: "black", fontFamily: "Poppins-Bold" }}
+                  >
+                    Write post
+                  </BasicText>
+                  <FontAwesome
+                    style={{ marginLeft: 10 }}
+                    name="pencil-square-o"
+                    size={22}
+                    color="#1f30fb"
+                  />
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  showGiveHypeBottomSheet();
+                  hideWritePostBottomSheet();
+                }}
+                style={styles.actionButton}
+              >
+                <View style={styles.actionButtonContent}>
+                  <BasicText
+                    style={{ color: "black", fontFamily: "Poppins-Bold" }}
+                  >
+                    Give Hype
+                  </BasicText>
+                  <MaterialIcons
+                    style={{ marginLeft: 4 }}
+                    name="local-fire-department"
+                    size={22}
+                    color="#ff046d"
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+            {!teamPostsData ||
+              (teamPostsData.length === 0 && (
+                <GeneralMessage
+                  title={"No posts yet"}
+                  subtitle={
+                    "Share your successes, challenges or spread positivity!"
+                  }
                 />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                showGiveHypeBottomSheet();
-                hideWritePostBottomSheet();
-              }}
-              style={styles.actionButton}
-            >
-              <View style={styles.actionButtonContent}>
-                <BasicText
-                  style={{ color: "black", fontFamily: "Poppins-Bold" }}
-                >
-                  Give Hype
-                </BasicText>
-                <MaterialIcons
-                  style={{ marginLeft: 4 }}
-                  name="local-fire-department"
-                  size={22}
-                  color="#ff046d"
-                />
-              </View>
-            </TouchableOpacity>
-
-            {!teamPostsData || teamPostsData.length === 0 &&
-              <GeneralMessage
-                title={"No posts yet"}
-                subtitle={"Share your successes, challenges or spread positivity!"}
-              />
-            }
-          </View>
+              ))}
+          </>
         }
         data={teamPostsData}
         renderItem={(data: any) => {

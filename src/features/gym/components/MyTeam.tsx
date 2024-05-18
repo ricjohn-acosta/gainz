@@ -31,7 +31,13 @@ export default function MyTeam() {
     if (!myTeam || !meTeamData) return
     const filteredTeamData = myTeam.filter(user => user.profile_id  !== me.id)
     meTeamData.sortOrder = 1
-    return [meTeamData, ...filteredTeamData]
+
+    if (myTeam.length > 1) {
+      // only show if there are other members in the team apart from the team owner
+      return [meTeamData, ...filteredTeamData]
+    } else {
+      return []
+    }
   }
 
   if (!myTeam) return null

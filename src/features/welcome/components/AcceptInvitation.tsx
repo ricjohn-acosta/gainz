@@ -5,6 +5,7 @@ import { PrimaryButton } from "../../../components/Button/PrimaryButton";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useInviteMember } from "../hooks/useInviteMember";
 import useTeamStore from "../../../stores/teamStore";
+import BasicText from "../../../components/Text/BasicText.tsx";
 
 export const AcceptInvitation = () => {
   const {
@@ -12,6 +13,7 @@ export const AcceptInvitation = () => {
     operations: { getMeProfile },
   } = useProfileStore();
   const {
+    data: {meTeamData},
     operations: { getMyTeam },
   } = useTeamStore();
   const {
@@ -56,15 +58,10 @@ export const AcceptInvitation = () => {
   if (!invitation || invitation.length === 0) return null;
   return (
     <View style={styles.container}>
-      <FontAwesome5 name="info-circle" size={16} color="black" />
       <View style={styles.message}>
         <Text style={styles.textContainer}>
-          You've been invited to team{" "}
-          <Text style={{ fontFamily: "Poppins-Bold" }}>{invitation.team_name}</Text> by{" "}
-          <Text style={{ fontFamily: "Poppins-Bold" }}>
-            {invitation.username}
-          </Text>
-          !
+          <Text style={{ fontFamily: "Poppins-Bold" }}>{invitation.username} <BasicText>wants you to join their team!</BasicText></Text>
+
         </Text>
       </View>
 

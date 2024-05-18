@@ -276,7 +276,7 @@ export const GiveHypeBottomSheet = forwardRef(
               </BasicText>
 
               {!hypeTeamList ||
-                (hypeTeamList.length === 0 && (
+                (hypeTeamList.length === 1 && (
                   <GeneralMessage
                     title={"No team members"}
                     subtitle={

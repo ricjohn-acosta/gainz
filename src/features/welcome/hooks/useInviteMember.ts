@@ -1,12 +1,32 @@
 import { supabase } from "../../../services/supabase";
 import useProfileStore from "../../../stores/profileStore";
+import useTeamStore from "../../../stores/teamStore.ts";
 
 export const useInviteMember = () => {
   const {
     data: { me },
   } = useProfileStore();
+  const {
+    data: { meTeamData },
+  } = useTeamStore();
 
   const sendInvite = async (recipientEmail: string) => {
+
+    if (!meTeamData) {
+      const { error } = await supabase.from("team_members").insert({
+        username: me.username,
+        team_id: me.team_id,
+        profile_id: me.id,
+        role: "leader",
+        email: me.email,
+      });
+
+      if (error) {
+        console.error(error);
+        return error;
+      }
+    }
+
     const { error } = await supabase.from("user_invites").insert({
       sender_id: me.id,
       recipient_email: recipientEmail,
@@ -43,21 +63,22 @@ export const useInviteMember = () => {
       if (!recipientEmail) return [];
 
       const { data, error } = await supabase
-        .from("teams")
-        .select(
-          `team_name, user_invites!user_invites_team_id_fkey( username, recipient_email, team_id, sender_id, status )
-      `,
-        )
-        .eq("user_invites.recipient_email", me.email)
-        .eq("user_invites.status", "pending");
+        .from("user_invites")
+        .select("*")
+        .eq("recipient_email", me.email)
+        .or("status.eq.pending");
 
       if (error) {
         console.error(error);
         return [];
       }
 
-      if (data.length > 0 && data[0].user_invites[0]) {
-        return { ...data[0].user_invites[0], team_name: data[0].team_name };
+      if (data.length > 0) {
+        return {
+          username: data[0].username,
+          team_id: data[0].team_id,
+          sender_id: data[0].sender_id,
+        };
       }
     } catch (error) {
       console.error(error);
