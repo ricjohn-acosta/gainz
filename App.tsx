@@ -35,6 +35,7 @@ import * as Notifications from "expo-notifications";
 import { useNotifications } from "./src/services/notifications/useNotifications";
 import { useFonts } from "expo-font";
 import { Loading } from "./src/components/Progress/Loading.tsx";
+import { NotificationScreen } from "./src/features/notifications/NotificationScreen.tsx";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -70,6 +71,30 @@ const HomeStack = () => {
           headerTitleStyle: {
             fontFamily: "Poppins-Bold",
           },
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <Ionicons
+              onPress={() => navigation.goBack()}
+              name="chevron-back-outline"
+              size={30}
+              color="black"
+            />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="Notification"
+        component={NotificationScreen}
+        options={() => ({
+          title: "",
+          headerStyle: {
+            backgroundColor: "#f2f4ff",
+          },
+          headerTitleStyle: {
+            fontFamily: "Poppins-Bold",
+          },
+          headerTitle: "Notifications",
+          headerShown: true,
           headerShadowVisible: false,
           headerLeft: () => (
             <Ionicons
@@ -326,8 +351,9 @@ export default function App() {
   const [notification, setNotification] = useState<
     Notifications.Notification | undefined
   >(undefined);
-  const lastNotificationResponse = Notifications.useLastNotificationResponse();
+  const [prevNotificationId, setPrevNotificationId] = useState(undefined);
 
+  const lastNotificationResponse = Notifications.useLastNotificationResponse();
   const notificationListener = useRef<Notifications.Subscription>();
 
   const checkIfUserSkippedInviteCode = async () => {
@@ -374,6 +400,11 @@ export default function App() {
 
   useEffect(() => {
     if (!lastNotificationResponse) return;
+    if (
+      prevNotificationId ===
+      lastNotificationResponse.notification.request.identifier
+    )
+      return;
     if (!navigationRef.isReady()) return;
 
     if (
@@ -384,6 +415,9 @@ export default function App() {
         uid: lastNotificationResponse.notification.request.content.data
           .recipient_uid,
       });
+      setPrevNotificationId(
+        lastNotificationResponse.notification.request.identifier,
+      );
     }
   }, [navigationRef, lastNotificationResponse]);
 

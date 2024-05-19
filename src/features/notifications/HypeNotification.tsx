@@ -30,7 +30,7 @@ export default function HypeNotification(props: HypeNotificationProps) {
               style={{
                 color: "grey",
                 marginRight: 4,
-                fontSize: 10,
+                fontSize: 11,
               }}
             >
               {" "}
@@ -48,7 +48,7 @@ export default function HypeNotification(props: HypeNotificationProps) {
               <BasicText
                 style={{
                   fontFamily: "Poppins-Bold",
-                  fontSize: 12,
+                  fontSize: 13,
                   color: "#1f30fb",
                 }}
               >
@@ -64,11 +64,11 @@ export default function HypeNotification(props: HypeNotificationProps) {
                 {/*  {time}*/}
                 {/*</BasicText>*/}
               </BasicText>
-              <BasicText style={{ fontSize: 12 }}> hyped </BasicText>
+              <BasicText style={{ fontSize: 13 }}> hyped </BasicText>
               <BasicText
                 style={{
                   fontFamily: "Poppins-Bold",
-                  fontSize: 12,
+                  fontSize: 13,
                   color: "#1f30fb",
                 }}
               >

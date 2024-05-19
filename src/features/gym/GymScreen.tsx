@@ -21,6 +21,7 @@ import images from "../../../assets";
 import { AddMemberBottomSheet } from "../../components/BottomSheet/AddMemberBottomSheet/AddMemberBottomSheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BasicText from "../../components/Text/BasicText";
+import {useNavigation} from "@react-navigation/native";
 
 export default function GymScreen({ props }) {
   const {
@@ -34,6 +35,7 @@ export default function GymScreen({ props }) {
     data: { canInvite },
   } = useMyTeam();
 
+  const navigation = useNavigation<any>();
   const addMemberBottomSheetRef = useRef<BottomSheetModal>(null);
 
   const [refreshing, setRefreshing] = React.useState(false);
@@ -80,7 +82,7 @@ export default function GymScreen({ props }) {
             <BasicText style={styles.title}>{me.username} 💪</BasicText>
           </View>
           <View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Notification")}>
               <Ionicons name="notifications" size={26} color="black" />
             </TouchableOpacity>
           </View>

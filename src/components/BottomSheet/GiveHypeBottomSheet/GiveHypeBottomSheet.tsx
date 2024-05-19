@@ -86,7 +86,7 @@ export const GiveHypeBottomSheet = forwardRef(
       } else {
         setGivableHype(5);
       }
-    }, []);
+    }, [meTeamData]);
 
     const handleAddHype = (userId: string) => {
       if (givableHype <= 0) return;
@@ -175,21 +175,24 @@ export const GiveHypeBottomSheet = forwardRef(
         // Skip insert for counters equal to 0
         if (hypeToGiveData.counter === 0) continue;
 
+        const recipientProfile =
+            await getUserProfileByUsername(recipientUsername);
+
         // This will trigger:
         // increment_redeemable_points
         // increment_given_points
         // increment_received_points
         // decrement_givable_points
         const { error } = await supabase.from("hype_activity").insert({
+          sender_id: me.id,
           sender_username: me.username,
           recipient_username: recipientUsername,
+          recipient_id: recipientProfile.id,
           hype_message: hypeToGiveData.message,
           hype_points_received: hypeToGiveData.counter,
           team_id: me.team_id,
         });
 
-        const recipientProfile =
-          await getUserProfileByUsername(recipientUsername);
 
         sendPushNotification(recipientProfile.expo_push_token, {
           title: `${me.username} hyped you up!`,
