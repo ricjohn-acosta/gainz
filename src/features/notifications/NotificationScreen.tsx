@@ -1,5 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
+import {
+  FlatList,
+  RefreshControl,
+  SafeAreaView,
+  StyleSheet,
+  View,
+} from "react-native";
 import { NotificationCard } from "./components/NotificationCard.tsx";
 import { useNotification } from "./useNotification.tsx";
 import { LeaderboardItem } from "../../components/BottomSheet/LeaderboardsBottomSheet/LeaderboardsItem.tsx";
@@ -12,23 +18,41 @@ export const NotificationScreen = () => {
   } = useNotification();
 
   const [notifications, setNotifications] = useState(undefined);
+  const [refresh, setRefreshing] = useState<boolean>(false);
+
+  const fetchNotifications = async () => {
+    const results = await getNotifications();
+    setNotifications(results);
+  };
 
   useFocusEffect(
     useCallback(() => {
-      const fetchNotifications = async () => {
-        const results = await getNotifications();
-        setNotifications(results);
-      };
-
       fetchNotifications();
     }, []),
   );
 
+  const onRefresh = () => {
+    try {
+      setRefreshing(true);
+      setTimeout(() => {
+        fetchNotifications();
+        setRefreshing(false);
+      }, 1000);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {!notifications ||
-        (notifications.length === 0 && <GeneralMessage title={'No notifications'}/>)}
+        (notifications.length === 0 && (
+          <GeneralMessage title={"No notifications"} />
+        ))}
       <FlatList
+        refreshControl={
+          <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
+        }
         data={notifications ?? []}
         renderItem={(data) => {
           return (

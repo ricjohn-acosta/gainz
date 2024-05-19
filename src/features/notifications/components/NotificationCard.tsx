@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import {SafeAreaView, StyleSheet, View} from "react-native";
 import BasicText from "../../../components/Text/BasicText.tsx";
 
 interface NotificationCardProps {
@@ -9,12 +9,12 @@ interface NotificationCardProps {
 export const NotificationCard = (props: NotificationCardProps) => {
   const { icon, message } = props;
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.iconContainer}>{icon}</View>
       <View style={styles.messageContainer}>
-        <BasicText>{message}</BasicText>
+        <BasicText style={{flex: 1, flexWrap: 'wrap'}}>{message}</BasicText>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   messageContainer: {
+    flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center'
   }
