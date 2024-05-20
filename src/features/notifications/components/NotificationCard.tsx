@@ -12,7 +12,7 @@ export const NotificationCard = (props: NotificationCardProps) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.iconContainer}>{icon}</View>
       <View style={styles.messageContainer}>
-        <BasicText style={{flex: 1, flexWrap: 'wrap'}}>{message}</BasicText>
+        <BasicText>{message}</BasicText>
       </View>
     </SafeAreaView>
   );
@@ -20,6 +20,7 @@ export const NotificationCard = (props: NotificationCardProps) => {
 
 const styles = StyleSheet.create({
   container: {
+    width: '90%',
     flexDirection: "row",
     marginBottom: 20,
   },
