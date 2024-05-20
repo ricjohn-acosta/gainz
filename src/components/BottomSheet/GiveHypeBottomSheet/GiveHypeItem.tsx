@@ -13,6 +13,7 @@ import images from "../../../../assets";
 import Avatar from "../../Avatar/Avatar";
 import { IconButton } from "../../Button/IconButton";
 import BasicText from "../../Text/BasicText";
+import {BottomSheetTextInput} from "@gorhom/bottom-sheet";
 
 interface GiveHypeItemProps {
   userId: string;
@@ -90,7 +91,7 @@ export const GiveHypeItem = (props: GiveHypeItemProps) => {
       {hypeToGive?.counter > 0 && showMessage && (
         <View style={styles.messageContainer}>
           <BasicText style={styles.sendMsgLabel}>Send {username} a message</BasicText>
-          <TextInput
+          <BottomSheetTextInput
             defaultValue={hypeToGive?.message}
             onChangeText={(text) => writeHypeMessage(userId, text)}
             style={styles.messageInput}

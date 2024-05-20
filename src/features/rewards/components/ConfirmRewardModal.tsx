@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { Alert, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import BasicBottomSheet from "../../../components/BottomSheet/BasicBottomSheet";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { PrimaryButton } from "../../../components/Button/PrimaryButton";
@@ -62,11 +62,16 @@ export const ConfirmRewardModal = forwardRef(
               <View style={styles.infoIcon}>
                 <Ionicons name="gift-outline" size={30} color={"#348529"} />
               </View>
-              <BasicText style={styles.confirmTitle}>Confirm redemption</BasicText>
+              <BasicText style={styles.confirmTitle}>
+                Confirm redemption
+              </BasicText>
               <BasicText style={styles.confirmItem}>{name}</BasicText>
               <View style={styles.confirmItemHypeAmountContainer}>
                 <BasicText style={styles.confirmItemHypeAmount}>
-                  for <BasicText style={{ fontFamily: "Poppins-Bold" }}>{amount}</BasicText>
+                  for{" "}
+                  <BasicText style={{ fontFamily: "Poppins-Bold" }}>
+                    {amount}
+                  </BasicText>
                 </BasicText>
                 <MaterialIcons
                   name="local-fire-department"
@@ -93,7 +98,14 @@ export const ConfirmRewardModal = forwardRef(
                 <PrimaryButton
                   onPress={() => {
                     redeemReward(rewardId, name, amount).then((error) => {
-                      if (!error) setRedeemSuccess(true);
+                      if (!error) {
+                        setRedeemSuccess(true);
+                      } else {
+                        Alert.alert(
+                          "Reward unavailable",
+                          "You do not have sufficient hype points to redeem this reward.",
+                        );
+                      }
                     });
                   }}
                   disablePadding
