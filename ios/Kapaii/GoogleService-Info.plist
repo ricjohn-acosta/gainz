@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyAX-5s0dyLNKia38R_q0oYflVwp2ZD3MyU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>309789552401</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mookentooken.gainz</string>
+	<key>PROJECT_ID</key>
+	<string>gainz-461da</string>
+	<key>STORAGE_BUCKET</key>
+	<string>gainz-461da.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:309789552401:ios:12ca400abf7f767ce626b0</string>
+	<key>DATABASE_URL</key>
+	<string>https://gainz-461da-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+</dict>
+</plist>
