@@ -6,6 +6,7 @@
   "build": {
     "development": {
       "developmentClient": true,
+      "distribution": "internal",
       "env": {
         "EXPO_PUBLIC_SUPABASE_URL": "https://chwtkqhuwdbvpgqhdjli.supabase.co",
         "EXPO_PUBLIC_SUPABASE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNod3RrcWh1d2RidnBncWhkamxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5NDYxMzAsImV4cCI6MjAyNTUyMjEzMH0.6Ba244A7pjRQMHrL0HC2AGgVI5Wioi6HK3W22ZimOKE"
