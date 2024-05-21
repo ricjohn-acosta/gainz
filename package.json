@@ -4,6 +4,7 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
+    "start:dev-client": "expo start --dev-client",
     "start:no-dev": "expo start --no-dev --minify",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -11,6 +12,7 @@
     "build:android-locally": "eas build -p android --local",
     "build:ios": "eas build -p ios",
     "build:ios-locally": "eas build -p ios --local",
+    "build:ios-dev-client-locally": "eas build -p ios --profile development-simulator --local",
     "build:ios-dev-client": "eas build -p ios --profile development",
     "build:all": "eas build -p all",
     "start-emulator": "firebase emulators:start",
