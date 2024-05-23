@@ -279,7 +279,7 @@ export const GiveHypeBottomSheet = forwardRef(
               </BasicText>
 
               {!hypeTeamList ||
-                (!memberUsername && hypeTeamList.length === 1 && (
+                (!memberUsername && hypeTeamList.length <= 1 && (
                   <GeneralMessage
                     title={"No team members"}
                     subtitle={
@@ -297,6 +297,7 @@ export const GiveHypeBottomSheet = forwardRef(
                     if (data.item.id === me.username) return null;
                     return (
                       <GiveHypeItem
+                        singleUserHype={!!memberUsername}
                         userId={data.item.username}
                         username={data.item.username}
                         removeHype={handleRemoveHype}

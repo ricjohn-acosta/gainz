@@ -3,6 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
   Image,
+  Keyboard,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -19,6 +20,9 @@ import useProfileStore from "../../../stores/profileStore";
 import { Loading } from "../../../components/Progress/Loading";
 import BasicText from "../../../components/Text/BasicText";
 import { GoogleSignUpButton } from "../../../components/Auth/GoogleSignUpButton.tsx";
+import { BasicTextInput } from "../../../components/Input/BasicTextInput.tsx";
+import { useForm } from "react-hook-form";
+import { commentValidation } from "../../../stores/posts/commentValidation.ts";
 
 interface LoginFormProps {
   setForm?: (form: string) => void;
@@ -30,6 +34,15 @@ export const LoginForm = (props: LoginFormProps) => {
   const {
     data: { me },
   } = useProfileStore();
+
+  const {
+    getValues,
+    control,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm<any>();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,9 +58,15 @@ export const LoginForm = (props: LoginFormProps) => {
   }, [user]);
 
   const handleLogin = () => {
-    login(email, password).then((user) => setUser(user));
+    if (getValues() && getValues("email") && getValues("password")) {
+      const email = getValues("email");
+      const password = getValues("password");
+
+      login(email, password).then((user) => setUser(user));
+    }
   };
 
+  console.log(errors);
   if (notLoaded && (!session || !me)) return <Loading />;
 
   if (!session) {
@@ -67,12 +86,20 @@ export const LoginForm = (props: LoginFormProps) => {
                 color="grey"
               />
             </View>
-            <TextInput
-              onChangeText={(val) => setEmail(val)}
+            <BasicTextInput
+              keyboardType={"email-address"}
               style={styles.input}
+              name={"email"}
+              control={control}
+              rules={{ required: "Enter email" }}
               placeholder="Email"
             />
           </View>
+          {errors && errors["email"] && (
+            <BasicText style={styles.errorMsg}>
+              {errors["email"].message}
+            </BasicText>
+          )}
           <View style={styles.inputContainer}>
             <View style={styles.icon}>
               <MaterialCommunityIcons
@@ -81,22 +108,30 @@ export const LoginForm = (props: LoginFormProps) => {
                 color="grey"
               />
             </View>
-            <TextInput
-              secureTextEntry
-              onChangeText={(val) => setPassword(val)}
+            <BasicTextInput
+              password={true}
               style={styles.input}
+              name={"password"}
+              control={control}
+              rules={{ required: "Enter password" }}
               placeholder="Password"
             />
           </View>
+          {errors && errors["password"] && (
+            <BasicText style={styles.errorMsg}>
+              {errors["password"].message}
+            </BasicText>
+          )}
           <View style={styles.forgotPasswordBtn}>
             <TextButton
+              onPress={() => navigation.navigate("ForgotPassword")}
               textStyle={styles.forgotPasswordText}
               text="Forgot password?"
             />
           </View>
 
           <View style={styles.ctaBtn}>
-            <PrimaryButton onPress={handleLogin} text="Log in" />
+            <PrimaryButton onPress={handleSubmit(handleLogin)} text="Log in" />
           </View>
         </View>
 
@@ -104,7 +139,6 @@ export const LoginForm = (props: LoginFormProps) => {
           <Divider title="or continue with" titleStyle={styles.dividerLabel} />
           <View style={styles.thirdPartyAuthContainer}>
             <Image style={styles.thirdPartyIcon} source={images.fbIcon} />
-            {/*<Image style={styles.thirdPartyIcon} source={images.googleIcon} />*/}
             <GoogleSignUpButton />
           </View>
         </View>
@@ -178,8 +212,6 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
     marginBottom: 10,
     marginTop: 10,
   },
@@ -211,5 +243,9 @@ const styles = StyleSheet.create({
     color: "#1f30fb",
     fontWeight: "normal",
     fontFamily: "Poppins-Regular",
+  },
+  errorMsg: {
+    color: "red",
+    marginLeft: 10,
   },
 });

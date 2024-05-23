@@ -36,6 +36,8 @@ import { useNotifications } from "./src/services/notifications/useNotifications"
 import { useFonts } from "expo-font";
 import { Loading } from "./src/components/Progress/Loading.tsx";
 import { NotificationScreen } from "./src/features/notifications/NotificationScreen.tsx";
+import { ForgotPasswordForm } from "./src/features/welcome/components/ForgotPasswordForm.tsx";
+import * as Linking from "expo-linking";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -356,6 +358,63 @@ export default function App() {
   const lastNotificationResponse = Notifications.useLastNotificationResponse();
   const notificationListener = useRef<Notifications.Subscription>();
 
+  const parseSupabaseUrl = (url: string) => {
+    let parsedUrl = url;
+    if (url.includes("#")) {
+      parsedUrl = url.replace("#", "?");
+    }
+
+    return parsedUrl;
+  };
+
+  const subscribe = (listener: (url: string) => void) => {
+    const onReceiveURL = ({ url }: { url: string }) => {
+      console.log("received url", url);
+      const transformedUrl = parseSupabaseUrl(url);
+      const parsedUrl = Linking.parse(transformedUrl);
+
+      const access_token = parsedUrl.queryParams?.access_token;
+      const refresh_token = parsedUrl.queryParams?.refresh_token;
+
+      if (
+        typeof access_token === "string" &&
+        typeof refresh_token === "string"
+      ) {
+        console.log('test')
+        // void loginWithToken({ access_token, refresh_token });
+      }
+
+      listener(transformedUrl);
+    };
+    const subscription = Linking.addEventListener("url", onReceiveURL);
+
+    return () => {
+      subscription.remove();
+    };
+  };
+
+  const getInitialURL = async () => {
+    const url = await Linking.getInitialURL();
+
+    if (url !== null) {
+      return parseSupabaseUrl(url);
+    }
+
+    return url;
+  };
+
+  const prefix = Linking.createURL("/");
+  const linking = {
+    prefixes: [prefix],
+    config: {
+      screens: {
+        ForgotPassword: "/reset-password",
+      },
+    },
+    getInitialURL,
+    subscribe,
+  };
+
   const checkIfUserSkippedInviteCode = async () => {
     // await AsyncStorage.removeItem('has_skipped_invite_code');
     const result = await AsyncStorage.getItem("has_skipped_invite_code");
@@ -398,6 +457,29 @@ export default function App() {
     };
   }, [me, session, navigationRef]);
 
+  // Handle password reset
+  useEffect(() => {
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "INITIAL_SESSION") {
+        // handle initial session
+      } else if (event === "SIGNED_IN") {
+        // handle sign in event
+      } else if (event === "SIGNED_OUT") {
+        // handle sign out event
+      } else if (event === "PASSWORD_RECOVERY") {
+        // handle password recovery event
+      } else if (event === "TOKEN_REFRESHED") {
+        // handle token refreshed event
+      } else if (event === "USER_UPDATED") {
+        // handle user updated event
+      }
+    });
+
+    return () => {
+      data.subscription.unsubscribe();
+    };
+  }, []);
+
   useEffect(() => {
     if (!lastNotificationResponse) return;
     if (
@@ -421,6 +503,17 @@ export default function App() {
     }
   }, [navigationRef, lastNotificationResponse]);
 
+  useEffect(() => {
+    const handleDeepLink = (event) => {
+      const data = Linking.parse(event.url);
+      console.log(data);
+    };
+
+    const subscription = Linking.addEventListener("url", handleDeepLink);
+
+    return () => subscription.remove();
+  }, []);
+
   const [isLoaded] = useFonts({
     "Poppins-Regular": require("./assets/fonts/Poppins/Poppins-Regular.ttf"),
     "Poppins-Bold": require("./assets/fonts/Poppins/Poppins-Bold.ttf"),
@@ -436,7 +529,11 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#f2f4ff" }}>
       <BottomSheetModalProvider>
-        <NavigationContainer ref={navigationRef} theme={theme}>
+        <NavigationContainer
+          linking={linking}
+          ref={navigationRef}
+          theme={theme}
+        >
           <Stack.Navigator>
             {session && me && !notLoaded ? (
               <>
@@ -502,6 +599,30 @@ export default function App() {
                   name="Signup"
                   component={SignupForm}
                   options={() => ({ headerShown: false })}
+                />
+                <Stack.Screen
+                  name="ForgotPassword"
+                  component={ForgotPasswordForm}
+                  options={({ navigation }) => ({
+                    title: "",
+                    headerStyle: {
+                      backgroundColor: "#f2f4ff",
+                    },
+                    headerTitleStyle: {
+                      fontFamily: "Poppins-Bold",
+                    },
+                    headerTitle: "Forgot password",
+                    headerShown: true,
+                    headerShadowVisible: false,
+                    headerLeft: () => (
+                      <Ionicons
+                        onPress={() => navigation.goBack()}
+                        name="chevron-back-outline"
+                        size={30}
+                        color="black"
+                      />
+                    ),
+                  })}
                 />
               </Stack.Group>
             )}

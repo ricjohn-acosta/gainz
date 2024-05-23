@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "kapaii",
     "name": "Kapaii",
     "slug": "gainz",
     "version": "1.0.0",
@@ -17,12 +18,21 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.mookentooken.gainz",
-      "buildNumber": "34",
+      "buildNumber": "36",
       "googleServicesFile": "./GoogleService-Info.plist",
       "config": {
         "googleSignIn": {
           "reservedClientId": "com.googleusercontent.apps.307561343933-38nip8bflo65ves9dgb2jbennrhobl25"
         }
+      },
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.307561343933-38nip8bflo65ves9dgb2jbennrhobl25"
+            ]
+          }
+        ]
       }
     },
     "android": {

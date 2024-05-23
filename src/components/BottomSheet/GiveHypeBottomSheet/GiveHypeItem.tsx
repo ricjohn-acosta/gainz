@@ -1,4 +1,4 @@
-import {AntDesign, Entypo, MaterialIcons} from "@expo/vector-icons";
+import { AntDesign, Entypo, MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
   Pressable,
@@ -13,7 +13,7 @@ import images from "../../../../assets";
 import Avatar from "../../Avatar/Avatar";
 import { IconButton } from "../../Button/IconButton";
 import BasicText from "../../Text/BasicText";
-import {BottomSheetTextInput} from "@gorhom/bottom-sheet";
+import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 
 interface GiveHypeItemProps {
   userId: string;
@@ -22,10 +22,12 @@ interface GiveHypeItemProps {
   removeHype: (id: string) => void;
   writeHypeMessage: (id: string, message: string) => void;
   hypeToGive: any;
+  singleUserHype: boolean;
 }
 
 export const GiveHypeItem = (props: GiveHypeItemProps) => {
   const {
+    singleUserHype,
     userId,
     username,
     hypeToGive,
@@ -63,25 +65,25 @@ export const GiveHypeItem = (props: GiveHypeItemProps) => {
           </BasicText>
           <View style={styles.countAdjustor}>
             <IconButton
-                onPress={() => addHype(userId)}
+              onPress={() => addHype(userId)}
+              IconComponent={AntDesign}
+              iconProps={{
+                name: "caretup",
+                size: 24,
+                defaultColor: "#1f30fb",
+                pressedColor: "#5f6cff",
+              }}
+            />
+            <View>
+              <IconButton
                 IconComponent={AntDesign}
                 iconProps={{
-                  name: "caretup",
+                  name: "caretdown",
                   size: 24,
                   defaultColor: "#1f30fb",
                   pressedColor: "#5f6cff",
                 }}
-            />
-            <View>
-              <IconButton
-                  IconComponent={AntDesign}
-                  iconProps={{
-                    name: "caretdown",
-                    size: 24,
-                    defaultColor: "#1f30fb",
-                    pressedColor: "#5f6cff",
-                  }}
-                  onPress={() => removeHype(userId)}
+                onPress={() => removeHype(userId)}
               />
             </View>
           </View>
@@ -90,13 +92,24 @@ export const GiveHypeItem = (props: GiveHypeItemProps) => {
 
       {hypeToGive?.counter > 0 && showMessage && (
         <View style={styles.messageContainer}>
-          <BasicText style={styles.sendMsgLabel}>Send {username} a message</BasicText>
-          <BottomSheetTextInput
-            defaultValue={hypeToGive?.message}
-            onChangeText={(text) => writeHypeMessage(userId, text)}
-            style={styles.messageInput}
-            placeholder={`Let them know how awesome they are!`}
-          />
+          <BasicText style={styles.sendMsgLabel}>
+            Send {username} a message
+          </BasicText>
+          {singleUserHype ? (
+            <TextInput
+              defaultValue={hypeToGive?.message}
+              onChangeText={(text) => writeHypeMessage(userId, text)}
+              style={styles.messageInput}
+              placeholder={`Let them know how awesome they are!`}
+            />
+          ) : (
+            <BottomSheetTextInput
+              defaultValue={hypeToGive?.message}
+              onChangeText={(text) => writeHypeMessage(userId, text)}
+              style={styles.messageInput}
+              placeholder={`Let them know how awesome they are!`}
+            />
+          )}
         </View>
       )}
     </View>
@@ -147,13 +160,13 @@ const styles = StyleSheet.create({
   },
   messageInput: {
     marginTop: 4,
-    fontFamily: 'Poppins-Regular'
+    fontFamily: "Poppins-Regular",
   },
   sendMsgLabel: {
     fontFamily: "Poppins-Bold",
   },
   countAdjustor: {
     flexDirection: "column",
-    gap: 6
+    gap: 6,
   },
 });
