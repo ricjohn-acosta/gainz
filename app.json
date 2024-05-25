@@ -26,12 +26,8 @@
         }
       },
       "infoPlist": {
-        "CFBundleURLTypes": [
-          {
-            "CFBundleURLSchemes": [
-              "com.googleusercontent.apps.307561343933-38nip8bflo65ves9dgb2jbennrhobl25"
-            ]
-          }
+        "CFBundleURLSchemes": [
+          "kapaii"
         ]
       }
     },

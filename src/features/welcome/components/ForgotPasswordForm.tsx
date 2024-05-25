@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, StyleSheet, Text, TextInput, View } from "react-native";
 import BasicText from "../../../components/Text/BasicText.tsx";
 import { PrimaryButton } from "../../../components/Button/PrimaryButton.tsx";
 import { BasicTextInput } from "../../../components/Input/BasicTextInput.tsx";
@@ -21,11 +21,15 @@ export const ForgotPasswordForm = () => {
   const handleSendLoginLink = () => {
     if (getValues() && getValues("email")) {
       const email = getValues("email");
-
       resetPassword(email);
+      Alert.alert(
+        "Email sent!",
+        "Please check your email to reset your password",
+      );
     }
   };
 
+  console.log(errors)
   return (
     <View style={styles.container}>
       <BasicText>
@@ -42,6 +46,7 @@ export const ForgotPasswordForm = () => {
         errors={errors}
       />
       <PrimaryButton
+        disabled={errors && errors.email}
         style={{ marginTop: 10 }}
         onPress={handleSubmit(handleSendLoginLink)}
         text={"Send login link!"}

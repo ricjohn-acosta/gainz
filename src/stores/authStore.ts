@@ -11,6 +11,10 @@ interface AuthState {
   session: Session | null;
   setSession: (session: Session | null) => void;
   login: (email: string, password: string) => Promise<User | AuthError | null>;
+  loginWithToken: (
+    access_token: string,
+    refresh_token: string,
+  ) => Promise<User | AuthError | null>;
   signUp: (
     username: string,
     email: string,
@@ -18,9 +22,10 @@ interface AuthState {
   ) => Promise<User | AuthError | null>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  updatePassword: (password: string) => Promise<AuthError>;
 }
 
-const useAuthStore = create<AuthState>((set) => ({
+const useAuthStore = create<AuthState>((set, get) => ({
   notLoaded: true,
   session: null,
   setSession: async (session) => {
@@ -50,6 +55,18 @@ const useAuthStore = create<AuthState>((set) => ({
     await useProfileStore.getState().operations.getMeProfile();
     return Promise.resolve(data.user);
   },
+  loginWithToken: async (access_token, refresh_token) => {
+    const { error } = await supabase.auth.setSession({
+      access_token,
+      refresh_token,
+    });
+
+    if (error) {
+      return Promise.reject(error);
+    }
+
+    await supabase.auth.refreshSession();
+  },
   signUp: async (username, email, password) => {
     if (!email) return Promise.reject("Email is required");
     if (!password) return Promise.reject("Password is required");
@@ -65,7 +82,7 @@ const useAuthStore = create<AuthState>((set) => ({
       },
     });
     if (error) {
-      Alert.alert(error.message);
+      Alert.alert("Sign up error", error.message);
       return Promise.reject(error);
     }
 
@@ -82,10 +99,25 @@ const useAuthStore = create<AuthState>((set) => ({
   resetPassword: async (email) => {
     const resetPasswordURL = Linking.createURL("reset-password");
 
-    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: resetPasswordURL,
     });
-    console.log(data, error);
+
+    if (error) {
+      return Promise.reject(error);
+    }
+  },
+  updatePassword: async (newPassword) => {
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    if (error) {
+      Alert.alert("Update password error", error.message);
+      return Promise.reject(error);
+    }
+
+    return error;
   },
 }));
 

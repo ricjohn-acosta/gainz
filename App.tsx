@@ -38,6 +38,7 @@ import { Loading } from "./src/components/Progress/Loading.tsx";
 import { NotificationScreen } from "./src/features/notifications/NotificationScreen.tsx";
 import { ForgotPasswordForm } from "./src/features/welcome/components/ForgotPasswordForm.tsx";
 import * as Linking from "expo-linking";
+import { ResetPasswordForm } from "./src/features/welcome/components/ResetPasswordForm.tsx";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -336,7 +337,7 @@ const AuthNavigatorStack = () => {
 };
 
 export default function App() {
-  const { session, setSession, logout } = useAuthStore();
+  const { session, setSession, logout, loginWithToken } = useAuthStore();
   const {
     data: { me },
   } = useProfileStore();
@@ -368,8 +369,7 @@ export default function App() {
   };
 
   const subscribe = (listener: (url: string) => void) => {
-    const onReceiveURL = ({ url }: { url: string }) => {
-      console.log("received url", url);
+    const onReceiveURL = async ({ url }: { url: string }) => {
       const transformedUrl = parseSupabaseUrl(url);
       const parsedUrl = Linking.parse(transformedUrl);
 
@@ -380,8 +380,7 @@ export default function App() {
         typeof access_token === "string" &&
         typeof refresh_token === "string"
       ) {
-        console.log('test')
-        // void loginWithToken({ access_token, refresh_token });
+        loginWithToken(access_token, refresh_token);
       }
 
       listener(transformedUrl);
@@ -408,7 +407,7 @@ export default function App() {
     prefixes: [prefix],
     config: {
       screens: {
-        ForgotPassword: "/reset-password",
+        ResetPassword: "/reset-password",
       },
     },
     getInitialURL,
@@ -432,7 +431,7 @@ export default function App() {
         if (session.error) await logout();
       })
       .catch(async (error) => {
-        Alert.alert(error);
+        Alert.alert("Error refreshing session", error);
       });
   }, []);
 
@@ -457,28 +456,34 @@ export default function App() {
     };
   }, [me, session, navigationRef]);
 
-  // Handle password reset
-  useEffect(() => {
-    const { data } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "INITIAL_SESSION") {
-        // handle initial session
-      } else if (event === "SIGNED_IN") {
-        // handle sign in event
-      } else if (event === "SIGNED_OUT") {
-        // handle sign out event
-      } else if (event === "PASSWORD_RECOVERY") {
-        // handle password recovery event
-      } else if (event === "TOKEN_REFRESHED") {
-        // handle token refreshed event
-      } else if (event === "USER_UPDATED") {
-        // handle user updated event
-      }
-    });
-
-    return () => {
-      data.subscription.unsubscribe();
-    };
-  }, []);
+  // Handle screen changes on auth states
+  // useEffect(() => {
+  //   if (!navigationRef.isReady()) return
+  //   const { data } = supabase.auth.onAuthStateChange((event, session) => {
+  //     if (event === "INITIAL_SESSION") {
+  //       // handle initial session
+  //     } else if (event === "SIGNED_IN") {
+  //       // handle sign in event
+  //     } else if (event === "SIGNED_OUT") {
+  //       // handle sign out event
+  //     } else if (event === "PASSWORD_RECOVERY") {
+  //       // handle password recovery event
+  //     } else if (event === "TOKEN_REFRESHED") {
+  //       // handle token refreshed event
+  //     } else if (event === "USER_UPDATED") {
+  //       // handle user updated event
+  //       console.log("password updated");
+  //       navigationRef.navigation.reset({
+  //         index: 0,
+  //         routes: [{ name: "AuthStack" }],
+  //       });
+  //     }
+  //   });
+  //
+  //   return () => {
+  //     data.subscription.unsubscribe();
+  //   };
+  // }, [session, navigationRef]);
 
   useEffect(() => {
     if (!lastNotificationResponse) return;
@@ -502,17 +507,6 @@ export default function App() {
       );
     }
   }, [navigationRef, lastNotificationResponse]);
-
-  useEffect(() => {
-    const handleDeepLink = (event) => {
-      const data = Linking.parse(event.url);
-      console.log(data);
-    };
-
-    const subscription = Linking.addEventListener("url", handleDeepLink);
-
-    return () => subscription.remove();
-  }, []);
 
   const [isLoaded] = useFonts({
     "Poppins-Regular": require("./assets/fonts/Poppins/Poppins-Regular.ttf"),
@@ -622,6 +616,23 @@ export default function App() {
                         color="black"
                       />
                     ),
+                  })}
+                />
+                <Stack.Screen
+                  name="ResetPassword"
+                  component={ResetPasswordForm}
+                  options={({ navigation }) => ({
+                    title: "",
+                    headerStyle: {
+                      backgroundColor: "#f2f4ff",
+                    },
+                    headerTitleStyle: {
+                      fontFamily: "Poppins-Bold",
+                    },
+                    headerTitle: "Reset password",
+                    headerShown: true,
+                    headerShadowVisible: false,
+                    headerLeft: () => <></>,
                   })}
                 />
               </Stack.Group>

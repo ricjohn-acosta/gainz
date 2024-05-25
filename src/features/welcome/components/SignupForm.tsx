@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -17,6 +17,8 @@ import { TextButton } from "../../../components/Button/TextButton";
 import Divider from "../../../components/Divider/Divider";
 import useAuthStore from "../../../stores/authStore";
 import BasicText from "../../../components/Text/BasicText";
+import { useForm } from "react-hook-form";
+import { BasicTextInput } from "../../../components/Input/BasicTextInput.tsx";
 
 interface SignupFormProps {
   setForm?: (form: string) => void;
@@ -26,10 +28,14 @@ export const SignupForm = (props: SignupFormProps) => {
   const navigation = useNavigation<any>();
 
   const { signUp } = useAuthStore();
-
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const {
+    getValues,
+    control,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm<any>();
 
   const [user, setUser] = useState(null);
 
@@ -38,16 +44,22 @@ export const SignupForm = (props: SignupFormProps) => {
       navigation.reset({
         index: 0,
         routes: [{ name: "AuthStack" }],
-      })
+      });
     }
   }, [user]);
 
+  const handleSignup = () => {
+    if (
+      getValues() &&
+      getValues("username") &&
+      getValues("email") &&
+      getValues("password")
+    ) {
+      const username = getValues("username");
+      const email = getValues("email");
+      const password = getValues("password");
 
-  const handleSignup = async () => {
-    try {
-      signUp(username, email, password).then(user => setUser(user));
-    } catch (e) {
-      console.error(e);
+      signUp(username, email, password).then((user) => setUser(user));
     }
   };
 
@@ -66,12 +78,20 @@ export const SignupForm = (props: SignupFormProps) => {
               color="grey"
             />
           </View>
-          <TextInput
-            onChangeText={setUsername}
+          <BasicTextInput
             style={styles.input}
-            placeholder="Name"
+            name={"username"}
+            control={control}
+            rules={{ required: "Username required" }}
+            placeholder="Enter username"
           />
         </View>
+        {errors && errors["username"] && (
+          <BasicText style={styles.errorMsg}>
+            {errors["username"].message}
+          </BasicText>
+        )}
+
         <View style={styles.inputContainer}>
           <View style={styles.icon}>
             <MaterialCommunityIcons
@@ -80,12 +100,21 @@ export const SignupForm = (props: SignupFormProps) => {
               color="grey"
             />
           </View>
-          <TextInput
-            onChangeText={setEmail}
+          <BasicTextInput
+            keyboardType={"email-address"}
             style={styles.input}
-            placeholder="Email"
+            name={"email"}
+            control={control}
+            rules={{ required: "Email required" }}
+            placeholder="Enter email"
           />
         </View>
+        {errors && errors["email"] && (
+          <BasicText style={styles.errorMsg}>
+            {errors["email"].message}
+          </BasicText>
+        )}
+
         <View style={styles.inputContainer}>
           <View style={styles.icon}>
             <MaterialCommunityIcons
@@ -94,16 +123,23 @@ export const SignupForm = (props: SignupFormProps) => {
               color="grey"
             />
           </View>
-          <TextInput
-            secureTextEntry
-            onChangeText={setPassword}
+          <BasicTextInput
+            password
             style={styles.input}
-            placeholder="Password"
+            name={"password"}
+            control={control}
+            rules={{ required: "Password required" }}
+            placeholder="Enter password"
           />
         </View>
+        {errors && errors["password"] && (
+          <BasicText style={styles.errorMsg}>
+            {errors["password"].message}
+          </BasicText>
+        )}
 
         <View style={styles.ctaBtn}>
-          <PrimaryButton onPress={handleSignup} text="Sign up" />
+          <PrimaryButton onPress={handleSubmit(handleSignup)} text="Sign up" />
         </View>
       </View>
 
@@ -139,7 +175,7 @@ const styles = StyleSheet.create({
   logoContainer: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 40,
+    marginTop: 15,
     marginBottom: 70,
   },
   logo: {
@@ -148,15 +184,13 @@ const styles = StyleSheet.create({
     height: 80,
   },
   title: {
-    fontFamily: 'Poppins-Bold',
+    fontFamily: "Poppins-Bold",
     fontSize: 40,
   },
   inputContainer: {
     flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
     marginBottom: 10,
-    marginTop: 10
+    marginTop: 10,
   },
   icon: {
     backgroundColor: "#ffffff",
@@ -168,7 +202,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
   },
   input: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: "Poppins-Regular",
     flex: 1,
     backgroundColor: "#ffffff",
     height: 50,
@@ -214,5 +248,9 @@ const styles = StyleSheet.create({
     height: 50,
     marginLeft: 10,
     marginRight: 10,
+  },
+  errorMsg: {
+    color: "red",
+    marginLeft: 10,
   },
 });

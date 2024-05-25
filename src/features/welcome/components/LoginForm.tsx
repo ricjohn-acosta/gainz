@@ -66,7 +66,6 @@ export const LoginForm = (props: LoginFormProps) => {
     }
   };
 
-  console.log(errors);
   if (notLoaded && (!session || !me)) return <Loading />;
 
   if (!session) {

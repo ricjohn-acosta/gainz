@@ -30,7 +30,6 @@ export const GoogleSignUpButton = () => {
               provider: "google",
               token: userInfo.idToken,
             });
-            console.log(error, data);
           } else {
             throw new Error("no ID token present!");
           }
