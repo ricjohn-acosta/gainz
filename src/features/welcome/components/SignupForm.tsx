@@ -19,6 +19,7 @@ import useAuthStore from "../../../stores/authStore";
 import BasicText from "../../../components/Text/BasicText";
 import { useForm } from "react-hook-form";
 import { BasicTextInput } from "../../../components/Input/BasicTextInput.tsx";
+import { GoogleSignUpButton } from "../../../components/Auth/GoogleSignUpButton.tsx";
 
 interface SignupFormProps {
   setForm?: (form: string) => void;
@@ -146,8 +147,7 @@ export const SignupForm = (props: SignupFormProps) => {
       <View style={styles.dividerContainer}>
         <Divider title="or continue with" titleStyle={styles.dividerLabel} />
         <View style={styles.thirdPartyAuthContainer}>
-          <Image style={styles.thirdPartyIcon} source={images.fbIcon} />
-          <Image style={styles.thirdPartyIcon} source={images.googleIcon} />
+          <GoogleSignUpButton />
         </View>
       </View>
       <View style={styles.signupContainer}>

@@ -137,7 +137,7 @@ export const LoginForm = (props: LoginFormProps) => {
         <View style={styles.dividerContainer}>
           <Divider title="or continue with" titleStyle={styles.dividerLabel} />
           <View style={styles.thirdPartyAuthContainer}>
-            <Image style={styles.thirdPartyIcon} source={images.fbIcon} />
+            {/*<Image style={styles.thirdPartyIcon} source={images.fbIcon} />*/}
             <GoogleSignUpButton />
           </View>
         </View>

@@ -27,7 +27,9 @@
       },
       "infoPlist": {
         "CFBundleURLSchemes": [
-          "kapaii"
+          "kapaii",
+          "exp+gainz",
+          "com.googleusercontent.apps.307561343933-38nip8bflo65ves9dgb2jbennrhobl25"
         ]
       }
     },
