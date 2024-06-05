@@ -23,6 +23,7 @@ import { GiveHypeBottomSheet } from "../../components/BottomSheet/GiveHypeBottom
 import { MaterialIcons } from "@expo/vector-icons";
 import BasicText from "../../components/Text/BasicText";
 import { GeneralMessage } from "../../components/Message/GeneralMessage.tsx";
+import { useMyTeam } from "../gym/hooks/useMyTeam.ts";
 
 export default function ProfileScreen({ route }) {
   const { uid } = route.params;
@@ -36,6 +37,9 @@ export default function ProfileScreen({ route }) {
   const {
     operations: { getUserHypeActivity },
   } = useHypeStore();
+  const {
+    data: { hasNoHypePointsGiven },
+  } = useMyTeam();
 
   const isFocused = useIsFocused();
   const giveHypeBottomSheetRef = useRef<BottomSheetModal>(null);
@@ -183,7 +187,9 @@ export default function ProfileScreen({ route }) {
         </View>
         <View style={styles.halfCard}>
           <View style={{ flexDirection: "row" }}>
-            <BasicText style={styles.counter}>{getHypeRank(uid)}</BasicText>
+            <BasicText style={styles.counter}>
+              {hasNoHypePointsGiven ? "-" : getHypeRank(uid)}
+            </BasicText>
             <MaterialIcons
               name="local-fire-department"
               size={24}
@@ -207,7 +213,7 @@ export default function ProfileScreen({ route }) {
 
       {!hypeActivityListData ||
         (hypeActivityListData.length === 0 && (
-          <View style={{height: 150}}>
+          <View style={{ height: 150 }}>
             <GeneralMessage
               imageStyle={{ width: 200, height: 200 }}
               title={"No activity yet..."}

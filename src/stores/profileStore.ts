@@ -47,6 +47,7 @@ const useProfileStore = create<ProfileState>((set, get) => ({
         }));
 
         get().operations.getTeamProfiles();
+        get().operations.getSubscription();
       }
     },
     getUserProfileByUsername: async (username: string) => {
