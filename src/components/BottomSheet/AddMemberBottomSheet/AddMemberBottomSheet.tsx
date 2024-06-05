@@ -53,8 +53,9 @@ export const AddMemberBottomSheet = forwardRef(
       }
     };
 
+    console.log("asdasd", subscription);
     const displayMemberCountStatus = () => {
-      if (!subscription) return;
+      if (!subscription || !subscription.metadata) return <></>;
 
       // Remaining available seats
       const seats =
@@ -67,7 +68,9 @@ export const AddMemberBottomSheet = forwardRef(
           <BasicText style={{ color: "#1f30fb", fontFamily: "Poppins-Bold" }}>
             {seats}
           </BasicText>{" "}
-          more member{subscription.metadata.seats == 1 ? "" : "s"} in your team.
+          more member
+          {subscription && subscription.metadata.seats == 1 ? "" : "s"} in your
+          team.
         </BasicText>
       );
     };

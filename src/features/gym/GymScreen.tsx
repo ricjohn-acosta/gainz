@@ -59,7 +59,7 @@ export default function GymScreen() {
   };
 
   const showAddMemberBottomSheet = () => {
-    if (!subscription) {
+    if (!subscription || !subscription.metadata) {
       navigation.navigate("SubscribeModal");
       return;
     }
