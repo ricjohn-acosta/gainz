@@ -1,4 +1,11 @@
-import { Alert, Image, StyleSheet, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  StyleSheet,
+  TextInput,
+  View,
+} from "react-native";
 import BasicText from "../../components/Text/BasicText.tsx";
 import { LinearGradient } from "expo-linear-gradient";
 import { Checkbox } from "expo-checkbox";
@@ -9,9 +16,10 @@ import { PaymentSheetError, useStripe } from "@stripe/stripe-react-native";
 import { supabase } from "../../services/supabase.ts";
 import useProfileStore from "../../stores/profileStore.ts";
 import { useNavigation } from "@react-navigation/native";
+import { TextButton } from "../../components/Button/TextButton.tsx";
 
-const oneMemberSubscriptionId = "1_MEMBER";
-const customMemberSubscriptionId = "CUSTOM_MEMBER";
+const FIXED_MEMBER_SUBSCRIPTION = "3_MEMBER";
+const CUSTOM_MEMBER_SUBSCRIPTION = "CUSTOM_MEMBER";
 const FREE_SEAT = 3;
 
 // This screen only shows for users who are going to subscribe for the first time
@@ -25,15 +33,16 @@ export const SubscribeModalScreen = () => {
 
   const [selectedSubscription, setSelectedSubscription] = useState(null);
   const [customMemberAmount, setCustomMemberAmount] = useState("5");
+  const [loading, setLoading] = useState(false);
 
   const displayFinalQuantity = () => {
     if (!selectedSubscription) return "Continue to checkout!";
 
-    if (selectedSubscription === oneMemberSubscriptionId) {
+    if (selectedSubscription === FIXED_MEMBER_SUBSCRIPTION) {
       return `Add 3 member seats for free!`;
     }
 
-    if (selectedSubscription === customMemberSubscriptionId) {
+    if (selectedSubscription === CUSTOM_MEMBER_SUBSCRIPTION) {
       if (Number(customMemberAmount) <= FREE_SEAT) {
         return `Add ${customMemberAmount} member seats for free!`;
       } else {
@@ -45,13 +54,13 @@ export const SubscribeModalScreen = () => {
   const initializePaymentSheet = async () => {
     // Amount of member seats the user purchases
     const seats =
-      selectedSubscription === oneMemberSubscriptionId
-        ? "1"
+      selectedSubscription === FIXED_MEMBER_SUBSCRIPTION
+        ? "3"
         : customMemberAmount;
 
     // Amount the user has to pay
     const quantity =
-      selectedSubscription === oneMemberSubscriptionId
+      selectedSubscription === FIXED_MEMBER_SUBSCRIPTION
         ? 0
         : Number(customMemberAmount) <= 3
           ? 0
@@ -63,6 +72,15 @@ export const SubscribeModalScreen = () => {
     } = await supabase.functions.invoke("stripe-payment-sheet", {
       body: { quantity, seats },
     });
+
+    if (!paymentIntent) {
+      // Payment completed - show a confirmation screen.
+      Alert.alert("Thank you!", "You may now add more members in your team.");
+      getSubscription().then((error) => {
+        if (!error) navigation.goBack();
+      });
+      return;
+    }
 
     const { error: stripeError } = await initPaymentSheet({
       merchantDisplayName: "Kapaii",
@@ -87,6 +105,7 @@ export const SubscribeModalScreen = () => {
   };
 
   const presentStripePaymentSheet = async () => {
+    setLoading(true);
     initializePaymentSheet().then(async () => {
       const { error } = await presentPaymentSheet();
 
@@ -106,6 +125,7 @@ export const SubscribeModalScreen = () => {
           if (!error) navigation.goBack();
         });
       }
+      setLoading(false);
     });
   };
 
@@ -124,6 +144,15 @@ export const SubscribeModalScreen = () => {
   return (
     <View style={styles.container}>
       <LinearGradient style={styles.background} colors={["#004e92", "#000428"]}>
+        <View style={styles.cancelContainer}>
+          <TextButton
+            onPress={() => navigation.goBack()}
+            textStyle={{ color: "#ffffff" }}
+            text={"Cancel"}
+            disabled={loading}
+          />
+        </View>
+
         <View style={styles.logoContainer}>
           <Image style={styles.logo} source={images.kapaiiSquareLogo} />
         </View>
@@ -144,9 +173,9 @@ export const SubscribeModalScreen = () => {
           <View style={styles.card}>
             <View style={styles.itemContainer}>
               <Checkbox
-                value={selectedSubscription === oneMemberSubscriptionId}
+                value={selectedSubscription === FIXED_MEMBER_SUBSCRIPTION}
                 onValueChange={() =>
-                  setSelectedSubscription(oneMemberSubscriptionId)
+                  setSelectedSubscription(FIXED_MEMBER_SUBSCRIPTION)
                 }
               />
               <BasicText>3 members</BasicText>
@@ -157,12 +186,12 @@ export const SubscribeModalScreen = () => {
           <View style={styles.card}>
             <View style={styles.itemContainer}>
               <Checkbox
-                value={selectedSubscription === customMemberSubscriptionId}
+                value={selectedSubscription === CUSTOM_MEMBER_SUBSCRIPTION}
                 onValueChange={() =>
-                  setSelectedSubscription(customMemberSubscriptionId)
+                  setSelectedSubscription(CUSTOM_MEMBER_SUBSCRIPTION)
                 }
               />
-              <BasicText styles={styles.itemName}>Custom</BasicText>
+              <BasicText styles={styles.itemName}>Custom amount</BasicText>
             </View>
             <View style={styles.customAmountContainer}>
               <BasicText>$</BasicText>
@@ -179,15 +208,25 @@ export const SubscribeModalScreen = () => {
           </View>
         </View>
 
-        <PrimaryButton
-          onPress={presentStripePaymentSheet}
-          disabled={
-            !selectedSubscription ||
-            (selectedSubscription === customMemberSubscriptionId &&
-              !customMemberAmount)
-          }
-          text={displayFinalQuantity()}
-        />
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <BasicText style={styles.loadingMessage}>
+              Please stay put! We're doing some magic in the background..
+            </BasicText>
+            <ActivityIndicator size={"large"} />
+          </View>
+        ) : (
+          <PrimaryButton
+            onPress={presentStripePaymentSheet}
+            disabled={
+              !selectedSubscription ||
+              (selectedSubscription === CUSTOM_MEMBER_SUBSCRIPTION &&
+                !customMemberAmount)
+            }
+            text={displayFinalQuantity()}
+          />
+        )}
+
         <BasicText style={styles.checkoutWarning}>
           You won't be charged yet
         </BasicText>
@@ -273,7 +312,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 20,
-    marginBottom: 50,
+    marginBottom: 40,
   },
   logo: {
     borderRadius: 20,
@@ -290,5 +329,16 @@ const styles = StyleSheet.create({
   pricingLabel: {
     color: "#1f30fb",
     fontFamily: "Poppins-Bold",
+  },
+  loadingContainer: {
+    alignItems: "center",
+  },
+  loadingMessage: {
+    fontFamily: "Poppins-Bold",
+    textAlign: "center",
+    color: "#ffffff",
+  },
+  cancelContainer: {
+    alignItems: "flex-end",
   },
 });

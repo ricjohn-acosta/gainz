@@ -621,6 +621,7 @@ export default function App() {
                     name="SubscribeModal"
                     component={SubscribeModalStack}
                     options={({ navigation }) => ({
+                      gestureEnabled: false,
                       presentation: "modal",
                       headerShown: false,
                       headerStyle: {
