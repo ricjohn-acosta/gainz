@@ -3,6 +3,7 @@ import { supabase } from "../services/supabase";
 import useProfileStore from "./profileStore";
 import { PostgrestError } from "@supabase/supabase-js";
 import { sortTeamBy } from "../helpers/teamSorter";
+import { Alert } from "react-native";
 
 interface TeamState {
   data: {
@@ -31,7 +32,7 @@ const useTeamStore = create<TeamState>((set, get) => ({
       const { data, error } = await supabase
         .from("team_members")
         .select("*")
-        .eq("team_id", me.team_id)
+        .eq("team_id", me.team_id);
       if (error) {
         console.error(error);
         return error;

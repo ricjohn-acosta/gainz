@@ -39,6 +39,8 @@ import { NotificationScreen } from "./src/features/notifications/NotificationScr
 import { ForgotPasswordForm } from "./src/features/welcome/components/ForgotPasswordForm.tsx";
 import * as Linking from "expo-linking";
 import { ResetPasswordForm } from "./src/features/welcome/components/ResetPasswordForm.tsx";
+import { StripeProvider } from "@stripe/stripe-react-native";
+import { SubscribeModalScreen } from "./src/features/subscribe/SubscribeModalScreen.tsx";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -278,6 +280,37 @@ const RewardModalStack = () => {
               />
             </View>
           ),
+        })}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const SubscribeModalStack = () => {
+  return (
+    <Stack.Navigator initialRouteName="SubscribeModalScreen">
+      <Stack.Screen
+        name="Subscribe"
+        component={SubscribeModalScreen}
+        options={({ navigation }) => ({
+          headerTitle: "",
+          headerShown: false,
+          headerStyle: {
+            backgroundColor: "#f2f4ff",
+          },
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <View style={{ marginLeft: 16 }}>
+              <TextButton
+                onPress={() => {
+                  navigation.goBack();
+                }}
+                textStyle={{ color: "#1f30fb" }}
+                text={"Cancel"}
+              />
+            </View>
+          ),
+          headerRight: () => <></>,
         })}
       />
     </Stack.Navigator>
@@ -528,130 +561,145 @@ export default function App() {
           ref={navigationRef}
           theme={theme}
         >
-          <Stack.Navigator>
-            {session && me && !notLoaded ? (
-              <>
-                {/*{!hasUserSkippedInviteCode && (*/}
-                {/*  <Stack.Screen*/}
-                {/*    name="Invitation"*/}
-                {/*    component={InvitationForm}*/}
-                {/*    options={({ navigation }) => ({*/}
-                {/*      headerTitle: "",*/}
-                {/*      headerShown: true,*/}
-                {/*      headerStyle: {*/}
-                {/*        backgroundColor: "#f2f4ff",*/}
-                {/*      },*/}
-                {/*      headerShadowVisible: false,*/}
-                {/*      headerRight: () => (*/}
-                {/*        <View style={{ marginRight: 20 }}>*/}
-                {/*          <TextButton*/}
-                {/*            text="Skip"*/}
-                {/*            textStyle={{ color: "grey" }}*/}
-                {/*            onPress={() => {*/}
-                {/*              AsyncStorage.setItem(*/}
-                {/*                "has_skipped_invite_code",*/}
-                {/*                "true",*/}
-                {/*              ).then(() =>*/}
-                {/*                navigation.reset({*/}
-                {/*                  index: 0,*/}
-                {/*                  routes: [{ name: "AuthStack" }],*/}
-                {/*                }),*/}
-                {/*              );*/}
-                {/*            }}*/}
-                {/*          />*/}
-                {/*        </View>*/}
-                {/*      ),*/}
-                {/*    })}*/}
-                {/*  />*/}
-                {/*)}*/}
-                <Stack.Screen
-                  name="AuthStack"
-                  component={AuthNavigatorStack}
-                  options={() => ({ headerShown: false })}
-                />
-                <Stack.Screen
-                  name="RewardModal"
-                  component={RewardModalStack}
-                  options={({ navigation }) => ({
-                    presentation: "modal",
-                    headerTitle: "Rewards",
-                    headerShown: false,
-                    headerStyle: {
-                      backgroundColor: "#f2f4ff",
-                    },
-                  })}
-                />
-              </>
-            ) : (
-              <Stack.Group>
-                <Stack.Screen
-                  name="Login"
-                  component={LoginForm}
-                  options={() => ({ headerShown: false })}
-                />
-                <Stack.Screen
-                  name="Signup"
-                  component={SignupForm}
-                  options={() => ({ headerShown: false })}
-                />
-                <Stack.Screen
-                  name="ForgotPassword"
-                  component={ForgotPasswordForm}
-                  options={({ navigation }) => ({
-                    title: "",
-                    headerStyle: {
-                      backgroundColor: "#f2f4ff",
-                    },
-                    headerTitleStyle: {
-                      fontFamily: "Poppins-Bold",
-                    },
-                    headerTitle: "Forgot password",
-                    headerShown: true,
-                    headerShadowVisible: false,
-                    headerLeft: () => (
-                      <Ionicons
-                        onPress={() => navigation.goBack()}
-                        name="chevron-back-outline"
-                        size={30}
-                        color="black"
-                      />
-                    ),
-                  })}
-                />
-                <Stack.Screen
-                  name="ResetPassword"
-                  component={ResetPasswordForm}
-                  options={({ navigation }) => ({
-                    title: "",
-                    headerStyle: {
-                      backgroundColor: "#f2f4ff",
-                    },
-                    headerTitleStyle: {
-                      fontFamily: "Poppins-Bold",
-                    },
-                    headerTitle: "Reset password",
-                    headerShown: true,
-                    headerShadowVisible: false,
-                    headerLeft: () => <></>,
-                  })}
-                />
-              </Stack.Group>
-            )}
-            {/*{notLoaded && (*/}
-            {/*  <Stack.Group>*/}
-            {/*    <Stack.Screen*/}
-            {/*      name="Login"*/}
-            {/*      component={LoginForm}*/}
-            {/*      options={() => ({ headerShown: false })}*/}
-            {/*    />*/}
-            {/*    <Stack.Screen*/}
-            {/*      name="Signup"*/}
-            {/*      component={SignupForm}*/}
-            {/*      options={() => ({ headerShown: false })}*/}
-            {/*    />*/}
-            {/*  </Stack.Group>*/}
-            {/*)}*/}
-          </Stack.Navigator>
+          <StripeProvider
+            publishableKey={process.env.EXPO_PUBLIC_DEV_STRIPE_PUBLISHABLE_KEY}
+          >
+            <Stack.Navigator>
+              {session && me && !notLoaded ? (
+                <>
+                  {/*{!hasUserSkippedInviteCode && (*/}
+                  {/*  <Stack.Screen*/}
+                  {/*    name="Invitation"*/}
+                  {/*    component={InvitationForm}*/}
+                  {/*    options={({ navigation }) => ({*/}
+                  {/*      headerTitle: "",*/}
+                  {/*      headerShown: true,*/}
+                  {/*      headerStyle: {*/}
+                  {/*        backgroundColor: "#f2f4ff",*/}
+                  {/*      },*/}
+                  {/*      headerShadowVisible: false,*/}
+                  {/*      headerRight: () => (*/}
+                  {/*        <View style={{ marginRight: 20 }}>*/}
+                  {/*          <TextButton*/}
+                  {/*            text="Skip"*/}
+                  {/*            textStyle={{ color: "grey" }}*/}
+                  {/*            onPress={() => {*/}
+                  {/*              AsyncStorage.setItem(*/}
+                  {/*                "has_skipped_invite_code",*/}
+                  {/*                "true",*/}
+                  {/*              ).then(() =>*/}
+                  {/*                navigation.reset({*/}
+                  {/*                  index: 0,*/}
+                  {/*                  routes: [{ name: "AuthStack" }],*/}
+                  {/*                }),*/}
+                  {/*              );*/}
+                  {/*            }}*/}
+                  {/*          />*/}
+                  {/*        </View>*/}
+                  {/*      ),*/}
+                  {/*    })}*/}
+                  {/*  />*/}
+                  {/*)}*/}
+                  <Stack.Screen
+                    name="AuthStack"
+                    component={AuthNavigatorStack}
+                    options={() => ({ headerShown: false })}
+                  />
+                  <Stack.Screen
+                    name="RewardModal"
+                    component={RewardModalStack}
+                    options={({ navigation }) => ({
+                      presentation: "modal",
+                      headerTitle: "Rewards",
+                      headerShown: false,
+                      headerStyle: {
+                        backgroundColor: "#f2f4ff",
+                      },
+                    })}
+                  />
+                  <Stack.Screen
+                    name="SubscribeModal"
+                    component={SubscribeModalStack}
+                    options={({ navigation }) => ({
+                      presentation: "modal",
+                      headerShown: false,
+                      headerStyle: {
+                        backgroundColor: "#f2f4ff",
+                      },
+                    })}
+                  />
+                </>
+              ) : (
+                <Stack.Group>
+                  <Stack.Screen
+                    name="Login"
+                    component={LoginForm}
+                    options={() => ({ headerShown: false })}
+                  />
+                  <Stack.Screen
+                    name="Signup"
+                    component={SignupForm}
+                    options={() => ({ headerShown: false })}
+                  />
+                  <Stack.Screen
+                    name="ForgotPassword"
+                    component={ForgotPasswordForm}
+                    options={({ navigation }) => ({
+                      title: "",
+                      headerStyle: {
+                        backgroundColor: "#f2f4ff",
+                      },
+                      headerTitleStyle: {
+                        fontFamily: "Poppins-Bold",
+                      },
+                      headerTitle: "Forgot password",
+                      headerShown: true,
+                      headerShadowVisible: false,
+                      headerLeft: () => (
+                        <Ionicons
+                          onPress={() => navigation.goBack()}
+                          name="chevron-back-outline"
+                          size={30}
+                          color="black"
+                        />
+                      ),
+                    })}
+                  />
+                  <Stack.Screen
+                    name="ResetPassword"
+                    component={ResetPasswordForm}
+                    options={({ navigation }) => ({
+                      title: "",
+                      headerStyle: {
+                        backgroundColor: "#f2f4ff",
+                      },
+                      headerTitleStyle: {
+                        fontFamily: "Poppins-Bold",
+                      },
+                      headerTitle: "Reset password",
+                      headerShown: true,
+                      headerShadowVisible: false,
+                      headerLeft: () => <></>,
+                    })}
+                  />
+                </Stack.Group>
+              )}
+              {/*{notLoaded && (*/}
+              {/*  <Stack.Group>*/}
+              {/*    <Stack.Screen*/}
+              {/*      name="Login"*/}
+              {/*      component={LoginForm}*/}
+              {/*      options={() => ({ headerShown: false })}*/}
+              {/*    />*/}
+              {/*    <Stack.Screen*/}
+              {/*      name="Signup"*/}
+              {/*      component={SignupForm}*/}
+              {/*      options={() => ({ headerShown: false })}*/}
+              {/*    />*/}
+              {/*  </Stack.Group>*/}
+              {/*)}*/}
+            </Stack.Navigator>
+          </StripeProvider>
         </NavigationContainer>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>

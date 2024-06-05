@@ -7,12 +7,14 @@ import { PostgrestError } from "@supabase/supabase-js";
 interface ProfileState {
   data: {
     me?: any;
+    subscription?: any;
     team?: any;
   };
   operations: {
     getMeProfile: () => Promise<PostgrestError | any>;
     getUserProfileByUsername: (username: string) => Promise<PostgrestError>;
     getTeamProfiles: () => Promise<any>;
+    getSubscription: () => Promise<PostgrestError>;
   };
 }
 
@@ -20,6 +22,7 @@ const useProfileStore = create<ProfileState>((set, get) => ({
   data: {
     me: null,
     team: null,
+    subscription: null,
   },
   operations: {
     getMeProfile: async () => {
@@ -73,6 +76,21 @@ const useProfileStore = create<ProfileState>((set, get) => ({
         data: { ...state.data, team: teamProfiles },
       }));
       return data;
+    },
+    getSubscription: async () => {
+      const {
+        data: { subscription },
+        error: fnError,
+      } = await supabase.functions.invoke("stripe-user-subscription");
+
+      if (fnError) {
+        return fnError;
+      }
+
+      set((state) => ({
+        ...state,
+        data: { ...state.data, subscription },
+      }));
     },
   },
 }));

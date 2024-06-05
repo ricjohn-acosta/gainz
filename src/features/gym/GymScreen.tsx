@@ -21,11 +21,12 @@ import images from "../../../assets";
 import { AddMemberBottomSheet } from "../../components/BottomSheet/AddMemberBottomSheet/AddMemberBottomSheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BasicText from "../../components/Text/BasicText";
-import {useNavigation} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
+import { useInviteMember } from "../welcome/hooks/useInviteMember.ts";
 
 export default function GymScreen({ props }) {
   const {
-    data: { me },
+    data: { me, subscription },
     operations: { getMeProfile, getTeamProfiles },
   } = useProfileStore();
   const {
@@ -45,7 +46,7 @@ export default function GymScreen({ props }) {
       setRefreshing(true);
       setTimeout(() => {
         getMeProfile().then((error) => {
-          if (error) return
+          if (error) return;
           getTeamProfiles();
           getMyTeam();
         });
@@ -56,9 +57,15 @@ export default function GymScreen({ props }) {
     }
   };
 
-  const showAddMemberBottomSheet = useCallback(() => {
+  const showAddMemberBottomSheet = () => {
+    // Show purchase sub screen if user has not subscription
+    if (!subscription || subscription.metadata.seats == 0) {
+      navigation.navigate("SubscribeModal");
+      return;
+    }
+
     addMemberBottomSheetRef.current?.present();
-  }, []);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -78,11 +85,15 @@ export default function GymScreen({ props }) {
             />
           </View>
           <View style={styles.titleContainer}>
-            <BasicText style={styles.subtitle}>Let's spread appreciation,</BasicText>
+            <BasicText style={styles.subtitle}>
+              Let's spread appreciation,
+            </BasicText>
             <BasicText style={styles.title}>{me.username} 💪</BasicText>
           </View>
           <View>
-            <TouchableOpacity onPress={() => navigation.navigate("Notification")}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Notification")}
+            >
               <Ionicons name="notifications" size={26} color="black" />
             </TouchableOpacity>
           </View>

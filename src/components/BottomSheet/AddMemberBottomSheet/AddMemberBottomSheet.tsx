@@ -17,40 +17,30 @@ import { BasicBottomSheetTextInput } from "../../Input/BasicBottomSheetTextInput
 import { useForm } from "react-hook-form";
 import { inviteValidation } from "./inviteValidation";
 import BasicText from "../../Text/BasicText";
+import useTeamStore from "../../../stores/teamStore.ts";
 
 interface AddMemberBottomSheetProps {}
 
 export const AddMemberBottomSheet = forwardRef(
   (props: AddMemberBottomSheetProps, ref) => {
     const {
-      data: { me },
+      data: { subscription },
     } = useProfileStore();
+    const {
+      data: { myTeam },
+    } = useTeamStore();
     const {
       operations: { sendInvite },
     } = useInviteMember();
+
     const {
       getValues,
       control,
       handleSubmit,
-      clearErrors,
       formState: { errors },
     } = useForm<any>();
 
     const [inviteSent, setInviteSent] = useState(false);
-    const [index, setIndex] = useState(null);
-
-    // Detect if we've closed the bottom sheet
-    // useEffect(() => {
-    //   if (!index) return;
-    //   if (index === -1) {
-    //     setInviteSent(false);
-    //     clearErrors();
-    //   }
-    // }, [index]);
-
-    const handleOnChange = (index) => {
-      setIndex(index);
-    };
 
     const handleInvite = async () => {
       if (getValues() && getValues("email")) {
@@ -63,15 +53,31 @@ export const AddMemberBottomSheet = forwardRef(
       }
     };
 
+    const displayMemberCountStatus = () => {
+      if (!subscription) return;
+
+      // Remaining available seats
+      const seats = subscription.metadata.seats - myTeam.length;
+
+      return (
+        <BasicText style={styles.subtitle}>
+          You may add{" "}
+          <BasicText style={{ color: "#1f30fb", fontFamily: "Poppins-Bold" }}>
+            {seats}
+          </BasicText>{" "}
+          more member{subscription.metadata.seats == 1 ? "" : "s"} in your team.
+        </BasicText>
+      );
+    };
+
     return (
       <SafeAreaView>
-        <BasicBottomSheet
-          handleOnChange={handleOnChange}
-          ref={ref}
-          _snapPoints={["50%"]}
-        >
+        <BasicBottomSheet ref={ref} _snapPoints={["50%"]}>
           <View style={{ padding: 20 }}>
-            <BasicText style={styles.addMemberMessage}>Invite a member!</BasicText>
+            <BasicText style={styles.addMemberMessage}>
+              Invite a member!
+            </BasicText>
+            {displayMemberCountStatus()}
             <BasicBottomSheetTextInput
               name={"email"}
               errors={errors}
@@ -144,5 +150,9 @@ const styles = StyleSheet.create({
   inviteSentMsg: {
     fontFamily: "Poppins-Bold",
     color: "#1f30fb",
+  },
+  subtitle: {
+    color: "grey",
+    marginTop: 6,
   },
 });
