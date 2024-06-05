@@ -22,6 +22,7 @@ import { AddMemberBottomSheet } from "../../components/BottomSheet/AddMemberBott
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BasicText from "../../components/Text/BasicText";
 import { useNavigation } from "@react-navigation/native";
+import Avatar from "../../components/Avatar/Avatar.tsx";
 
 export default function GymScreen() {
   const {
@@ -111,12 +112,8 @@ export default function GymScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.headerContainer}>
-          <View>
-            <ImageBackground
-              style={styles.avatar}
-              resizeMode="cover"
-              source={require("../../../assets/mocks/fake-profile1.jpeg")}
-            />
+          <View style={styles.meAvatarContainer}>
+            <Avatar md />
           </View>
           <View style={styles.titleContainer}>
             <BasicText style={styles.subtitle}>
@@ -163,6 +160,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   titleContainer: {
+    marginLeft: 10,
     marginTop: 10,
     flex: 1,
   },
@@ -203,5 +201,8 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: "center",
     alignItems: "center",
+  },
+  meAvatarContainer: {
+    marginTop: 4,
   },
 });

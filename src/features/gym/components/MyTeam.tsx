@@ -1,22 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
-import {
-  Text,
-  View,
-  StyleSheet,
-  ImageBackground,
-  TouchableOpacity,
-  FlatList,
-  ActivityIndicator,
-} from "react-native";
+import { View, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 
-import images from "../../../../assets";
 import Avatar from "../../../components/Avatar/Avatar";
 import useProfileStore from "../../../stores/profileStore";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { AddMemberBottomSheet } from "../../../components/BottomSheet/AddMemberBottomSheet/AddMemberBottomSheet";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useMyTeam } from "../hooks/useMyTeam";
 import useTeamStore from "../../../stores/teamStore";
+import BasicText from "../../../components/Text/BasicText.tsx";
 
 export default function MyTeam() {
   const navigation = useNavigation<any>();
@@ -28,19 +16,19 @@ export default function MyTeam() {
   } = useTeamStore();
 
   const getListData = () => {
-    if (!myTeam || !meTeamData) return
-    const filteredTeamData = myTeam.filter(user => user.profile_id  !== me.id)
-    meTeamData.sortOrder = 1
+    if (!myTeam || !meTeamData) return;
+    const filteredTeamData = myTeam.filter((user) => user.profile_id !== me.id);
+    meTeamData.sortOrder = 1;
 
     if (myTeam.length > 1) {
       // only show if there are other members in the team apart from the team owner
-      return [meTeamData, ...filteredTeamData]
+      return [meTeamData, ...filteredTeamData];
     } else {
-      return []
+      return [];
     }
-  }
+  };
 
-  if (!myTeam) return null
+  if (!myTeam) return null;
 
   return (
     <>
@@ -61,9 +49,11 @@ export default function MyTeam() {
             return (
               <View style={{ flexDirection: "column" }}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("Profile", {
-                    uid: data.item.profile_id
-                  })}
+                  onPress={() =>
+                    navigation.navigate("Profile", {
+                      uid: data.item.profile_id,
+                    })
+                  }
                 >
                   <Avatar
                     url={data.item.img}
@@ -71,6 +61,9 @@ export default function MyTeam() {
                     username={data.item.username}
                     md
                   />
+                  {me.username === data.item.username && (
+                    <BasicText style={styles.youIndicator}>🫵</BasicText>
+                  )}
                 </TouchableOpacity>
               </View>
             );
@@ -88,7 +81,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: "Poppins-Bold",
-    fontFamily: "Poppins-Bold",
     fontSize: 22,
     color: "#000000",
     marginBottom: 10,
@@ -103,5 +95,13 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     justifyContent: "center",
     alignItems: "center",
+  },
+  youIndicator: {
+    position: 'absolute',
+    left: 18,
+    top: -22,
+    color: "grey",
+    textAlign: "center",
+    fontSize: 16,
   },
 });
