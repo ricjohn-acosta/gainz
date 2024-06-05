@@ -1,14 +1,14 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import {
   ImageBackground,
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 
 import MyStats from "./components/MyStats";
@@ -22,14 +22,14 @@ import { AddMemberBottomSheet } from "../../components/BottomSheet/AddMemberBott
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BasicText from "../../components/Text/BasicText";
 import { useNavigation } from "@react-navigation/native";
-import { useInviteMember } from "../welcome/hooks/useInviteMember.ts";
 
-export default function GymScreen({ props }) {
+export default function GymScreen() {
   const {
-    data: { me, subscription },
-    operations: { getMeProfile, getTeamProfiles },
+    data: { me, subscription, loadingSubscription },
+    operations: { getMeProfile, getTeamProfiles, getSubscription },
   } = useProfileStore();
   const {
+    data: { myTeam },
     operations: { getMyTeam },
   } = useTeamStore();
   const {
@@ -49,6 +49,7 @@ export default function GymScreen({ props }) {
           if (error) return;
           getTeamProfiles();
           getMyTeam();
+          getSubscription();
         });
         setRefreshing(false);
       }, 1000);
@@ -58,13 +59,41 @@ export default function GymScreen({ props }) {
   };
 
   const showAddMemberBottomSheet = () => {
+    const teamSize = myTeam.length;
+    const availableSeatCount =
+      subscription.metadata.seats <= teamSize
+        ? 0
+        : subscription.metadata.seats - teamSize;
+
     // Show purchase sub screen if user has not subscription
-    if (!subscription || subscription.metadata.seats == 0) {
+    if (availableSeatCount === 0) {
       navigation.navigate("SubscribeModal");
       return;
     }
 
     addMemberBottomSheetRef.current?.present();
+  };
+
+  const renderInviteButton = () => {
+    if (loadingSubscription) return <ActivityIndicator size={"small"} />;
+
+    return (
+      canInvite && (
+        <TouchableOpacity onPress={showAddMemberBottomSheet}>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <ImageBackground style={styles.addMemberBtn} source={images.add} />
+            <View style={{ marginTop: 4 }}>
+              <BasicText style={{ color: "#808080" }}>Invite</BasicText>
+            </View>
+          </View>
+        </TouchableOpacity>
+      )
+    );
   };
 
   return (
@@ -104,24 +133,7 @@ export default function GymScreen({ props }) {
         <View style={styles.teamsTitleContainer}>
           <BasicText style={styles.teamsTitle}>Your team</BasicText>
           <AcceptInvitation />
-          {canInvite && (
-            <TouchableOpacity onPress={showAddMemberBottomSheet}>
-              <View
-                style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <ImageBackground
-                  style={styles.addMemberBtn}
-                  source={images.add}
-                />
-                <View style={{ marginTop: 4 }}>
-                  <BasicText style={{ color: "#808080" }}>Invite</BasicText>
-                </View>
-              </View>
-            </TouchableOpacity>
-          )}
+          {renderInviteButton()}
         </View>
         <MyTeam />
         <AddMemberBottomSheet ref={addMemberBottomSheetRef} />

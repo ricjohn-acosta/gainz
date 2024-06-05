@@ -7,6 +7,7 @@ import { PostgrestError } from "@supabase/supabase-js";
 interface ProfileState {
   data: {
     me?: any;
+    loadingSubscription?: boolean;
     subscription?: any;
     team?: any;
   };
@@ -23,6 +24,7 @@ const useProfileStore = create<ProfileState>((set, get) => ({
     me: null,
     team: null,
     subscription: null,
+    loadingSubscription: false,
   },
   operations: {
     getMeProfile: async () => {
@@ -39,7 +41,11 @@ const useProfileStore = create<ProfileState>((set, get) => ({
         return error;
       }
       if (data) {
-        set({ data: { me: data[0] } });
+        set((state) => ({
+          ...state,
+          data: { me: data[0] },
+        }));
+
         get().operations.getTeamProfiles();
       }
     },
@@ -78,6 +84,10 @@ const useProfileStore = create<ProfileState>((set, get) => ({
       return data;
     },
     getSubscription: async () => {
+      set((state) => ({
+        ...state,
+        data: { ...state.data, loadingSubscription: true },
+      }));
       const {
         data: { subscription },
         error: fnError,
@@ -90,6 +100,10 @@ const useProfileStore = create<ProfileState>((set, get) => ({
       set((state) => ({
         ...state,
         data: { ...state.data, subscription },
+      }));
+      set((state) => ({
+        ...state,
+        data: { ...state.data, loadingSubscription: false },
       }));
     },
   },

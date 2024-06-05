@@ -24,7 +24,7 @@ interface AddMemberBottomSheetProps {}
 export const AddMemberBottomSheet = forwardRef(
   (props: AddMemberBottomSheetProps, ref) => {
     const {
-      data: { subscription },
+      data: { me, subscription },
     } = useProfileStore();
     const {
       data: { myTeam },
@@ -57,7 +57,9 @@ export const AddMemberBottomSheet = forwardRef(
       if (!subscription) return;
 
       // Remaining available seats
-      const seats = subscription.metadata.seats - myTeam.length;
+      const seats =
+        subscription.metadata.seats -
+        myTeam.filter((user) => user.profile_id === me.id).length;
 
       return (
         <BasicText style={styles.subtitle}>
