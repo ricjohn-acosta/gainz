@@ -32,14 +32,26 @@ serve(async (req) => {
       priceId,
     );
 
-    console.log('subscription', subscription)
-    // Return the customer details as well as the Stripe publishable key which we have set in our secrets.
-    const res = {
-      paymentIntent: subscription.latest_invoice.payment_intent.client_secret,
-      ephemeralKey: ephemeralKey.secret,
-      customer: customer,
-      subscriptionId: subscription.id,
-    };
+    let res;
+
+    if (!subscription.latest_invoice.payment_intent) {
+      res = {
+        paymentIntent: null,
+        ephemeralKey: ephemeralKey.secret,
+        customer: customer,
+        subscriptionId: subscription.id,
+      };
+    } else {
+      // Return the customer details as well as the Stripe publishable key which we have set in our secrets.
+      res = {
+        paymentIntent: subscription.latest_invoice.payment_intent.client_secret,
+        ephemeralKey: ephemeralKey.secret,
+        customer: customer,
+        subscriptionId: subscription.id,
+      };
+    }
+    console.log("subscription", subscription);
+
     return new Response(JSON.stringify(res), {
       headers: { "Content-Type": "application/json" },
       status: 200,
