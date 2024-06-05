@@ -59,6 +59,11 @@ export default function GymScreen() {
   };
 
   const showAddMemberBottomSheet = () => {
+    if (!subscription) {
+      navigation.navigate("SubscribeModal");
+      return;
+    }
+
     const teamSize = myTeam.length;
     const availableSeatCount =
       subscription.metadata.seats <= teamSize
@@ -145,7 +150,7 @@ export default function GymScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 12,
+    marginTop: 50,
     marginLeft: 12,
     marginRight: 12,
   },
