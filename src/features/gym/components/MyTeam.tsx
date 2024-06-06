@@ -4,7 +4,6 @@ import { View, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import Avatar from "../../../components/Avatar/Avatar";
 import useProfileStore from "../../../stores/profileStore";
 import useTeamStore from "../../../stores/teamStore";
-import BasicText from "../../../components/Text/BasicText.tsx";
 
 export default function MyTeam() {
   const navigation = useNavigation<any>();
