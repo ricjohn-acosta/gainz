@@ -76,7 +76,11 @@ export const AddMemberBottomSheet = forwardRef(
 
     return (
       <SafeAreaView>
-        <BasicBottomSheet ref={ref} _snapPoints={["50%"]}>
+        <BasicBottomSheet
+          onDismiss={() => setInviteSent(false)}
+          ref={ref}
+          _snapPoints={["50%"]}
+        >
           <View style={{ padding: 20 }}>
             <BasicText style={styles.addMemberMessage}>
               Invite a member!
