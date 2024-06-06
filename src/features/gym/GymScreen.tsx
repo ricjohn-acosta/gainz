@@ -113,7 +113,15 @@ export default function GymScreen() {
       >
         <View style={styles.headerContainer}>
           <View style={styles.meAvatarContainer}>
-            <Avatar md />
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("Profile", {
+                  uid: me.id,
+                })
+              }
+            >
+              <Avatar md />
+            </TouchableOpacity>
           </View>
           <View style={styles.titleContainer}>
             <BasicText style={styles.subtitle}>
