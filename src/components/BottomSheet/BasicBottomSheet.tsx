@@ -1,9 +1,6 @@
-import BottomSheet, { BottomSheetModal } from "@gorhom/bottom-sheet";
-import {
-  BottomSheetMethods,
-  BottomSheetModalMethods,
-} from "@gorhom/bottom-sheet/lib/typescript/types";
-import React, { forwardRef, useMemo, useState } from "react";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
+import React, { forwardRef, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 
 interface BasicBottomSheetProps {
