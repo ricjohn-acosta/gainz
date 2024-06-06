@@ -53,7 +53,6 @@ export const AddMemberBottomSheet = forwardRef(
       }
     };
 
-    console.log("asdasd", subscription);
     const displayMemberCountStatus = () => {
       if (!subscription || !subscription.metadata) return <></>;
 
