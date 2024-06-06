@@ -46,6 +46,7 @@ export default function MyTeam() {
           data={getListData()}
           numColumns={3}
           renderItem={(data: any) => {
+            if (me.id === data.item.profile_id) return null;
             return (
               <View style={{ flexDirection: "column" }}>
                 <TouchableOpacity
@@ -61,9 +62,6 @@ export default function MyTeam() {
                     username={data.item.username}
                     md
                   />
-                  {me.username === data.item.username && (
-                    <BasicText style={styles.youIndicator}>🫵</BasicText>
-                  )}
                 </TouchableOpacity>
               </View>
             );
@@ -97,7 +95,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   youIndicator: {
-    position: 'absolute',
+    position: "absolute",
     left: 18,
     top: -22,
     color: "grey",
