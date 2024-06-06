@@ -45,17 +45,8 @@ export const GiveHypeBottomSheet = forwardRef(
     const [hypeTeamList, setHypeTeamList] = useState(null);
     const [submitLoading, setSubmitLoading] = useState(false);
     const [showSuccessView, setShowSuccessView] = useState(false);
-    const [index, setIndex] = useState(null);
 
     const givableHypeLimit = 5;
-
-    // Detect if we've closed the bottom sheet
-    useEffect(() => {
-      if (!index) return;
-      if (index === -1) {
-        setShowSuccessView(false);
-      }
-    }, [index]);
 
     useEffect(() => {
       if (!myTeam) return;
@@ -157,10 +148,6 @@ export const GiveHypeBottomSheet = forwardRef(
       });
     };
 
-    const handleOnChange = (index) => {
-      setIndex(index);
-    };
-
     const handleSubmit = async () => {
       if (!hypeToGiveCounter) return;
 
@@ -176,7 +163,7 @@ export const GiveHypeBottomSheet = forwardRef(
         if (hypeToGiveData.counter === 0) continue;
 
         const recipientProfile =
-            await getUserProfileByUsername(recipientUsername);
+          await getUserProfileByUsername(recipientUsername);
 
         // This will trigger:
         // increment_redeemable_points
@@ -192,7 +179,6 @@ export const GiveHypeBottomSheet = forwardRef(
           hype_points_received: hypeToGiveData.counter,
           team_id: me.team_id,
         });
-
 
         sendPushNotification(recipientProfile.expo_push_token, {
           title: `${me.username} hyped you up!`,
@@ -242,9 +228,13 @@ export const GiveHypeBottomSheet = forwardRef(
     return (
       <SafeAreaView>
         <BasicBottomSheet
+          onDismiss={() => {
+            setShowSuccessView(false);
+            setHypeToGiveCounter(null);
+            setGivableHype(meTeamData.hype_givable);
+          }}
           ref={ref}
           _snapPoints={snapPoints ?? ["95%"]}
-          handleOnChange={handleOnChange}
         >
           {showSuccessView ? (
             <GiveHypeSuccess
@@ -282,9 +272,7 @@ export const GiveHypeBottomSheet = forwardRef(
                 (!memberUsername && hypeTeamList.length <= 1 && (
                   <GeneralMessage
                     title={"No team members"}
-                    subtitle={
-                      "Invite members and hype them up!"
-                    }
+                    subtitle={"Invite members and hype them up!"}
                   />
                 ))}
 
