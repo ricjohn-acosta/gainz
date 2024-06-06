@@ -186,14 +186,15 @@ const ActivityFeedStack = () => {
               />
             </View>
           ),
-          headerRight: () => (
-            <Entypo
-              style={{ marginRight: 16 }}
-              name="pin"
-              size={26}
-              color="black"
-            />
-          ),
+          // TODO: Implement pinned notes
+          // headerRight: () => (
+          //   <Entypo
+          //     style={{ marginRight: 16 }}
+          //     name="pin"
+          //     size={26}
+          //     color="black"
+          //   />
+          // ),
         })}
       />
     </Stack.Navigator>
