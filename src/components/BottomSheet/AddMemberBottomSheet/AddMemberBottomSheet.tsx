@@ -1,16 +1,7 @@
-import React, { forwardRef, useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import React, { forwardRef, useState } from "react";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import BasicBottomSheet from "../BasicBottomSheet";
-import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
-import { Ionicons } from "@expo/vector-icons";
 import { PrimaryButton } from "../../Button/PrimaryButton";
-import { supabase } from "../../../services/supabase";
 import useProfileStore from "../../../stores/profileStore";
 import { useInviteMember } from "../../../features/welcome/hooks/useInviteMember";
 import { BasicBottomSheetTextInput } from "../../Input/BasicBottomSheetTextInput";
