@@ -82,7 +82,6 @@ export const DeleteRewardList = () => {
 
 const styles = StyleSheet.create({
   container: {
-    margin: 12,
   },
   parentContainer: {
     flexDirection: "row",

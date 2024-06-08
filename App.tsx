@@ -41,6 +41,7 @@ import * as Linking from "expo-linking";
 import { ResetPasswordForm } from "./src/features/welcome/components/ResetPasswordForm.tsx";
 import { StripeProvider } from "@stripe/stripe-react-native";
 import { SubscribeModalScreen } from "./src/features/subscribe/SubscribeModalScreen.tsx";
+import { ManageAccountStack } from "./src/features/manageAccount/ManageAccountStack.tsx";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -362,6 +363,21 @@ const AuthNavigatorStack = () => {
               <Ionicons name="gift" size={24} color="black" />
             ) : (
               <Ionicons name="gift-outline" size={24} color="black" />
+            );
+          },
+        })}
+      />
+      <Tab.Screen
+        name="ManageAccount"
+        component={ManageAccountStack}
+        options={() => ({
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarIcon: ({ focused }) => {
+            return focused ? (
+              <Ionicons name="person-circle" size={24} color="black" />
+            ) : (
+              <Ionicons name="person-circle-outline" size={24} color="black" />
             );
           },
         })}

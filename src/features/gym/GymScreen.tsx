@@ -65,13 +65,13 @@ export default function GymScreen() {
       return;
     }
 
-    const teamSize = myTeam.length;
-    const availableSeatCount =
-      subscription.metadata.seats <= teamSize
-        ? 0
-        : subscription.metadata.seats - teamSize;
+    const subscriptionSeats = Number(subscription.metadata.seats);
+    // Exclude team leader from team size
+    const actualTeamSize = myTeam.filter(
+      (user) => user.profile_id === me.id,
+    ).length;
 
-    // Show purchase sub screen if user has not subscription
+    const availableSeatCount = Math.abs(subscriptionSeats - actualTeamSize);
     if (availableSeatCount === 0) {
       navigation.navigate("SubscribeModal");
       return;

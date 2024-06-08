@@ -15,6 +15,7 @@ interface TeamState {
     getMyTeam: () => Promise<PostgrestError>;
     getHypeRank: (uid: string) => number;
     getMember: (uid: string) => any;
+    removeMember: (uid: string) => void;
   };
 }
 
@@ -62,6 +63,48 @@ const useTeamStore = create<TeamState>((set, get) => ({
       const team = get().data.myTeam;
       if (!team) return null;
       return team.find((user) => user.profile_id === uid);
+    },
+    removeMember: async (uid: string) => {
+      // remove from team_members table
+      const { error: deleteError } = await supabase
+        .from("team_members")
+        .delete()
+        .eq("profile_id", uid);
+
+      if (deleteError) {
+        Alert.alert("Error", "deleteError");
+        return;
+      }
+
+      // get original team_id from teams table
+      const { data, error: getOriginalTeamIdError } = await supabase
+        .from("teams")
+        .select("*")
+        .eq("owner_id", uid);
+
+      if (getOriginalTeamIdError) {
+        Alert.alert("Error", "getOriginalTeamIdError");
+        return;
+      }
+
+      const originalTeamId = data[0].team_id;
+      console.log(originalTeamId);
+      if (!originalTeamId) {
+        Alert.alert("Error", "Something went wrong while removing this member");
+        return;
+      }
+      // set team_id in profiles table back to its original id
+      const { error: setTeamIdError } = await supabase
+        .from("profiles")
+        .update({ team_id: originalTeamId })
+        .eq("id", uid);
+
+      if (setTeamIdError) {
+        Alert.alert("Error", "setTeamIdError");
+        return;
+      }
+
+      get().operations.getMyTeam();
     },
   },
 }));
