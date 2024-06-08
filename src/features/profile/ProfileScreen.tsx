@@ -52,8 +52,8 @@ export default function ProfileScreen({ route }) {
   useEffect(() => {
     if (isTeamEmpty()) return;
 
-    setLoading(true);
     if (!hypeActivityListData || hypeActivityListData.length === 0) {
+      setLoading(true);
       getMyTeam();
       const username = getMember(uid)?.username;
 
