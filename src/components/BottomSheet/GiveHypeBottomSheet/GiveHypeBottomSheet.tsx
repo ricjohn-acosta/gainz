@@ -231,7 +231,10 @@ export const GiveHypeBottomSheet = forwardRef(
           onDismiss={() => {
             setShowSuccessView(false);
             setHypeToGiveCounter(null);
-            setGivableHype(meTeamData.hype_givable);
+
+            if (meTeamData) {
+              setGivableHype(meTeamData.hype_givable);
+            }
           }}
           ref={ref}
           _snapPoints={snapPoints ?? ["95%"]}
