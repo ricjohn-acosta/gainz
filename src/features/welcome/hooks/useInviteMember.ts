@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 export const useInviteMember = () => {
   const {
-    data: { me, subscription },
+    data: { me },
   } = useProfileStore();
   const {
     data: { meTeamData, myTeam },

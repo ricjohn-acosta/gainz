@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import useProfileStore from "../../../stores/profileStore";
 import { PrimaryButton } from "../../../components/Button/PrimaryButton";
-import { FontAwesome5 } from "@expo/vector-icons";
 import { useInviteMember } from "../hooks/useInviteMember";
 import useTeamStore from "../../../stores/teamStore";
 import BasicText from "../../../components/Text/BasicText.tsx";
+import { useUserInvitesListener } from "../../../services/realtime/useUserInvitesListener.tsx";
 
 export const AcceptInvitation = () => {
   const {
@@ -13,7 +13,6 @@ export const AcceptInvitation = () => {
     operations: { getMeProfile },
   } = useProfileStore();
   const {
-    data: {meTeamData},
     operations: { getMyTeam },
   } = useTeamStore();
   const {
@@ -22,6 +21,8 @@ export const AcceptInvitation = () => {
 
   const [invitation, setInvitation] = useState(null);
 
+  // This listens for team invites in realtime
+  useUserInvitesListener(setInvitation);
   const fetchInvitesData = async () => {
     try {
       const fetchedInvites = await fetchInvites(me.email);
@@ -32,16 +33,14 @@ export const AcceptInvitation = () => {
   };
 
   const handleAcceptInvite = async () => {
-    const error = await acceptInvite(
-      invitation.team_id,
-    );
+    const error = await acceptInvite(invitation.team_id);
 
     if (!error) {
       setInvitation(null);
-      getMeProfile().then(error => {
-        if (error) return
-        getMyTeam()
-      })
+      getMeProfile().then((error) => {
+        if (error) return;
+        getMyTeam();
+      });
     }
   };
 
@@ -60,8 +59,10 @@ export const AcceptInvitation = () => {
     <View style={styles.container}>
       <View style={styles.message}>
         <Text style={styles.textContainer}>
-          <Text style={{ fontFamily: "Poppins-Bold" }}>{invitation.username} <BasicText>wants you to join their team!</BasicText></Text>
-
+          <Text style={{ fontFamily: "Poppins-Bold" }}>
+            {invitation.username}{" "}
+            <BasicText>wants you to join their team!</BasicText>
+          </Text>
         </Text>
       </View>
 
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#6cff54",
     borderRadius: 10,
     borderWidth: 1,
-    marginBottom: 20
+    marginBottom: 20,
   },
   message: {
     alignItems: "center",
