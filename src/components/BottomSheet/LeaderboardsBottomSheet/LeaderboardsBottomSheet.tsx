@@ -52,7 +52,7 @@ export const LeaderboardsBottomSheet = forwardRef(
             </View>
 
             <BasicText style={styles.subtitle}>
-              See who gets the most Hype!
+              See who gets the most hype!
             </BasicText>
             {!sortedTeam ||
               // the owner of the team is included in the team so show message if no other member is in the team

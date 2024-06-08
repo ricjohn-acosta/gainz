@@ -50,7 +50,7 @@ export const AddMemberBottomSheet = forwardRef(
       // Remaining available seats
       const seats =
         subscription.metadata.seats -
-        myTeam.filter((user) => user.profile_id === me.id).length;
+        myTeam.filter((user) => user.profile_id !== me.id).length;
 
       return (
         <BasicText style={styles.subtitle}>
@@ -59,8 +59,7 @@ export const AddMemberBottomSheet = forwardRef(
             {seats}
           </BasicText>{" "}
           more member
-          {subscription && subscription.metadata.seats == 1 ? "" : "s"} in your
-          team.
+          {seats === 1 ? "" : "s"} in your team.
         </BasicText>
       );
     };
