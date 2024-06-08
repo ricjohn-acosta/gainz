@@ -1,11 +1,11 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
+  ActivityIndicator,
   RefreshControl,
   SafeAreaView,
   SectionList,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 
@@ -32,6 +32,7 @@ export default function ProfileScreen({ route }) {
     data: { me },
   } = useProfileStore();
   const {
+    data: { myTeam },
     operations: { getMyTeam, getHypeRank, getMember },
   } = useTeamStore();
   const {
@@ -46,8 +47,12 @@ export default function ProfileScreen({ route }) {
 
   const [refresh, setRefreshing] = useState<boolean>(false);
   const [hypeActivityListData, setHypeActivityListData] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    if (isTeamEmpty()) return;
+
+    setLoading(true);
     if (!hypeActivityListData || hypeActivityListData.length === 0) {
       getMyTeam();
       const username = getMember(uid)?.username;
@@ -57,6 +62,7 @@ export default function ProfileScreen({ route }) {
       getUserHypeActivity(username).then((hypeActivityData) => {
         const formattedHypeActivityData = createListData(hypeActivityData);
         setHypeActivityListData(formattedHypeActivityData);
+        setLoading(false);
       });
     }
   }, [uid, isFocused]);
@@ -141,6 +147,30 @@ export default function ProfileScreen({ route }) {
     );
   };
 
+  // We do this because if the team is empty, the only profile you have access to
+  // would be your own so only show your own information
+  const isTeamEmpty = () => {
+    return !myTeam || myTeam.length === 0;
+  };
+
+  const displayNoActivity = () => {
+    if (
+      isTeamEmpty() ||
+      !hypeActivityListData ||
+      hypeActivityListData.length === 0
+    ) {
+      return (
+        <View style={{ height: 150 }}>
+          <GeneralMessage
+            imageStyle={{ width: 200, height: 200 }}
+            title={"No activity yet..."}
+            subtitle={"It's quiet in here. Go hype people up!"}
+          />
+        </View>
+      );
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.avatarContainer}>
@@ -148,7 +178,7 @@ export default function ProfileScreen({ route }) {
       </View>
       <View>
         <BasicText style={styles.displayName}>
-          {getMember(uid)?.username}
+          {isTeamEmpty() ? me.username : getMember(uid)?.username}
         </BasicText>
         {isMyProfile() && (
           <BasicText
@@ -162,7 +192,9 @@ export default function ProfileScreen({ route }) {
         <View style={styles.halfCard}>
           <View style={{ flexDirection: "row" }}>
             <BasicText style={styles.counter}>
-              {getMember(uid)?.hype_received}
+              {isTeamEmpty()
+                ? me.total_hype_received
+                : getMember(uid)?.hype_received}
             </BasicText>
             <MaterialIcons
               name="local-fire-department"
@@ -175,7 +207,7 @@ export default function ProfileScreen({ route }) {
         <View style={styles.halfCard}>
           <View style={{ flexDirection: "row" }}>
             <BasicText style={styles.counter}>
-              {getMember(uid)?.hype_given}
+              {isTeamEmpty() ? me.total_hype_given : getMember(uid)?.hype_given}
             </BasicText>
             <MaterialIcons
               name="local-fire-department"
@@ -210,17 +242,7 @@ export default function ProfileScreen({ route }) {
       )}
 
       <BasicText style={styles.h2}>Activity</BasicText>
-
-      {!hypeActivityListData ||
-        (hypeActivityListData.length === 0 && (
-          <View style={{ height: 150 }}>
-            <GeneralMessage
-              imageStyle={{ width: 200, height: 200 }}
-              title={"No activity yet..."}
-              subtitle={"It's quiet in here. Go hype people up!"}
-            />
-          </View>
-        ))}
+      {loading ? <ActivityIndicator size={"small"} /> : displayNoActivity()}
 
       <SafeAreaView style={styles.activityContainer}>
         <SectionList
