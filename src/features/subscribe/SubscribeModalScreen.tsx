@@ -17,6 +17,7 @@ import { supabase } from "../../services/supabase.ts";
 import useProfileStore from "../../stores/profileStore.ts";
 import { useNavigation } from "@react-navigation/native";
 import { TextButton } from "../../components/Button/TextButton.tsx";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const FIXED_MEMBER_SUBSCRIPTION = "3_MEMBER";
 const CUSTOM_MEMBER_SUBSCRIPTION = "CUSTOM_MEMBER";
@@ -144,92 +145,94 @@ export const SubscribeModalScreen = () => {
   return (
     <View style={styles.container}>
       <LinearGradient style={styles.background} colors={["#004e92", "#000428"]}>
-        <View style={styles.cancelContainer}>
-          <TextButton
-            onPress={() => navigation.goBack()}
-            textStyle={{ color: "#ffffff" }}
-            text={"Cancel"}
-            disabled={loading}
-          />
-        </View>
-
-        <View style={styles.logoContainer}>
-          <Image style={styles.logo} source={images.kapaiiSquareLogo} />
-        </View>
-
-        <View style={styles.headerContainer}>
-          <BasicText style={styles.header}>First 3 members free!</BasicText>
-          <BasicText style={styles.subheader}>
-            Purchase member seats and start celebrating your team 💪
-          </BasicText>
-        </View>
-
-        <View style={styles.pricingContainer}>
-          <BasicText style={styles.price}>$1</BasicText>
-          <BasicText style={styles.priceDetails}>per member/month</BasicText>
-        </View>
-
-        <View style={styles.cardContainer}>
-          <View style={styles.card}>
-            <View style={styles.itemContainer}>
-              <Checkbox
-                value={selectedSubscription === FIXED_MEMBER_SUBSCRIPTION}
-                onValueChange={() =>
-                  setSelectedSubscription(FIXED_MEMBER_SUBSCRIPTION)
-                }
-              />
-              <BasicText>3 members</BasicText>
-            </View>
-            <BasicText style={styles.pricingLabel}>FREE!</BasicText>
+        <KeyboardAwareScrollView>
+          <View style={styles.cancelContainer}>
+            <TextButton
+              onPress={() => navigation.goBack()}
+              textStyle={{ color: "#ffffff" }}
+              text={"Cancel"}
+              disabled={loading}
+            />
           </View>
 
-          <View style={styles.card}>
-            <View style={styles.itemContainer}>
-              <Checkbox
-                value={selectedSubscription === CUSTOM_MEMBER_SUBSCRIPTION}
-                onValueChange={() =>
-                  setSelectedSubscription(CUSTOM_MEMBER_SUBSCRIPTION)
-                }
-              />
-              <BasicText styles={styles.itemName}>Custom amount</BasicText>
-            </View>
-            <View style={styles.customAmountContainer}>
-              <BasicText>$</BasicText>
-              <TextInput
-                value={customMemberAmount}
-                keyboardType={"numeric"}
-                inputMode={"numeric"}
-                onChangeText={handleCustomMemberAmountChange}
-                placeholder={"5"}
-                style={styles.customAmountInput}
-              />
-              <BasicText>/month</BasicText>
-            </View>
+          <View style={styles.logoContainer}>
+            <Image style={styles.logo} source={images.kapaiiSquareLogo} />
           </View>
-        </View>
 
-        {loading ? (
-          <View style={styles.loadingContainer}>
-            <BasicText style={styles.loadingMessage}>
-              Please stay put! We're doing some magic in the background..
+          <View style={styles.headerContainer}>
+            <BasicText style={styles.header}>First 3 members free!</BasicText>
+            <BasicText style={styles.subheader}>
+              Purchase member seats and start celebrating your team 💪
             </BasicText>
-            <ActivityIndicator size={"large"} />
           </View>
-        ) : (
-          <PrimaryButton
-            onPress={presentStripePaymentSheet}
-            disabled={
-              !selectedSubscription ||
-              (selectedSubscription === CUSTOM_MEMBER_SUBSCRIPTION &&
-                !customMemberAmount)
-            }
-            text={displayFinalQuantity()}
-          />
-        )}
 
-        <BasicText style={styles.checkoutWarning}>
-          You won't be charged yet
-        </BasicText>
+          <View style={styles.pricingContainer}>
+            <BasicText style={styles.price}>$1</BasicText>
+            <BasicText style={styles.priceDetails}>per member/month</BasicText>
+          </View>
+
+          <View style={styles.cardContainer}>
+            <View style={styles.card}>
+              <View style={styles.itemContainer}>
+                <Checkbox
+                  value={selectedSubscription === FIXED_MEMBER_SUBSCRIPTION}
+                  onValueChange={() =>
+                    setSelectedSubscription(FIXED_MEMBER_SUBSCRIPTION)
+                  }
+                />
+                <BasicText>3 members</BasicText>
+              </View>
+              <BasicText style={styles.pricingLabel}>FREE!</BasicText>
+            </View>
+
+            <View style={styles.card}>
+              <View style={styles.itemContainer}>
+                <Checkbox
+                  value={selectedSubscription === CUSTOM_MEMBER_SUBSCRIPTION}
+                  onValueChange={() =>
+                    setSelectedSubscription(CUSTOM_MEMBER_SUBSCRIPTION)
+                  }
+                />
+                <BasicText styles={styles.itemName}>Custom amount</BasicText>
+              </View>
+              <View style={styles.customAmountContainer}>
+                <BasicText>$</BasicText>
+                <TextInput
+                  value={customMemberAmount}
+                  keyboardType={"numeric"}
+                  inputMode={"numeric"}
+                  onChangeText={handleCustomMemberAmountChange}
+                  placeholder={"5"}
+                  style={styles.customAmountInput}
+                />
+                <BasicText>/month</BasicText>
+              </View>
+            </View>
+          </View>
+
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <BasicText style={styles.loadingMessage}>
+                Please stay put! We're doing some magic in the background..
+              </BasicText>
+              <ActivityIndicator size={"large"} />
+            </View>
+          ) : (
+            <PrimaryButton
+              onPress={presentStripePaymentSheet}
+              disabled={
+                !selectedSubscription ||
+                (selectedSubscription === CUSTOM_MEMBER_SUBSCRIPTION &&
+                  !customMemberAmount)
+              }
+              text={displayFinalQuantity()}
+            />
+          )}
+
+          <BasicText style={styles.checkoutWarning}>
+            You won't be charged yet
+          </BasicText>
+        </KeyboardAwareScrollView>
       </LinearGradient>
     </View>
   );
