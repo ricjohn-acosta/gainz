@@ -27,7 +27,10 @@ export const ManageAccountHomeScreen = () => {
       )}
 
       {subscription && (
-        <MenuActionButton label={"Manage subscription"} to={"ManageSubscription"} />
+        <MenuActionButton
+          label={"Manage subscription"}
+          to={"ManageSubscription"}
+        />
       )}
 
       <MenuActionButton

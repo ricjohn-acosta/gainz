@@ -11,7 +11,7 @@ serve(async (req) => {
     const customerId = await retrieveCustomer(authHeader);
 
     if (!customerId) {
-      res = [];
+      res = null;
     } else {
       // Return customer subscriptions
       const subscriptions = await stripe.subscriptions.list({
