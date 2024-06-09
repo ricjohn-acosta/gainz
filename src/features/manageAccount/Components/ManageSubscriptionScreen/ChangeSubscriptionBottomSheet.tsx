@@ -104,7 +104,7 @@ export const ChangeSubscriptionBottomSheet = (
     } else {
       Alert.alert(
         "Success!",
-        `Your next payment will be $${customMemberAmount}.00`,
+        `Your next payment will be $${Number(customMemberAmount) - FREE_SEAT < 0 ? 0 : Number(customMemberAmount) - FREE_SEAT}.00`,
       );
       getSubscription();
     }
@@ -117,7 +117,9 @@ export const ChangeSubscriptionBottomSheet = (
     const currentSubscription = subscription.items.data[0].quantity;
 
     return (
-      !customMemberAmount || Number(customMemberAmount) === currentSubscription
+      !customMemberAmount ||
+      Number(customMemberAmount) === currentSubscription ||
+      Number(customMemberAmount) <= FREE_SEAT
     );
   };
 
