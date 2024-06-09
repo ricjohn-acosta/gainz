@@ -11,6 +11,7 @@ interface BasicBottomSheetProps {
   handleOnChange?: (index: number) => void;
   style?: any;
   onDismiss?: any;
+  enablePanDownToClose?: false;
 }
 
 const BasicBottomSheet = forwardRef(
@@ -26,11 +27,13 @@ const BasicBottomSheet = forwardRef(
       handleOnChange,
       style,
       onDismiss,
+      enablePanDownToClose,
     } = props;
     const snapPoints = useMemo(() => [..._snapPoints], []);
 
     return (
       <BottomSheetModal
+        enablePanDownToClose={enablePanDownToClose}
         onDismiss={onDismiss}
         style={style}
         onChange={handleOnChange}

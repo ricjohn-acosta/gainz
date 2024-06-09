@@ -130,3 +130,46 @@ export const createOrUpdateSubscription = async (
     });
   }
 };
+
+export const updateSubscription = async (
+  seats,
+  customerId,
+  newQuantity,
+  priceId,
+) => {
+  try {
+    // Fetch all subscriptions for the customer
+    const subscriptions = await stripe.subscriptions.list({
+      customer: customerId,
+      status: "active",
+      limit: 1,
+    });
+
+    if (subscriptions.data.length > 0) {
+      // Customer already has an active subscription, update it
+      const existingSubscription = subscriptions.data[0];
+      return await stripe.subscriptions.update(existingSubscription.id, {
+        items: [
+          {
+            id: existingSubscription.items.data[0].id,
+            price: priceId,
+            quantity: newQuantity,
+          },
+        ],
+        metadata: { seats },
+      });
+    } else {
+      res.status(400).json({
+        error: true,
+        message: "Error fetching subscription",
+      });
+    }
+  } catch (error) {
+    console.error("Error creating or updating subscription:", error);
+    res.status(400).json({
+      error: true,
+      message: "Error creating or updating subscription",
+      details: error.message,
+    });
+  }
+};

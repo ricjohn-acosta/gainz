@@ -7,11 +7,12 @@ import { useNavigation } from "@react-navigation/native";
 interface ActionButtonProps {
   onPress?: any;
   label: string;
+  labelStyle?: any;
   to?: string;
 }
 
 export const MenuActionButton: FC<ActionButtonProps> = (props) => {
-  const { to, label, onPress } = props;
+  const { to, label, onPress, labelStyle } = props;
 
   const navigation = useNavigation<any>();
   const handleNavigate = () => {
@@ -30,7 +31,7 @@ export const MenuActionButton: FC<ActionButtonProps> = (props) => {
       }}
     >
       <View style={styles.optionContainer}>
-        <BasicText style={styles.label}>{label}</BasicText>
+        <BasicText style={[styles.label, labelStyle]}>{label}</BasicText>
         {to && (
           <Entypo name="chevron-small-right" size={30} color={"#1f30fb"} />
         )}

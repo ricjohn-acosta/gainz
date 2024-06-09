@@ -4,6 +4,7 @@ import { ManageAccountHomeScreen } from "./screens/ManageAccountHomeScreen.tsx";
 import { ManageTeamScreen } from "./screens/ManageTeamScreen.tsx";
 import { View } from "react-native";
 import { TextButton } from "../../components/Button/TextButton.tsx";
+import { ManageSubscriptionScreen } from "./screens/ManageSubscriptionScreen.tsx";
 
 export const ManageAccountStack = () => {
   const Stack = createStackNavigator();
@@ -14,7 +15,7 @@ export const ManageAccountStack = () => {
         name="ManageAccount"
         component={ManageAccountHomeScreen}
         options={({ navigation }) => ({
-          headerTitle: "Account settings",
+          headerTitle: "Account",
           headerTitleStyle: {
             fontFamily: "Poppins-SemiBold",
           },
@@ -51,7 +52,32 @@ export const ManageAccountStack = () => {
           ),
         })}
       />
+      <Stack.Screen
+        name="ManageSubscription"
+        component={ManageSubscriptionScreen}
+        options={({ navigation }) => ({
+          headerTitle: "Manage subscription",
+          headerTitleStyle: {
+            fontFamily: "Poppins-SemiBold",
+          },
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: "#f2f4ff",
+          },
+          headerShadowVisible: true,
+          headerLeft: () => (
+            <View style={{ marginLeft: 16 }}>
+              <TextButton
+                onPress={() => {
+                  navigation.goBack();
+                }}
+                textStyle={{ color: "#1f30fb" }}
+                text={"Back"}
+              />
+            </View>
+          ),
+        })}
+      />
     </Stack.Navigator>
   );
 };
-

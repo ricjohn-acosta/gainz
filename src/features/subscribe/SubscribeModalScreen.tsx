@@ -19,9 +19,9 @@ import { useNavigation } from "@react-navigation/native";
 import { TextButton } from "../../components/Button/TextButton.tsx";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-const FIXED_MEMBER_SUBSCRIPTION = "3_MEMBER";
-const CUSTOM_MEMBER_SUBSCRIPTION = "CUSTOM_MEMBER";
-const FREE_SEAT = 3;
+export const FIXED_MEMBER_SUBSCRIPTION = "3_MEMBER";
+export const CUSTOM_MEMBER_SUBSCRIPTION = "CUSTOM_MEMBER";
+export const FREE_SEAT = 3;
 
 // This screen only shows for users who are going to subscribe for the first time
 export const SubscribeModalScreen = () => {
