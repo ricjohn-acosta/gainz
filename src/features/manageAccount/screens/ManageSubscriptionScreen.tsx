@@ -15,8 +15,10 @@ export const ManageSubscriptionScreen = () => {
   const [changeSubscription, setChangeSubscription] = useState<boolean>(false);
 
   const displayCurrentSubscription = () => {
-    if (!subscription) return;
-
+    if (!subscription) {
+      ("Not subscribed!");
+      return;
+    }
     return `${subscription.metadata.seats} member seats at $${subscription.items.data[0].quantity}.00 per month`;
   };
 
