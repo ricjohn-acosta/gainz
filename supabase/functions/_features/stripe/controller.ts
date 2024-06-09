@@ -173,3 +173,16 @@ export const updateSubscription = async (
     });
   }
 };
+
+export const cancelSubscription = async (id) => {
+  try {
+    return await stripe.subscriptions.cancel(id);
+  } catch (error) {
+    console.error("Error creating or updating subscription:", error);
+    res.status(400).json({
+      error: true,
+      message: "Error creating or updating subscription",
+      details: error.message,
+    });
+  }
+};
