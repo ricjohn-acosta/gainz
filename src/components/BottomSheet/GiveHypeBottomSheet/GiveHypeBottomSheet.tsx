@@ -153,7 +153,7 @@ export const GiveHypeBottomSheet = forwardRef(
       if (!subscription) {
         Alert.alert(
           "Hype giving disabled",
-          "Please purchase a subscription to enable. There is a free subscription currently available!",
+          "Please purchase a subscription to enable. There is a free trial currently available!",
         );
         return;
       }
