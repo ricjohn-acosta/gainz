@@ -88,7 +88,6 @@ const useTeamStore = create<TeamState>((set, get) => ({
       }
 
       const originalTeamId = data[0].team_id;
-      console.log(originalTeamId);
       if (!originalTeamId) {
         Alert.alert("Error", "Something went wrong while removing this member");
         return;

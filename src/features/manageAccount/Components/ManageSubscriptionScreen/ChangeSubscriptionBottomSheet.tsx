@@ -54,7 +54,6 @@ export const ChangeSubscriptionBottomSheet = (
     if (!subscription) return;
     const currentSubscription = subscription.items.data[0].quantity;
 
-    console.log(Number(customMemberAmount), currentSubscription);
     return Number(customMemberAmount) < currentSubscription;
   };
 

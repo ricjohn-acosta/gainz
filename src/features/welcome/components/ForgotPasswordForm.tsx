@@ -29,7 +29,6 @@ export const ForgotPasswordForm = () => {
     }
   };
 
-  console.log(errors)
   return (
     <View style={styles.container}>
       <BasicText>

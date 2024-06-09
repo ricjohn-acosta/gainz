@@ -11,7 +11,6 @@ export const useUserInvitesListener = (set) => {
     const listener = supabase
       .channel("user_invites")
       .on("postgres_changes", { schema: "public", event: "*" }, (payload) => {
-        console.log("Change received!", payload);
         if (payload.new.recipient_email !== me.email) return;
 
         switch (payload.eventType) {
