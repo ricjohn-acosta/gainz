@@ -2,6 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import React, { forwardRef, useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   SafeAreaView,
   StyleSheet,
@@ -28,7 +29,7 @@ interface GiveHypeBottomSheetProps {
 export const GiveHypeBottomSheet = forwardRef(
   ({ snapPoints, memberUsername }: GiveHypeBottomSheetProps, ref: any) => {
     const {
-      data: { me },
+      data: { me, subscription },
       operations: { getMeProfile, getUserProfileByUsername },
     } = useProfileStore();
     const {
@@ -149,6 +150,14 @@ export const GiveHypeBottomSheet = forwardRef(
     };
 
     const handleSubmit = async () => {
+      if (!subscription) {
+        Alert.alert(
+          "Hype giving disabled",
+          "Please purchase a subscription to enable. There is a free subscription currently available!",
+        );
+        return;
+      }
+
       if (!hypeToGiveCounter) return;
 
       setSubmitLoading(true);
