@@ -34,7 +34,7 @@ export const GiveHypeBottomSheet = forwardRef(
     } = useProfileStore();
     const {
       data: { myTeam, meTeamData },
-      operations: { getMyTeam },
+      operations: { getMyTeam, getTeamRestriction },
     } = useTeamStore();
 
     const {
@@ -150,7 +150,9 @@ export const GiveHypeBottomSheet = forwardRef(
     };
 
     const handleSubmit = async () => {
-      if (!subscription) {
+      const restricted = await getTeamRestriction(meTeamData.team_id);
+
+      if (restricted || (meTeamData.role === "leader" && !subscription)) {
         Alert.alert(
           "Hype giving disabled",
           "Please purchase a subscription to enable. There is a free trial currently available!",

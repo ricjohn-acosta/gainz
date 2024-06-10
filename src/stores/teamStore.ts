@@ -9,13 +9,16 @@ interface TeamState {
   data: {
     meTeamData?: any;
     myTeam?: any;
+    restricted?: boolean;
   };
   operations: {
     createTeam: () => Promise<PostgrestError>;
     getMyTeam: () => Promise<PostgrestError>;
     getHypeRank: (uid: string) => number;
     getMember: (uid: string) => any;
+    getTeamRestriction: (teamId: string) => Promise<boolean>;
     removeMember: (uid: string) => void;
+    updateTeamRestriction: (subscription: any) => boolean;
   };
 }
 
@@ -23,6 +26,7 @@ const useTeamStore = create<TeamState>((set, get) => ({
   data: {
     meTeamData: null,
     myTeam: null,
+    restricted: true,
   },
   operations: {
     getMyTeam: async () => {
@@ -40,10 +44,16 @@ const useTeamStore = create<TeamState>((set, get) => ({
       }
 
       if (!data) {
-        set({ data: { myTeam: null, meTeamData: null } });
+        set((state) => ({
+          ...state,
+          data: { ...state.data, myTeam: null, meTeamData: null },
+        }));
       } else {
         const meTeamData = data.find((user) => user.profile_id === me.id);
-        set({ data: { myTeam: data, meTeamData } });
+        set((state) => ({
+          ...state,
+          data: { ...state.data, myTeam: data, meTeamData },
+        }));
       }
     },
     getHypeRank: (uid: string) => {
@@ -104,6 +114,45 @@ const useTeamStore = create<TeamState>((set, get) => ({
       }
 
       get().operations.getMyTeam();
+    },
+    getTeamRestriction: async (teamId) => {
+      const { data, error: getTeamRestrictionError } = await supabase
+        .from("teams")
+        .select("*")
+        .eq("team_id", teamId);
+      const isRestricted = data[0].restricted;
+
+      if (getTeamRestrictionError) {
+        Alert.alert("Error", getTeamRestrictionError.message);
+        return true;
+      }
+
+      set((state) => ({
+        ...state,
+        data: { ...state.data, restricted: isRestricted },
+      }));
+      return isRestricted;
+    },
+    updateTeamRestriction: async (subscription) => {
+      const teamId = get().data.meTeamData.team_id;
+
+      if (!subscription) {
+        get().operations.getTeamRestriction(teamId);
+        return;
+      }
+      const { error: updateTeamRestrictionError } = await supabase
+        .from("teams")
+        .update({
+          restricted: false,
+        })
+        .eq("team_id", teamId);
+
+      if (updateTeamRestrictionError) {
+        Alert.alert("Error", updateTeamRestrictionError.message);
+        return updateTeamRestrictionError;
+      }
+
+      get().operations.getTeamRestriction(team_id);
     },
   },
 }));

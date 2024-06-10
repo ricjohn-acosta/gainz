@@ -3,6 +3,7 @@ import { supabase } from "../services/supabase";
 import useAuthStore from "./authStore";
 import { parseProfileQueryResult } from "./profile/helpers";
 import { PostgrestError } from "@supabase/supabase-js";
+import teamStore from "./teamStore.ts";
 
 interface ProfileState {
   data: {
@@ -100,12 +101,9 @@ const useProfileStore = create<ProfileState>((set, get) => ({
 
       set((state) => ({
         ...state,
-        data: { ...state.data, subscription },
+        data: { ...state.data, subscription, loadingSubscription: false },
       }));
-      set((state) => ({
-        ...state,
-        data: { ...state.data, loadingSubscription: false },
-      }));
+      teamStore.getState().operations.updateTeamRestriction(subscription);
     },
   },
 }));
