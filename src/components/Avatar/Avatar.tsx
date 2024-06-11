@@ -30,6 +30,20 @@ export default function Avatar(props: AvatarProps) {
 
   const isOnline = status === "online" || status === "in-gym";
 
+  const getFirstLetterSize = () => {
+    if (lg) {
+      return 40;
+    }
+
+    if (md) {
+      return 18;
+    }
+
+    if (sm) {
+      return 14;
+    }
+  };
+
   const displayFirstLetterOfUsername = () => {
     if (!uid) return;
     return getMember(uid)?.username[0].charAt(0).toUpperCase();
@@ -67,7 +81,9 @@ export default function Avatar(props: AvatarProps) {
               backgroundColor: stringToColor(getMember(uid)?.username),
             }}
           >
-            <BasicText style={styles.initial}>
+            <BasicText
+              style={{ ...styles.initial, fontSize: getFirstLetterSize() }}
+            >
               {displayFirstLetterOfUsername()}
             </BasicText>
           </View>
