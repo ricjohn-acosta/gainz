@@ -8,6 +8,7 @@ import {
 import images from "../../../assets";
 import BasicText from "../Text/BasicText";
 import useTeamStore from "../../stores/teamStore.ts";
+import useProfileStore from "../../stores/profileStore.ts";
 
 export type UserStatus = "offline" | "online" | "in-gym";
 
@@ -25,7 +26,11 @@ export default function Avatar(props: AvatarProps) {
   const { url, status, lg, md, sm, username, uid } = props;
 
   const {
+    data: { me },
+  } = useProfileStore();
+  const {
     operations: { getMember },
+    data: { myTeam },
   } = useTeamStore();
 
   const isOnline = status === "online" || status === "in-gym";
@@ -46,14 +51,28 @@ export default function Avatar(props: AvatarProps) {
 
   const displayFirstLetterOfUsername = () => {
     if (!uid) return;
-    return getMember(uid)?.username[0].charAt(0).toUpperCase();
+
+    if (myTeam.length === 0) {
+      return me.username.charAt(0).toUpperCase();
+    }
+
+    return getMember(uid)?.username.charAt(0).toUpperCase();
   };
 
-  const stringToColor = (uid) => {
-    if (!uid) return;
+  const stringToColor = () => {
+    let username;
+
+    if (myTeam.length === 0) {
+      username = me.username;
+    } else {
+      username = getMember(uid)?.username;
+    }
+
+    if (!username) return;
+
     let hash = 0;
-    for (let i = 0; i < uid.length; i++) {
-      hash = uid.charCodeAt(i) + ((hash << 5) - hash);
+    for (let i = 0; i < username.length; i++) {
+      hash = username.charCodeAt(i) + ((hash << 5) - hash);
     }
     let color = "#";
     for (let i = 0; i < 3; i++) {
@@ -78,7 +97,7 @@ export default function Avatar(props: AvatarProps) {
           <View
             style={{
               ...styles.avatar,
-              backgroundColor: stringToColor(getMember(uid)?.username),
+              backgroundColor: stringToColor(),
             }}
           >
             <BasicText
