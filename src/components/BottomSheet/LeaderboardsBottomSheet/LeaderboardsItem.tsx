@@ -32,10 +32,12 @@ export const LeaderboardItem = (props: LeaderboardItemProps) => {
           <BasicText style={styles.rank}>-</BasicText>
         )
       ) : (
-          <BasicText style={styles.rank}>{teamHasPoints ? leaderboardRank : "-"}</BasicText>
+        <BasicText style={styles.rank}>
+          {teamHasPoints ? leaderboardRank : "-"}
+        </BasicText>
       )}
       <View style={styles.item}>
-        <Avatar md url={images.mockProfilePic1} />
+        <Avatar md />
         <BasicText style={styles.memberName}>{username}</BasicText>
       </View>
       <View>

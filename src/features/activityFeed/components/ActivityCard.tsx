@@ -77,7 +77,7 @@ export const ActivityCard = (props: ActivityCardProps) => {
     <View style={styles.container}>
       <View style={styles.postInfoContainer}>
         <View style={styles.postAvatar}>
-          <Avatar md url={avatar} />
+          <Avatar md />
         </View>
         <View style={styles.postDetails}>
           <BasicText style={styles.displayName}>{posterDisplayName}</BasicText>

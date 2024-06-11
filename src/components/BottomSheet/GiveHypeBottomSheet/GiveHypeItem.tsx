@@ -42,7 +42,7 @@ export const GiveHypeItem = (props: GiveHypeItemProps) => {
     <View style={styles.parentContainer}>
       <View style={styles.container}>
         <View style={styles.item}>
-          <Avatar md url={images.mockProfilePic1} />
+          <Avatar md />
           <BasicText style={styles.memberName}>{username}</BasicText>
         </View>
         <View style={styles.giveHypeControls}>

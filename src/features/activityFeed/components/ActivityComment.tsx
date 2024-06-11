@@ -41,7 +41,7 @@ export const ActivityComment = (props: ActivityCommentProps) => {
     <View style={styles.container}>
       <View style={styles.postInfoContainer}>
         <View>
-          <Avatar sm url={avatar} />
+          <Avatar sm />
         </View>
         <View style={styles.nameAndDate}>
           <BasicText style={styles.displayName}>{posterDisplayName}</BasicText>
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   datePosted: {
     color: "grey",
     marginLeft: 4,
-    fontSize: 12
+    fontSize: 12,
   },
   nameAndDate: {
     flex: 1,

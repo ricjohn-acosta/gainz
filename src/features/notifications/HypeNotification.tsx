@@ -21,10 +21,10 @@ export default function HypeNotification(props: HypeNotificationProps) {
     <>
       <View style={{ flexDirection: "row" }}>
         <View>
-          <Avatar url={images.mockProfilePic1} sm />
+          <Avatar sm />
         </View>
 
-        <View style={{marginTop: 2}}>
+        <View style={{ marginTop: 2 }}>
           <View>
             <BasicText
               style={{
