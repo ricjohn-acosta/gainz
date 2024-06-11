@@ -174,7 +174,7 @@ export default function ProfileScreen({ route }) {
   return (
     <View style={styles.container}>
       <View style={styles.avatarContainer}>
-        <Avatar uid={me.id} lg />
+        <Avatar uid={uid} lg />
       </View>
       <View>
         <BasicText style={styles.displayName}>
