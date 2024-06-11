@@ -22,9 +22,6 @@ interface LeaderboardsBottomSheetProps {}
 export const LeaderboardsBottomSheet = forwardRef(
   (props: LeaderboardsBottomSheetProps, ref: any) => {
     const {
-      data: { team },
-    } = useProfileStore();
-    const {
       data: { myTeam },
     } = useTeamStore();
 
