@@ -174,7 +174,7 @@ export default function ProfileScreen({ route }) {
   return (
     <View style={styles.container}>
       <View style={styles.avatarContainer}>
-        <Avatar url={images.mockProfilePic3} status="online" lg />
+        <Avatar lg />
       </View>
       <View>
         <BasicText style={styles.displayName}>

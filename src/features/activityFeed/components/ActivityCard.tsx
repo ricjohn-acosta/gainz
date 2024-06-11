@@ -48,7 +48,6 @@ export const ActivityCard = (props: ActivityCardProps) => {
     data: { me },
   } = useProfileStore();
   const {
-    data: { teamPostsData },
     operations: { addComment, unlike, like },
   } = usePostStore();
   const {
@@ -132,7 +131,7 @@ export const ActivityCard = (props: ActivityCardProps) => {
         />
       </View>
       <View style={styles.textInputContainer}>
-        <Avatar sm url={images.mockProfilePic1} />
+        <Avatar sm />
         <View style={styles.inputContainer}>
           <BasicTextInput
             multiline={true}
