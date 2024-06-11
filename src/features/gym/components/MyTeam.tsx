@@ -56,7 +56,7 @@ export default function MyTeam() {
                   }
                 >
                   <Avatar
-                    url={data.item.img}
+                    uid={data.item.profile_id}
                     status={data.item.status}
                     username={data.item.username}
                     md

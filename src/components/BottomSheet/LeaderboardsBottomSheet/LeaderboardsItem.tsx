@@ -7,6 +7,7 @@ import Avatar from "../../Avatar/Avatar";
 import BasicText from "../../Text/BasicText";
 
 interface LeaderboardItemProps {
+  uid: string;
   username: string;
   rank: number;
   hypeData: number;
@@ -14,7 +15,7 @@ interface LeaderboardItemProps {
 }
 
 export const LeaderboardItem = (props: LeaderboardItemProps) => {
-  const { username, rank, hypeData, teamHasPoints } = props;
+  const { uid, username, rank, hypeData, teamHasPoints } = props;
   const leaderboardRank = rank + 1;
   const isLeader = leaderboardRank === 1;
 
@@ -37,7 +38,7 @@ export const LeaderboardItem = (props: LeaderboardItemProps) => {
         </BasicText>
       )}
       <View style={styles.item}>
-        <Avatar md />
+        <Avatar uid={uid} md />
         <BasicText style={styles.memberName}>{username}</BasicText>
       </View>
       <View>

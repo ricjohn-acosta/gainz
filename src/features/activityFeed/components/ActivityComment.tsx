@@ -10,6 +10,7 @@ import useProfileStore from "../../../stores/profileStore";
 import BasicText from "../../../components/Text/BasicText";
 
 interface ActivityCommentProps {
+  uid: string;
   likes: any;
   posterDisplayName: string;
   avatar: any;
@@ -19,8 +20,15 @@ interface ActivityCommentProps {
 }
 
 export const ActivityComment = (props: ActivityCommentProps) => {
-  const { posterDisplayName, avatar, datePosted, content, commentId, likes } =
-    props;
+  const {
+    uid,
+    posterDisplayName,
+    avatar,
+    datePosted,
+    content,
+    commentId,
+    likes,
+  } = props;
 
   const {
     data: { me },
@@ -41,7 +49,7 @@ export const ActivityComment = (props: ActivityCommentProps) => {
     <View style={styles.container}>
       <View style={styles.postInfoContainer}>
         <View>
-          <Avatar sm />
+          <Avatar uid={uid} sm />
         </View>
         <View style={styles.nameAndDate}>
           <BasicText style={styles.displayName}>{posterDisplayName}</BasicText>

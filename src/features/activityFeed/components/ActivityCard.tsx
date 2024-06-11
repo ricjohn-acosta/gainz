@@ -24,6 +24,7 @@ import useProfileStore from "../../../stores/profileStore";
 import BasicText from "../../../components/Text/BasicText";
 
 interface ActivityCardProps {
+  uid: string;
   posterDisplayName: string;
   avatar: any;
   datePosted: string;
@@ -35,8 +36,8 @@ interface ActivityCardProps {
 
 export const ActivityCard = (props: ActivityCardProps) => {
   const {
+    uid,
     posterDisplayName,
-    avatar,
     datePosted,
     content,
     replies,
@@ -77,7 +78,7 @@ export const ActivityCard = (props: ActivityCardProps) => {
     <View style={styles.container}>
       <View style={styles.postInfoContainer}>
         <View style={styles.postAvatar}>
-          <Avatar md />
+          <Avatar uid={uid} md />
         </View>
         <View style={styles.postDetails}>
           <BasicText style={styles.displayName}>{posterDisplayName}</BasicText>
@@ -119,6 +120,7 @@ export const ActivityCard = (props: ActivityCardProps) => {
           renderItem={(data: any) => {
             return (
               <ActivityComment
+                uid={data.item.profileId}
                 likes={data.item.likes}
                 posterDisplayName={data.item.username}
                 avatar={data.item.avatar}
@@ -131,7 +133,7 @@ export const ActivityCard = (props: ActivityCardProps) => {
         />
       </View>
       <View style={styles.textInputContainer}>
-        <Avatar sm />
+        <Avatar uid={uid} sm />
         <View style={styles.inputContainer}>
           <BasicTextInput
             multiline={true}

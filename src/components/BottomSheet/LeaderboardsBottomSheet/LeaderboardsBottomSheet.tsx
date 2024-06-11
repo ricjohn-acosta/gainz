@@ -66,6 +66,7 @@ export const LeaderboardsBottomSheet = forwardRef(
                   return (
                     <LeaderboardItem
                       teamHasPoints={checkTeamHasPoints()}
+                      uid={data.item.profile_id}
                       username={data.item.username}
                       rank={data.index}
                       hypeData={data.item.hype_received}

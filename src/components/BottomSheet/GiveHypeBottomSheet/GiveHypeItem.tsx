@@ -15,7 +15,9 @@ import { IconButton } from "../../Button/IconButton";
 import BasicText from "../../Text/BasicText";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 
+// TODO: userId is actually a fuckin username?? why did i do that?? change this please
 interface GiveHypeItemProps {
+  uid: string;
   userId: string;
   username: string;
   addHype: (id: string) => void;
@@ -27,6 +29,7 @@ interface GiveHypeItemProps {
 
 export const GiveHypeItem = (props: GiveHypeItemProps) => {
   const {
+    uid,
     singleUserHype,
     userId,
     username,
@@ -42,7 +45,7 @@ export const GiveHypeItem = (props: GiveHypeItemProps) => {
     <View style={styles.parentContainer}>
       <View style={styles.container}>
         <View style={styles.item}>
-          <Avatar md />
+          <Avatar uid={uid} md />
           <BasicText style={styles.memberName}>{username}</BasicText>
         </View>
         <View style={styles.giveHypeControls}>

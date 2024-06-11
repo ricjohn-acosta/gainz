@@ -8,6 +8,7 @@ export const buildPostsListData = (
 ) => {
   const teamPostsData = postData.map((post) => {
     return {
+      profileId: post.profile_id,
       postId: post.post_id,
       username: post.posterData.username,
       avatar: post.posterData.avatar_url,
@@ -45,6 +46,7 @@ export const buildPostsListData = (
       (post) => post.postId === comment.post_id,
     );
     associatedPost.comments.push({
+      profileId: comment.profile_id,
       commentId: comment.comment_id,
       username: comment.commenterData.username,
       avatar: comment.commenterData.avatar_url,

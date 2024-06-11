@@ -174,7 +174,7 @@ export default function ProfileScreen({ route }) {
   return (
     <View style={styles.container}>
       <View style={styles.avatarContainer}>
-        <Avatar lg />
+        <Avatar uid={me.id} lg />
       </View>
       <View>
         <BasicText style={styles.displayName}>
@@ -256,6 +256,7 @@ export default function ProfileScreen({ route }) {
             return (
               <>
                 <HypeNotification
+                  uid={item.sender_id}
                   donor={item.sender_username}
                   recipient={item.recipient_username}
                   time={item.time}

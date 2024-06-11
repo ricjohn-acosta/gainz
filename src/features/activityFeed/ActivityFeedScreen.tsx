@@ -180,6 +180,7 @@ export const ActivityFeedScreen = () => {
 
           return (
             <ActivityCard
+              uid={data.item.profileId}
               likes={data.item.likes}
               postId={data.item.postId}
               posterDisplayName={data.item.username}

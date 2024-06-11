@@ -7,6 +7,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 
 interface HypeNotificationProps {
+  uid: string;
   donor: string;
   recipient: string;
   time: string;
@@ -15,13 +16,13 @@ interface HypeNotificationProps {
 }
 
 export default function HypeNotification(props: HypeNotificationProps) {
-  const { donor, recipient, time, donorMessage, hypeReceived } = props;
+  const { uid, donor, recipient, time, donorMessage, hypeReceived } = props;
 
   return (
     <>
       <View style={{ flexDirection: "row" }}>
         <View>
-          <Avatar sm />
+          <Avatar uid={uid} sm />
         </View>
 
         <View style={{ marginTop: 2 }}>

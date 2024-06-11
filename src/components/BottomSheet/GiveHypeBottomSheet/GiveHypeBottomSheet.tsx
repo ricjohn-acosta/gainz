@@ -55,6 +55,7 @@ export const GiveHypeBottomSheet = forwardRef(
       const list = myTeam
         .map((item: any) => {
           return {
+            uid: item.profile_id,
             id: item.username,
             username: item.username,
           };
@@ -300,6 +301,7 @@ export const GiveHypeBottomSheet = forwardRef(
                     return (
                       <GiveHypeItem
                         singleUserHype={!!memberUsername}
+                        uid={data.item.uid}
                         userId={data.item.username}
                         username={data.item.username}
                         removeHype={handleRemoveHype}

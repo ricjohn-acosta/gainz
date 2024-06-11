@@ -120,7 +120,7 @@ export default function GymScreen() {
                 })
               }
             >
-              <Avatar md />
+              <Avatar uid={me.id} md />
             </TouchableOpacity>
           </View>
           <View style={styles.titleContainer}>
