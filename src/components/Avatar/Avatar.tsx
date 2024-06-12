@@ -50,7 +50,7 @@ export default function Avatar(props: AvatarProps) {
   };
 
   const displayFirstLetterOfUsername = () => {
-    if (!uid) return;
+    if (!uid || !myTeam) return;
 
     if (myTeam.length === 0) {
       return me.username.charAt(0).toUpperCase();
@@ -60,6 +60,7 @@ export default function Avatar(props: AvatarProps) {
   };
 
   const stringToColor = () => {
+    if (!myTeam) return
     let username;
 
     if (myTeam.length === 0) {
