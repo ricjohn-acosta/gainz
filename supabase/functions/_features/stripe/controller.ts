@@ -99,9 +99,10 @@ export const createOrUpdateSubscription = async (
             {
               id: existingSubscription.items.data[0].id,
               price: priceId,
-              quantity: existingSubscription.items.data[0].quantity + quantity,
+              quantity,
             },
           ],
+          metadata: { seats },
         },
       );
 
