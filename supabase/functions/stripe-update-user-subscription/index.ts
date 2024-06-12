@@ -2,7 +2,6 @@ import { serve } from "https://deno.land/std@0.132.0/http/server.ts";
 import { stripe } from "../_features/stripe/stripe.ts";
 import {
   createOrRetrieveCustomer,
-  createOrUpdateSubscription,
   updateSubscription,
 } from "../_features/stripe/controller.ts";
 

@@ -6,10 +6,7 @@ import BasicText from "../../../../components/Text/BasicText.tsx";
 import { PrimaryButton } from "../../../../components/Button/PrimaryButton.tsx";
 import useProfileStore from "../../../../stores/profileStore.ts";
 import { supabase } from "../../../../services/supabase.ts";
-import {
-  FIXED_MEMBER_SUBSCRIPTION,
-  FREE_SEAT,
-} from "../../../subscribe/SubscribeModalScreen.tsx";
+import { FREE_SEAT } from "../../../subscribe/SubscribeModalScreen.tsx";
 
 interface ChangeSubscriptionBottomSheetProps {
   open: boolean;
@@ -152,8 +149,8 @@ export const ChangeSubscriptionBottomSheet = (
 
         {displayDowngradeWarning() && (
           <BasicText style={styles.warningMsg}>
-            *You are downgrading your subscription. If you proceed, you will
-            need to remove members from your team to continue giving hype.
+            *You are downgrading your subscription. If you proceed, you may need
+            to remove members from your team to continue giving hype.
           </BasicText>
         )}
         {updatingSubscription && (
