@@ -149,6 +149,17 @@ export const updateSubscription = async (
     if (subscriptions.data.length > 0) {
       // Customer already has an active subscription, update it
       const existingSubscription = subscriptions.data[0];
+
+      if (existingSubscription.metadata.seats <= 3) {
+        await cancelSubscription(existingSubscription.id);
+        return await createOrUpdateSubscription(
+          seats,
+          customerId,
+          newQuantity,
+          priceId,
+        );
+      }
+
       return await stripe.subscriptions.update(existingSubscription.id, {
         items: [
           {

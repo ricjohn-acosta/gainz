@@ -7,6 +7,7 @@ import { PrimaryButton } from "../../../../components/Button/PrimaryButton.tsx";
 import useProfileStore from "../../../../stores/profileStore.ts";
 import { supabase } from "../../../../services/supabase.ts";
 import { FREE_SEAT } from "../../../subscribe/SubscribeModalScreen.tsx";
+import { PaymentSheetError, useStripe } from "@stripe/stripe-react-native";
 
 interface ChangeSubscriptionBottomSheetProps {
   open: boolean;
@@ -16,13 +17,16 @@ interface ChangeSubscriptionBottomSheetProps {
 export const ChangeSubscriptionBottomSheet = (
   props: ChangeSubscriptionBottomSheetProps,
 ) => {
+  const { open, onDismiss } = props;
+
   const {
     operations: { getSubscription },
     data: { subscription },
   } = useProfileStore();
 
-  const { open, onDismiss } = props;
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const bottomsheetRef = useRef<BottomSheetModal>(null);
+
   const [customMemberAmount, setCustomMemberAmount] = useState("10");
   const [updatingSubscription, setUpdatingSubscription] =
     useState<boolean>(false);
@@ -74,8 +78,7 @@ export const ChangeSubscriptionBottomSheet = (
     );
   };
 
-  const updateSubscription = async () => {
-    setUpdatingSubscription(true);
+  const initializePaymentSheet = async () => {
     // Amount of member seats the user purchases
     const seats =
       Number(customMemberAmount) <= FREE_SEAT ? "3" : customMemberAmount;
@@ -86,27 +89,71 @@ export const ChangeSubscriptionBottomSheet = (
         ? 0
         : Number(customMemberAmount) - 3;
 
-    const { error: fnError } = await supabase.functions.invoke(
-      "stripe-update-user-subscription",
-      {
-        body: { quantity, seats },
-      },
-    );
+    const {
+      data: { paymentIntent, ephemeralKey, customer },
+      error: fnError,
+    } = await supabase.functions.invoke("stripe-update-user-subscription", {
+      body: { quantity, seats },
+    });
 
     if (fnError) {
       Alert.alert(
         "Something went wrong changing your subscription!",
         fnError.message,
       );
-    } else {
-      Alert.alert(
-        "Success!",
-        `Your next payment will be $${Number(customMemberAmount) - FREE_SEAT < 0 ? 0 : Number(customMemberAmount) - FREE_SEAT}.00`,
-      );
-      getSubscription();
+      return;
     }
 
-    setUpdatingSubscription(false);
+    if (!paymentIntent) {
+      Alert.alert("Thank you!", "Subscription changed successfully");
+      getSubscription().then((error) => {
+        if (!error) setLoading(false);
+      });
+      return;
+    }
+
+    const { error: stripeError } = await initPaymentSheet({
+      merchantDisplayName: "Kapaii",
+      customerId: customer,
+      customerEphemeralKeySecret: ephemeralKey,
+      paymentIntentClientSecret: paymentIntent,
+      defaultBillingDetails: {
+        name: "Jane Doe",
+      },
+      primaryButtonLabel: `Subscribe for $${quantity}.00/month`, // Custom button label,
+    });
+
+    if (stripeError) {
+      Alert.alert(
+        "Something went wrong changing your subscription!",
+        stripeError.message,
+      );
+    }
+  };
+
+  const updateSubscription = async () => {
+    setUpdatingSubscription(true);
+    initializePaymentSheet().then(async () => {
+      const { error } = await presentPaymentSheet();
+
+      if (error) {
+        if (error.code === PaymentSheetError.Canceled) {
+          // Customer canceled - you should probably do nothing.
+        } else {
+          // PaymentSheet encountered an unrecoverable error. You can display the error to the user, log it, etc.
+        }
+      } else {
+        // Payment completed - show a confirmation screen.
+        Alert.alert(
+          "Thank you!",
+          "Purchase successful. You may now add more members in your team.",
+        );
+        getSubscription().then((error) => {
+          if (!error) navigation.goBack();
+        });
+      }
+      setUpdatingSubscription(false);
+    });
   };
 
   const isConfirmBtnDisabled = () => {
@@ -115,7 +162,7 @@ export const ChangeSubscriptionBottomSheet = (
 
     return (
       !customMemberAmount ||
-      Number(customMemberAmount) === currentSubscription ||
+      Number(customMemberAmount) - FREE_SEAT === currentSubscription ||
       Number(customMemberAmount) <= FREE_SEAT
     );
   };
