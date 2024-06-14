@@ -8,16 +8,23 @@ import useProfileStore from "../../../stores/profileStore.ts";
 export const ManageAccountHomeScreen = () => {
   const { logout } = useAuthStore();
   const {
-    data: { subscription },
+    data: { me, subscription },
   } = useProfileStore();
   const {
     data: { meTeamData },
+    operations: { removeMember },
   } = useTeamStore();
 
   const displayManageTeam = () => {
     if (meTeamData && meTeamData.role === "leader") return true;
 
     return false;
+  };
+
+  const handleLeaveTeam = () => {
+    if (!me) return;
+
+    removeMember(me.id);
   };
 
   return (
@@ -30,6 +37,31 @@ export const ManageAccountHomeScreen = () => {
         <MenuActionButton
           label={"Manage subscription"}
           to={"ManageSubscription"}
+        />
+      )}
+
+      {meTeamData && (
+        <MenuActionButton
+          label={"Leave team"}
+          onPress={() => {
+            Alert.alert(
+              "Leave your current team",
+              "Are you sure you want to leave your current team?",
+              [
+                {
+                  text: "Cancel",
+                  onPress: () => {},
+                  style: "cancel",
+                },
+                {
+                  text: "OK",
+                  onPress: () => {
+                    handleLeaveTeam();
+                  },
+                },
+              ],
+            );
+          }}
         />
       )}
 
