@@ -579,7 +579,11 @@ export default function App() {
           theme={theme}
         >
           <StripeProvider
-            publishableKey={process.env.EXPO_PUBLIC_DEV_STRIPE_PUBLISHABLE_KEY}
+            publishableKey={
+              __DEV__
+                ? process.env.EXPO_PUBLIC_DEV_STRIPE_PUBLISHABLE_KEY
+                : process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY
+            }
           >
             <Stack.Navigator>
               {session && me && !notLoaded ? (
