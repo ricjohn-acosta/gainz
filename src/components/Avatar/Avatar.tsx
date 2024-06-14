@@ -60,20 +60,11 @@ export default function Avatar(props: AvatarProps) {
   };
 
   const stringToColor = () => {
-    if (!myTeam) return
-    let username;
-
-    if (myTeam.length === 0) {
-      username = me.username;
-    } else {
-      username = getMember(uid)?.username;
-    }
-
-    if (!username) return;
+    if (!uid) return;
 
     let hash = 0;
-    for (let i = 0; i < username.length; i++) {
-      hash = username.charCodeAt(i) + ((hash << 5) - hash);
+    for (let i = 0; i < uid.length; i++) {
+      hash = uid.charCodeAt(i) + ((hash << 5) - hash);
     }
     let color = "#";
     for (let i = 0; i < 3; i++) {
