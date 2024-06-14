@@ -92,21 +92,51 @@ export const createOrUpdateSubscription = async (
     if (subscriptions.data.length > 0) {
       // Customer already has an active subscription, update it
       const existingSubscription = subscriptions.data[0];
-      const updatedSubscription = await stripe.subscriptions.update(
-        existingSubscription.id,
-        {
-          items: [
-            {
-              id: existingSubscription.items.data[0].id,
-              price: priceId,
-              quantity,
-            },
-          ],
-          metadata: { seats },
-        },
-      );
 
-      subscription = updatedSubscription;
+      if (existingSubscription.metadata.seats <= 3) {
+        await cancelSubscription(existingSubscription.id);
+
+        subscription = await stripe.subscriptions.create({
+          customer: customerId,
+          items: [{ price: priceId, quantity }],
+          payment_behavior: "default_incomplete",
+          payment_settings: { save_default_payment_method: "on_subscription" },
+          expand: ["latest_invoice.payment_intent"],
+          metadata: { seats },
+        });
+      } else {
+        subscription = await stripe.subscriptions.update(
+          existingSubscription.id,
+          {
+            items: [
+              {
+                id: existingSubscription.items.data[0].id,
+                price: priceId,
+                quantity,
+              },
+            ],
+            metadata: { seats },
+          },
+        );
+      }
+
+      // Customer already has an active subscription, update it
+      // const existingSubscription = subscriptions.data[0];
+      // const updatedSubscription = await stripe.subscriptions.update(
+      //   existingSubscription.id,
+      //   {
+      //     items: [
+      //       {
+      //         id: existingSubscription.items.data[0].id,
+      //         price: priceId,
+      //         quantity,
+      //       },
+      //     ],
+      //     metadata: { seats },
+      //   },
+      // );
+
+      // subscription = updatedSubscription;
     } else {
       // Customer does not have an active subscription, create a new one
       subscription = await stripe.subscriptions.create({

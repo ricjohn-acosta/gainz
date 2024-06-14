@@ -156,7 +156,7 @@ export const GiveHypeBottomSheet = forwardRef(
       if (restricted || (meTeamData.role === "leader" && !subscription)) {
         Alert.alert(
           "Hype giving disabled",
-          "Please purchase a subscription to enable. There is a free trial currently available!",
+          "You have either don't have an existing subscription or have ran out of member seats!",
         );
         return;
       }

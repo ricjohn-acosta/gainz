@@ -18,6 +18,7 @@ import useProfileStore from "../../stores/profileStore.ts";
 import { useNavigation } from "@react-navigation/native";
 import { TextButton } from "../../components/Button/TextButton.tsx";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import useTeamStore from "../../stores/teamStore.ts";
 
 export const FIXED_MEMBER_SUBSCRIPTION = "3_MEMBER";
 export const CUSTOM_MEMBER_SUBSCRIPTION = "CUSTOM_MEMBER";
@@ -26,8 +27,12 @@ export const FREE_SEAT = 3;
 // This screen only shows for users who are going to subscribe for the first time
 export const SubscribeModalScreen = () => {
   const {
+    data: { me, subscription },
     operations: { getSubscription },
   } = useProfileStore();
+  const {
+    data: { myTeam },
+  } = useTeamStore();
 
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const navigation = useNavigation<any>();
@@ -142,6 +147,35 @@ export const SubscribeModalScreen = () => {
     setCustomMemberAmount(numericText);
   };
 
+  const displayHeroMessage = () => {
+    if (!subscription) {
+      return (
+        <View style={styles.headerContainer}>
+          <BasicText style={styles.header}>First 3 members free!</BasicText>
+          <BasicText style={styles.subheader}>
+            Purchase member seats and start celebrating your team 💪
+          </BasicText>
+        </View>
+      );
+    }
+
+    const seats =
+      subscription.metadata.seats -
+      myTeam.filter((user) => user.profile_id !== me.id).length;
+
+    if (seats === 0) {
+      return (
+        <View style={styles.headerContainer}>
+          <BasicText style={styles.header}>Purchase more seats</BasicText>
+          <BasicText style={styles.subheader}>
+            Not enough member seats! Purchase more to continue
+            celebrating your team 💪
+          </BasicText>
+        </View>
+      );
+    }
+  };
+
   return (
     <View style={styles.container}>
       <LinearGradient style={styles.background} colors={["#004e92", "#000428"]}>
@@ -159,12 +193,7 @@ export const SubscribeModalScreen = () => {
             <Image style={styles.logo} source={images.kapaiiSquareLogo} />
           </View>
 
-          <View style={styles.headerContainer}>
-            <BasicText style={styles.header}>First 3 members free!</BasicText>
-            <BasicText style={styles.subheader}>
-              Purchase member seats and start celebrating your team 💪
-            </BasicText>
-          </View>
+          {displayHeroMessage()}
 
           <View style={styles.pricingContainer}>
             <BasicText style={styles.price}>$1</BasicText>
@@ -172,18 +201,20 @@ export const SubscribeModalScreen = () => {
           </View>
 
           <View style={styles.cardContainer}>
-            <View style={styles.card}>
-              <View style={styles.itemContainer}>
-                <Checkbox
-                  value={selectedSubscription === FIXED_MEMBER_SUBSCRIPTION}
-                  onValueChange={() =>
-                    setSelectedSubscription(FIXED_MEMBER_SUBSCRIPTION)
-                  }
-                />
-                <BasicText>3 members</BasicText>
+            {!subscription && (
+              <View style={styles.card}>
+                <View style={styles.itemContainer}>
+                  <Checkbox
+                    value={selectedSubscription === FIXED_MEMBER_SUBSCRIPTION}
+                    onValueChange={() =>
+                      setSelectedSubscription(FIXED_MEMBER_SUBSCRIPTION)
+                    }
+                  />
+                  <BasicText>3 members</BasicText>
+                </View>
+                <BasicText style={styles.pricingLabel}>FREE!</BasicText>
               </View>
-              <BasicText style={styles.pricingLabel}>FREE!</BasicText>
-            </View>
+            )}
 
             <View style={styles.card}>
               <View style={styles.itemContainer}>

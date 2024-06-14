@@ -1,18 +1,31 @@
 import { supabase } from "../../../services/supabase";
 import useProfileStore from "../../../stores/profileStore";
 import useTeamStore from "../../../stores/teamStore.ts";
-import { useEffect } from "react";
 
 export const useInviteMember = () => {
   const {
     data: { me },
   } = useProfileStore();
   const {
-    data: { meTeamData, myTeam },
+    data: { myTeam },
   } = useTeamStore();
 
   const sendInvite = async (recipientEmail: string) => {
-    if (!meTeamData) {
+    if (!me) return;
+
+    const { data, error: fetchError } = await supabase
+      .from("team_members")
+      .select("*")
+      .eq("profile_id", me.id);
+
+    const meTeamDataExists = data[0];
+
+    if (fetchError) {
+      console.error(fetchError);
+      return fetchError;
+    }
+
+    if (!meTeamDataExists) {
       const { error } = await supabase.from("team_members").insert({
         username: me.username,
         team_id: me.team_id,

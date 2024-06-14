@@ -215,7 +215,7 @@ export const ChangeSubscriptionBottomSheet = (
             disabled={isConfirmBtnDisabled()}
             onPress={handleChangeSubscription}
             style={styles.changeSubBtn}
-            text={`Change subscription ($${Number(customMemberAmount) - FREE_SEAT < 0 ? 0 : Number(customMemberAmount) - FREE_SEAT}.00)`}
+            text={`Change subscription (Total: $${Number(customMemberAmount) - FREE_SEAT < 0 ? 0 : Number(customMemberAmount) - FREE_SEAT}.00)`}
           />
         </View>
       )}
