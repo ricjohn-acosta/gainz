@@ -18,7 +18,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.mookentooken.gainz",
-      "buildNumber": "36",
+      "buildNumber": "38",
       "googleServicesFile": "./GoogleService-Info.plist",
       "config": {
         "googleSignIn": {
@@ -30,7 +30,8 @@
           "kapaii",
           "exp+gainz",
           "com.googleusercontent.apps.307561343933-38nip8bflo65ves9dgb2jbennrhobl25"
-        ]
+        ],
+        "NSCameraUsageDescription": "Camera is not used for this app."
       }
     },
     "android": {

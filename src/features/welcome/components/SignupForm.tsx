@@ -144,12 +144,12 @@ export const SignupForm = (props: SignupFormProps) => {
         </View>
       </View>
 
-      <View style={styles.dividerContainer}>
-        <Divider title="or continue with" titleStyle={styles.dividerLabel} />
-        <View style={styles.thirdPartyAuthContainer}>
-          <GoogleSignUpButton />
-        </View>
-      </View>
+      {/*<View style={styles.dividerContainer}>*/}
+      {/*  <Divider title="or continue with" titleStyle={styles.dividerLabel} />*/}
+      {/*  <View style={styles.thirdPartyAuthContainer}>*/}
+      {/*    <GoogleSignUpButton />*/}
+      {/*  </View>*/}
+      {/*</View>*/}
       <View style={styles.signupContainer}>
         <BasicText>Already have an account? </BasicText>
         <TextButton
