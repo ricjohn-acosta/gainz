@@ -9,6 +9,7 @@ export const ManageAccountHomeScreen = () => {
   const { logout } = useAuthStore();
   const {
     data: { me, subscription },
+    operations: { deleteProfile },
   } = useProfileStore();
   const {
     data: { meTeamData },
@@ -81,6 +82,30 @@ export const ManageAccountHomeScreen = () => {
               },
             },
           ]);
+        }}
+      />
+
+      <MenuActionButton
+        label={"Delete account"}
+        labelStyle={{ color: "red" }}
+        onPress={() => {
+          Alert.alert(
+            "Delete account?",
+            "Are you sure you want to permanently delete your account?",
+            [
+              {
+                text: "Cancel",
+                onPress: () => {},
+                style: "cancel",
+              },
+              {
+                text: "Yes",
+                onPress: () => {
+                  deleteProfile(me.id);
+                },
+              },
+            ],
+          );
         }}
       />
     </View>

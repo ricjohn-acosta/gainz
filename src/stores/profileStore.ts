@@ -4,6 +4,7 @@ import useAuthStore from "./authStore";
 import { parseProfileQueryResult } from "./profile/helpers";
 import { PostgrestError } from "@supabase/supabase-js";
 import teamStore from "./teamStore.ts";
+import { Alert } from "react-native";
 
 interface ProfileState {
   data: {
@@ -17,6 +18,7 @@ interface ProfileState {
     getUserProfileByUsername: (username: string) => Promise<PostgrestError>;
     getTeamProfiles: () => Promise<any>;
     getSubscription: () => Promise<PostgrestError>;
+    deleteProfile: (uid: string) => Promise<PostgrestError>;
   };
 }
 
@@ -104,6 +106,22 @@ const useProfileStore = create<ProfileState>((set, get) => ({
         data: { ...state.data, subscription, loadingSubscription: false },
       }));
       teamStore.getState().operations.updateTeamRestriction(subscription);
+    },
+    deleteProfile: async (uid) => {
+      if (!uid) return;
+
+      useAuthStore.getState().logout();
+
+      console.log(uid);
+      const { error: deleteError } = await supabase
+        .from("profiles")
+        .delete()
+        .eq("id", uid);
+
+      if (deleteError) {
+        Alert.alert("Error", deleteError.message);
+        return deleteError;
+      }
     },
   },
 }));
