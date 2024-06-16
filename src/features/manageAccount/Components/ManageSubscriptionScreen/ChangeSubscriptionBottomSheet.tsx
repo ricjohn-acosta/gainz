@@ -172,7 +172,7 @@ export const ChangeSubscriptionBottomSheet = (
       enablePanDownToClose={!updatingSubscription}
       onDismiss={onDismiss}
       ref={bottomsheetRef}
-      _snapPoints={["50%"]}
+      _snapPoints={["70%"]}
     >
       <View style={styles.container}>
         <BasicText style={styles.modalTitle}>Change subscription</BasicText>
@@ -208,17 +208,19 @@ export const ChangeSubscriptionBottomSheet = (
             <ActivityIndicator size={"small"} />
           </View>
         )}
+
+        {!updatingSubscription && (
+          <View style={styles.changeSubBtnContainer}>
+            <PrimaryButton
+              disabled={isConfirmBtnDisabled()}
+              onPress={handleChangeSubscription}
+              style={styles.changeSubBtn}
+              text={`Change subscription (Total: $${Number(customMemberAmount) - FREE_SEAT < 0 ? 0 : Number(customMemberAmount) - FREE_SEAT}.00)`}
+            />
+          </View>
+        )}
+
       </View>
-      {!updatingSubscription && (
-        <View style={styles.changeSubBtnContainer}>
-          <PrimaryButton
-            disabled={isConfirmBtnDisabled()}
-            onPress={handleChangeSubscription}
-            style={styles.changeSubBtn}
-            text={`Change subscription (Total: $${Number(customMemberAmount) - FREE_SEAT < 0 ? 0 : Number(customMemberAmount) - FREE_SEAT}.00)`}
-          />
-        </View>
-      )}
     </BasicBottomSheet>
   );
 };
@@ -250,10 +252,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     textAlign: "center",
     fontSize: 50,
-    height: "80%",
+    height: "100%",
     fontFamily: "Poppins-Bold",
     paddingLeft: 10,
     paddingRight: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
   amountText: {
     fontSize: 50,
@@ -273,8 +277,6 @@ const styles = StyleSheet.create({
   },
   changeSubBtn: {
     width: "100%",
-    bottom: 50,
-    position: "absolute",
   },
   warningMsg: {
     color: "#ff3d02",
