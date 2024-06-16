@@ -98,7 +98,7 @@ export default function MyStats() {
           <View style={styles.rightContainer}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <BasicText style={styles.subtitle}>Give Hype</BasicText>
-              <Entypo name="chevron-small-right" size={20} color="grey" />
+              <Entypo name="chevron-small-right" size={14} color="grey" />
             </View>
             <BasicText style={{ fontSize: 26, color: "#ff046d", fontFamily: "Poppins-Bold" }}>
               {meTeamData ? meTeamData.hype_givable : "5"}
@@ -115,7 +115,7 @@ export default function MyStats() {
           <View style={styles.rightContainer}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <BasicText style={styles.subtitle}>Hype rank</BasicText>
-              <Entypo name="chevron-small-right" size={20} color="grey" />
+              <Entypo name="chevron-small-right" size={14} color="grey" />
             </View>
             <BasicText style={{ fontSize: 26, color: "#eccb15", fontFamily: "Poppins-Bold" }}>
               {displayHypeRank()}
