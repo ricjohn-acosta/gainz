@@ -53,10 +53,10 @@ export default function Avatar(props: AvatarProps) {
     if (!uid || !myTeam) return;
 
     if (myTeam.length === 0) {
-      return me.username.charAt(0).toUpperCase();
+      return me.username.charAt(0);
     }
 
-    return getMember(uid)?.username.charAt(0).toUpperCase();
+    return getMember(uid)?.username.charAt(0);
   };
 
   const stringToColor = () => {
