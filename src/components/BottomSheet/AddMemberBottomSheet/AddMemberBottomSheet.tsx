@@ -45,12 +45,10 @@ export const AddMemberBottomSheet = forwardRef(
     };
 
     const displayMemberCountStatus = () => {
-      if (!subscription || !subscription.metadata || !myTeam) return <></>;
-
+      if (!myTeam) return;
       // Remaining available seats
       const seats =
-        subscription.metadata.seats -
-        myTeam.filter((user) => user.profile_id !== me.id).length;
+        3 - myTeam.filter((user) => user.profile_id !== me.id).length;
 
       return (
         <BasicText style={styles.subtitle}>

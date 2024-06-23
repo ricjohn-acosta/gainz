@@ -1,5 +1,5 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import React, { useRef } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import {
   ImageBackground,
   SafeAreaView,
@@ -9,6 +9,7 @@ import {
   View,
   RefreshControl,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 
 import MyStats from "./components/MyStats";
@@ -21,26 +22,31 @@ import images from "../../../assets";
 import { AddMemberBottomSheet } from "../../components/BottomSheet/AddMemberBottomSheet/AddMemberBottomSheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BasicText from "../../components/Text/BasicText";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Avatar from "../../components/Avatar/Avatar.tsx";
+import Purchases from "react-native-purchases";
+import useSubscriptionStore from "../../stores/subscriptionStore.ts";
 
 export default function GymScreen() {
   const {
-    data: { me, subscription, loadingSubscription },
+    data: { me },
     operations: { getMeProfile, getTeamProfiles, getSubscription },
   } = useProfileStore();
   const {
-    data: { myTeam },
     operations: { getMyTeam },
   } = useTeamStore();
   const {
     data: { canInvite },
   } = useMyTeam();
+  const {
+    operations: { showInvitePaywall },
+  } = useSubscriptionStore();
 
   const navigation = useNavigation<any>();
   const addMemberBottomSheetRef = useRef<BottomSheetModal>(null);
 
   const [refreshing, setRefreshing] = React.useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onRefresh = () => {
     try {
@@ -59,43 +65,38 @@ export default function GymScreen() {
     }
   };
 
-  const showAddMemberBottomSheet = () => {
-    if (!subscription || !subscription.metadata) {
-      navigation.navigate("SubscribeModal");
-      return;
+  const showAddMemberBottomSheet = async () => {
+    setLoading(true);
+    try {
+      const renderPaywall = await showInvitePaywall();
+
+      if (renderPaywall) {
+        navigation.navigate("SubscribeModal");
+      } else {
+        addMemberBottomSheetRef.current?.present();
+      }
+    } catch (e) {
+      Alert.alert("Error", "Failed to check invite status");
     }
-
-    const seats =
-      subscription.metadata.seats -
-      myTeam.filter((user) => user.profile_id !== me.id).length;
-
-    if (seats === 0) {
-      navigation.navigate("SubscribeModal");
-      return;
-    }
-
-    addMemberBottomSheetRef.current?.present();
+    setLoading(false);
   };
 
   const renderInviteButton = () => {
-    if (loadingSubscription) return <ActivityIndicator size={"small"} />;
-
+    if (!canInvite) return null;
     return (
-      canInvite && (
-        <TouchableOpacity onPress={showAddMemberBottomSheet}>
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <ImageBackground style={styles.addMemberBtn} source={images.add} />
-            <View style={{ marginTop: 4 }}>
-              <BasicText style={{ color: "#808080" }}>Invite</BasicText>
-            </View>
+      <TouchableOpacity onPress={showAddMemberBottomSheet}>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <ImageBackground style={styles.addMemberBtn} source={images.add} />
+          <View style={{ marginTop: 4 }}>
+            <BasicText style={{ color: "#808080" }}>Invite</BasicText>
           </View>
-        </TouchableOpacity>
-      )
+        </View>
+      </TouchableOpacity>
     );
   };
 
@@ -140,7 +141,11 @@ export default function GymScreen() {
         <View style={styles.teamsTitleContainer}>
           <BasicText style={styles.teamsTitle}>Your team</BasicText>
           <AcceptInvitation />
-          {renderInviteButton()}
+          {loading ? (
+            <ActivityIndicator size={"large"} />
+          ) : (
+            renderInviteButton()
+          )}
         </View>
         <MyTeam />
         <AddMemberBottomSheet ref={addMemberBottomSheetRef} />

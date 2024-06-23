@@ -20,6 +20,7 @@ import useTeamStore from "../../../stores/teamStore";
 import BasicText from "../../Text/BasicText";
 import { useNotifications } from "../../../services/notifications/useNotifications.ts";
 import { GeneralMessage } from "../../Message/GeneralMessage.tsx";
+import useSubscriptionStore from "../../../stores/subscriptionStore.ts";
 
 interface GiveHypeBottomSheetProps {
   snapPoints?: any;
@@ -36,6 +37,9 @@ export const GiveHypeBottomSheet = forwardRef(
       data: { myTeam, meTeamData },
       operations: { getMyTeam, getTeamRestriction },
     } = useTeamStore();
+    const {
+      operations: { showFeaturePaywall },
+    } = useSubscriptionStore();
 
     const {
       operations: { sendPushNotification },
@@ -151,19 +155,20 @@ export const GiveHypeBottomSheet = forwardRef(
     };
 
     const handleSubmit = async () => {
-      const restricted = await getTeamRestriction(meTeamData.team_id);
+      setSubmitLoading(true);
 
-      if (restricted || (meTeamData.role === "leader" && !subscription)) {
+      const showPaywall = await showFeaturePaywall();
+
+      if (showPaywall) {
         Alert.alert(
           "Hype giving disabled",
-          "You have either don't have an existing subscription or have ran out of member seats!",
+          "Your team's subscription may have expired. Please contact your team leader.",
         );
+        setSubmitLoading(false);
         return;
       }
 
       if (!hypeToGiveCounter) return;
-
-      setSubmitLoading(true);
 
       const usernames = Object.keys(hypeToGiveCounter);
       const values = Object.values(hypeToGiveCounter);

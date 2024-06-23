@@ -7,9 +7,9 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_STRIPE_DEV_KEY": "pk_test_51PKxRg03MaXp75WnyX1xEYCCBe9CYIoIk6DJYO9xfkHRsZ8JFxNlFCG8YTRxuS947tgimuH77WYUxfxOBJ8U1QeI00pm1f2lMq",
         "EXPO_PUBLIC_SUPABASE_URL": "https://chwtkqhuwdbvpgqhdjli.supabase.co",
-        "EXPO_PUBLIC_SUPABASE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNod3RrcWh1d2RidnBncWhkamxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5NDYxMzAsImV4cCI6MjAyNTUyMjEzMH0.6Ba244A7pjRQMHrL0HC2AGgVI5Wioi6HK3W22ZimOKE"
+        "EXPO_PUBLIC_SUPABASE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNod3RrcWh1d2RidnBncWhkamxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5NDYxMzAsImV4cCI6MjAyNTUyMjEzMH0.6Ba244A7pjRQMHrL0HC2AGgVI5Wioi6HK3W22ZimOKE",
+        "EXPO_RC_APPLE_KEY": "appl_EFunEffsBbIXRmoXuWwhneoXLbP"
       }
     },
     "development-simulator": {
@@ -22,14 +22,15 @@
       "distribution": "internal",
       "env": {
         "EXPO_PUBLIC_SUPABASE_URL": "https://chwtkqhuwdbvpgqhdjli.supabase.co",
-        "EXPO_PUBLIC_SUPABASE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNod3RrcWh1d2RidnBncWhkamxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5NDYxMzAsImV4cCI6MjAyNTUyMjEzMH0.6Ba244A7pjRQMHrL0HC2AGgVI5Wioi6HK3W22ZimOKE"
+        "EXPO_PUBLIC_SUPABASE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNod3RrcWh1d2RidnBncWhkamxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5NDYxMzAsImV4cCI6MjAyNTUyMjEzMH0.6Ba244A7pjRQMHrL0HC2AGgVI5Wioi6HK3W22ZimOKE",
+        "EXPO_RC_APPLE_KEY": "appl_EFunEffsBbIXRmoXuWwhneoXLbP"
       }
     },
     "production": {
       "env": {
         "EXPO_PUBLIC_SUPABASE_URL": "https://chwtkqhuwdbvpgqhdjli.supabase.co",
         "EXPO_PUBLIC_SUPABASE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNod3RrcWh1d2RidnBncWhkamxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5NDYxMzAsImV4cCI6MjAyNTUyMjEzMH0.6Ba244A7pjRQMHrL0HC2AGgVI5Wioi6HK3W22ZimOKE",
-        "EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY": "pk_live_51PKxRg03MaXp75WneuYtyZVbCzE0S0dcQd9NrqIY7Rruxqm5wrREeckHnreh4bxJNgGPc6w17spv2UXsMm889VEx00IUse2AGG"
+        "EXPO_RC_APPLE_KEY": "appl_EFunEffsBbIXRmoXuWwhneoXLbP"
       },
       "autoIncrement": true
     }

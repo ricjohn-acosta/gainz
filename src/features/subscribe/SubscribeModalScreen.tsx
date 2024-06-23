@@ -1,14 +1,6 @@
-import {
-  ActivityIndicator,
-  Alert,
-  Image,
-  StyleSheet,
-  TextInput,
-  View,
-} from "react-native";
+import { Alert, Image, StyleSheet, View } from "react-native";
 import BasicText from "../../components/Text/BasicText.tsx";
 import { LinearGradient } from "expo-linear-gradient";
-import { Checkbox } from "expo-checkbox";
 import { PrimaryButton } from "../../components/Button/PrimaryButton.tsx";
 import React, { useState } from "react";
 import images from "../../../assets/index.ts";
@@ -19,9 +11,10 @@ import { useNavigation } from "@react-navigation/native";
 import { TextButton } from "../../components/Button/TextButton.tsx";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import useTeamStore from "../../stores/teamStore.ts";
+import Purchases from "react-native-purchases";
+import useSubscriptionStore from "../../stores/subscriptionStore.ts";
 
 export const FIXED_MEMBER_SUBSCRIPTION = "3_MEMBER";
-export const CUSTOM_MEMBER_SUBSCRIPTION = "CUSTOM_MEMBER";
 export const FREE_SEAT = 3;
 
 // This screen only shows for users who are going to subscribe for the first time
@@ -33,29 +26,15 @@ export const SubscribeModalScreen = () => {
   const {
     data: { myTeam },
   } = useTeamStore();
+  const {
+    data: { offerings, customer },
+    operations: { saveUserSubscriptionId },
+  } = useSubscriptionStore();
 
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const navigation = useNavigation<any>();
 
-  const [selectedSubscription, setSelectedSubscription] = useState(null);
-  const [customMemberAmount, setCustomMemberAmount] = useState("5");
   const [loading, setLoading] = useState(false);
-
-  const displayFinalQuantity = () => {
-    if (!selectedSubscription) return "Continue to checkout!";
-
-    if (selectedSubscription === FIXED_MEMBER_SUBSCRIPTION) {
-      return `Add 3 member seats for free!`;
-    }
-
-    if (selectedSubscription === CUSTOM_MEMBER_SUBSCRIPTION) {
-      if (Number(customMemberAmount) <= FREE_SEAT) {
-        return `Add ${customMemberAmount} member seats for free!`;
-      } else {
-        return `Continue to checkout ($${Number(customMemberAmount) - FREE_SEAT}.00)`;
-      }
-    }
-  };
 
   const initializePaymentSheet = async () => {
     // Amount of member seats the user purchases
@@ -135,25 +114,13 @@ export const SubscribeModalScreen = () => {
     });
   };
 
-  const handleCustomMemberAmountChange = (text) => {
-    // Filter out any non-numeric characters
-    const numericText = text.replace(/[^0-9]/g, "");
-
-    if (numericText === "" || numericText === "0") {
-      setCustomMemberAmount("");
-      return;
-    }
-
-    setCustomMemberAmount(numericText);
-  };
-
-  const displayHeroMessage = () => {
+  const renderHeroMessage = () => {
     if (!subscription) {
       return (
         <View style={styles.headerContainer}>
-          <BasicText style={styles.header}>First 3 members free!</BasicText>
+          <BasicText style={styles.header}>Subscribe for more!</BasicText>
           <BasicText style={styles.subheader}>
-            Purchase member seats and start celebrating your team 💪
+            Get unlimited member space and more! 🎉
           </BasicText>
         </View>
       );
@@ -168,11 +135,87 @@ export const SubscribeModalScreen = () => {
         <View style={styles.headerContainer}>
           <BasicText style={styles.header}>Purchase more seats</BasicText>
           <BasicText style={styles.subheader}>
-            Not enough member seats! Purchase more to continue
-            celebrating your team 💪
+            Not enough member seats! Purchase more to continue celebrating your
+            team 💪
           </BasicText>
         </View>
       );
+    }
+  };
+
+  const renderOfferings = () => {
+    if (
+      offerings.current !== null &&
+      offerings.current.availablePackages.length !== 0
+    ) {
+      // Display packages for sale
+      return offerings.current.availablePackages.map((offering) => {
+        console.log(offering);
+
+        return (
+          <View style={styles.cardContainer}>
+            <View style={styles.card}>
+              <View style={styles.productHeader}>
+                <BasicText style={styles.productTitle}>
+                  {offering.product.title}
+                </BasicText>
+              </View>
+
+              <View style={styles.productBodyContainer}>
+                <BasicText style={styles.price}>
+                  {offering.product.priceString}
+                  <BasicText
+                    style={{ fontSize: 14, fontFamily: "Poppins-Bold" }}
+                  >
+                    {offering.product.currencyCode}
+                  </BasicText>
+                </BasicText>
+                <BasicText style={styles.productLabel}>
+                  {offering.packageType === "MONTHLY" ? "per month" : ""}
+                </BasicText>
+                <BasicText style={styles.productDescription}>
+                  *{offering.product.description}
+                </BasicText>
+              </View>
+            </View>
+          </View>
+        );
+      });
+    }
+  };
+
+  const renderPurchaseButton = () => {
+    return (
+      <View style={styles.purchaseBtnContainer}>
+        <PrimaryButton
+          onPress={handlePurchase}
+          text={"Purchase subscription!"}
+        />
+      </View>
+    );
+  };
+
+  const handlePurchase = async () => {
+    try {
+      // Grab the offering the user will purchase
+      const offerings = await Purchases.getOfferings();
+      let offering;
+      if (
+        offerings.current !== null &&
+        offerings.current.availablePackages.length !== 0
+      ) {
+        offering = offerings.current.availablePackages[0];
+      }
+
+      const { customerInfo } = await Purchases.purchasePackage(offering);
+
+      if (customerInfo) {
+        await saveUserSubscriptionId(customerInfo.originalAppUserId);
+      }
+    } catch (e) {
+      if (!e.userCancelled) {
+        Alert.alert("Error", e);
+      }
     }
   };
 
@@ -193,72 +236,9 @@ export const SubscribeModalScreen = () => {
             <Image style={styles.logo} source={images.kapaiiSquareLogo} />
           </View>
 
-          {displayHeroMessage()}
-
-          <View style={styles.pricingContainer}>
-            <BasicText style={styles.price}>$1</BasicText>
-            <BasicText style={styles.priceDetails}>per member/month</BasicText>
-          </View>
-
-          <View style={styles.cardContainer}>
-            {!subscription && (
-              <View style={styles.card}>
-                <View style={styles.itemContainer}>
-                  <Checkbox
-                    value={selectedSubscription === FIXED_MEMBER_SUBSCRIPTION}
-                    onValueChange={() =>
-                      setSelectedSubscription(FIXED_MEMBER_SUBSCRIPTION)
-                    }
-                  />
-                  <BasicText>3 members</BasicText>
-                </View>
-                <BasicText style={styles.pricingLabel}>FREE!</BasicText>
-              </View>
-            )}
-
-            <View style={styles.card}>
-              <View style={styles.itemContainer}>
-                <Checkbox
-                  value={selectedSubscription === CUSTOM_MEMBER_SUBSCRIPTION}
-                  onValueChange={() =>
-                    setSelectedSubscription(CUSTOM_MEMBER_SUBSCRIPTION)
-                  }
-                />
-                <BasicText styles={styles.itemName}>Custom amount</BasicText>
-              </View>
-              <View style={styles.customAmountContainer}>
-                <BasicText>$</BasicText>
-                <TextInput
-                  value={customMemberAmount}
-                  keyboardType={"numeric"}
-                  inputMode={"numeric"}
-                  onChangeText={handleCustomMemberAmountChange}
-                  placeholder={"5"}
-                  style={styles.customAmountInput}
-                />
-                <BasicText>/month</BasicText>
-              </View>
-            </View>
-          </View>
-
-          {loading ? (
-            <View style={styles.loadingContainer}>
-              <BasicText style={styles.loadingMessage}>
-                Please stay put! We're doing some magic in the background..
-              </BasicText>
-              <ActivityIndicator size={"large"} />
-            </View>
-          ) : (
-            <PrimaryButton
-              onPress={presentStripePaymentSheet}
-              disabled={
-                !selectedSubscription ||
-                (selectedSubscription === CUSTOM_MEMBER_SUBSCRIPTION &&
-                  !customMemberAmount)
-              }
-              text={displayFinalQuantity()}
-            />
-          )}
+          {renderHeroMessage()}
+          {renderOfferings()}
+          {renderPurchaseButton()}
 
           <BasicText style={styles.checkoutWarning}>
             You won't be charged yet
@@ -301,26 +281,41 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
   },
+  productHeader: {
+    width: "100%",
+    backgroundColor: "#1f30fb",
+  },
+  productBodyContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 30,
+  },
+  productTitle: {
+    color: "#ffd600",
+    fontFamily: "Poppins-Bold",
+    fontSize: 18,
+    textAlign: "center",
+    padding: 20,
+  },
   price: {
-    color: "#ffffff",
+    color: "#1f30fb",
     fontSize: 60,
     fontFamily: "Poppins-Bold",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   priceDetails: {
     color: "#b9b9b9",
   },
   cardContainer: {
-    marginTop: 50,
-    marginBottom: 50,
+    width: "100%",
   },
   itemContainer: {
     flexDirection: "row",
     gap: 8,
   },
   card: {
-    padding: 20,
-    flexDirection: "row",
-    justifyContent: "space-between",
     backgroundColor: "#ffffff",
     borderRadius: 20,
     shadowColor: "#6e6e6e",
@@ -328,7 +323,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 5,
     elevation: 5,
-    marginBottom: 10,
+    alignItems: "center",
+    margin: 40,
   },
   customAmountContainer: {
     flexDirection: "row",
@@ -360,9 +356,18 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#ffffff",
   },
-  pricingLabel: {
+  productLabel: {
     color: "#1f30fb",
     fontFamily: "Poppins-Bold",
+    fontSize: 18,
+    textAlign: "center",
+  },
+  productDescription: {
+    color: "#000000",
+    fontFamily: "Poppins-Bold",
+    textAlign: "center",
+    marginTop: 10,
+    fontSize: 12,
   },
   loadingContainer: {
     alignItems: "center",
@@ -374,5 +379,9 @@ const styles = StyleSheet.create({
   },
   cancelContainer: {
     alignItems: "flex-end",
+  },
+  purchaseBtnContainer: {
+    marginLeft: 50,
+    marginRight: 50,
   },
 });

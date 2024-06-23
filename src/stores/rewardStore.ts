@@ -80,7 +80,6 @@ const useRewardStore = create<TeamState>((set, get) => ({
         description: rewardDescription,
         quantity,
         amount: rewardAmount,
-        sponsor: meTeamData.username,
         team_id: meTeamData.team_id,
       });
 

@@ -10,7 +10,7 @@ import {
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, Image, StatusBar, Text, View } from "react-native";
+import { Alert, Image, Platform, StatusBar, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { ActivityFeedScreen } from "./src/features/activityFeed/ActivityFeedScreen";
@@ -42,6 +42,8 @@ import { ResetPasswordForm } from "./src/features/welcome/components/ResetPasswo
 import { StripeProvider } from "@stripe/stripe-react-native";
 import { SubscribeModalScreen } from "./src/features/subscribe/SubscribeModalScreen.tsx";
 import { ManageAccountStack } from "./src/features/manageAccount/ManageAccountStack.tsx";
+import Purchases, { LOG_LEVEL } from "react-native-purchases";
+import useSubscriptionStore from "./src/stores/subscriptionStore.ts";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -389,6 +391,9 @@ const AuthNavigatorStack = () => {
 export default function App() {
   const { session, setSession, logout, loginWithToken } = useAuthStore();
   const {
+    operations: { setOfferings, setCustomer },
+  } = useSubscriptionStore();
+  const {
     data: { me },
   } = useProfileStore();
   const {
@@ -469,6 +474,26 @@ export default function App() {
     const result = await AsyncStorage.getItem("has_skipped_invite_code");
     setHasUserSkippedInviteCode(result);
   };
+
+  useEffect(() => {
+    const setup = async () => {
+      if (Platform.OS === "ios") {
+        await Purchases.configure({
+          apiKey: process.env.EXPO_PUBLIC_RC_APPLE_KEY,
+        });
+      }
+
+      const offerings = await Purchases.getOfferings();
+      const customerInfo = await Purchases.getCustomerInfo();
+
+      setOfferings(offerings);
+      setCustomer(customerInfo);
+    };
+
+    Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
+
+    setup().catch(console.log);
+  }, []);
 
   // Load user data
   useEffect(() => {

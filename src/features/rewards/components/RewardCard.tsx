@@ -1,6 +1,13 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import React, { useCallback, useRef } from "react";
-import {Alert, Image, StyleSheet, Text, View} from "react-native";
+import React, { useCallback, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { PrimaryButton } from "../../../components/Button/PrimaryButton";
 import images from "../../../../assets";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
@@ -8,6 +15,7 @@ import { ConfirmRewardModal } from "./ConfirmRewardModal";
 import LottieView from "lottie-react-native";
 import BasicText from "../../../components/Text/BasicText";
 import useTeamStore from "../../../stores/teamStore.ts";
+import useSubscriptionStore from "../../../stores/subscriptionStore.ts";
 
 interface RewardCardProps {
   name: string;
@@ -23,9 +31,15 @@ export const RewardCard = (props: RewardCardProps) => {
   const {
     data: { meTeamData },
   } = useTeamStore();
+  const {
+    operations: { showFeaturePaywall },
+  } = useSubscriptionStore();
 
   const { name, description, rewardId, imageUrl, quantity, amount, sponsor } =
     props;
+
+  const [loading, setLoading] = useState<boolean>(false);
+
   const confirmRewardModal = useRef<BottomSheetModal>(null);
 
   const showConfirmRewardModal = useCallback(() => {
@@ -36,13 +50,34 @@ export const RewardCard = (props: RewardCardProps) => {
     confirmRewardModal.current?.dismiss();
   }, []);
 
-  const handleShowConfirmRewardModal = () => {
+  const handleShowConfirmRewardModal = async () => {
     if (!meTeamData || meTeamData.hype_redeemable === 0) {
-      Alert.alert('Reward unavailable', 'You do not have sufficient hype points to redeem this reward.')
-      return
+      Alert.alert(
+        "Reward unavailable",
+        "You do not have sufficient hype points to redeem this reward.",
+      );
+      return;
     }
-    showConfirmRewardModal()
-  }
+
+    if (sponsor) {
+      setLoading(true);
+      const showPaywall = await showFeaturePaywall();
+
+      if (showPaywall) {
+        Alert.alert(
+          "Sponsored reward disabled",
+          "Your team's subscription may have expired. Please contact your team leader.",
+        );
+        setLoading(false);
+        return;
+      }
+
+      setLoading(false);
+      showConfirmRewardModal();
+    } else {
+      showConfirmRewardModal();
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -52,7 +87,9 @@ export const RewardCard = (props: RewardCardProps) => {
           {sponsor && (
             <BasicText style={styles.extraDetail}>
               Sponsored by{" "}
-              <BasicText style={{ color: "#1f30fb", fontFamily: "Poppins-Bold" }}>
+              <BasicText
+                style={{ color: "#1f30fb", fontFamily: "Poppins-Bold" }}
+              >
                 {sponsor}
               </BasicText>
             </BasicText>
@@ -61,19 +98,23 @@ export const RewardCard = (props: RewardCardProps) => {
           <BasicText style={styles.description}>{description}</BasicText>
           <BasicText style={styles.itemStock}>Quantity: {quantity}</BasicText>
         </View>
-        <PrimaryButton
-          onPress={handleShowConfirmRewardModal}
-          disablePadding
-          textStyle={{ fontSize: 14, padding: 6 }}
-          text={`${amount}`}
-          endAdornment={
-            <MaterialIcons
-              name="local-fire-department"
-              size={20}
-              color="#ff046d"
-            />
-          }
-        />
+        {loading ? (
+          <ActivityIndicator size={"small"} />
+        ) : (
+          <PrimaryButton
+            onPress={handleShowConfirmRewardModal}
+            disablePadding
+            textStyle={{ fontSize: 14, padding: 6 }}
+            text={`${amount}`}
+            endAdornment={
+              <MaterialIcons
+                name="local-fire-department"
+                size={20}
+                color="#ff046d"
+              />
+            }
+          />
+        )}
       </View>
       <ConfirmRewardModal
         onHide={hideConfirmRewardModal}
