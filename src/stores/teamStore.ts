@@ -49,10 +49,10 @@ const useTeamStore = create<TeamState>((set, get) => ({
           data: { ...state.data, myTeam: null, meTeamData: null },
         }));
       } else {
-        const meTeamData = data.find((user) => user.profile_id === me.id);
+        const meTeamData = data.filter((user) => user.profile_id === me.id);
         set((state) => ({
           ...state,
-          data: { ...state.data, myTeam: data, meTeamData },
+          data: { ...state.data, myTeam: data, meTeamData: meTeamData[0] },
         }));
       }
     },

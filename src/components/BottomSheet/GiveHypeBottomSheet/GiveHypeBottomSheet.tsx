@@ -30,7 +30,7 @@ interface GiveHypeBottomSheetProps {
 export const GiveHypeBottomSheet = forwardRef(
   ({ snapPoints, memberUsername }: GiveHypeBottomSheetProps, ref: any) => {
     const {
-      data: { me, subscription },
+      data: { me },
       operations: { getMeProfile, getUserProfileByUsername },
     } = useProfileStore();
     const {
@@ -78,7 +78,7 @@ export const GiveHypeBottomSheet = forwardRef(
     }, [myTeam, meTeamData]);
 
     useEffect(() => {
-      if (meTeamData) {
+      if (meTeamData && meTeamData.length > 0) {
         setGivableHype(meTeamData.hype_givable);
       } else {
         setGivableHype(5);

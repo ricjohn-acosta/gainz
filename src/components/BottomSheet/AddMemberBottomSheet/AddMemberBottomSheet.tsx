@@ -15,7 +15,7 @@ interface AddMemberBottomSheetProps {}
 export const AddMemberBottomSheet = forwardRef(
   (props: AddMemberBottomSheetProps, ref) => {
     const {
-      data: { me, subscription },
+      data: { me },
     } = useProfileStore();
     const {
       data: { myTeam },

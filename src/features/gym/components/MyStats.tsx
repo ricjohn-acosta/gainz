@@ -101,7 +101,7 @@ export default function MyStats() {
               <Entypo name="chevron-small-right" size={14} color="grey" />
             </View>
             <BasicText style={{ fontSize: 26, color: "#ff046d", fontFamily: "Poppins-Bold" }}>
-              {meTeamData ? meTeamData.hype_givable : "5"}
+              {meTeamData && meTeamData.length > 0 ? meTeamData.hype_givable : "5"}
             </BasicText>
           </View>
         </TouchableOpacity>

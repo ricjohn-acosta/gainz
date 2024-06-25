@@ -5,18 +5,17 @@ import { parseProfileQueryResult } from "./profile/helpers";
 import { PostgrestError } from "@supabase/supabase-js";
 import teamStore from "./teamStore.ts";
 import { Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface ProfileState {
   data: {
     me?: any;
     loadingSubscription?: boolean;
     subscription?: any;
-    team?: any;
   };
   operations: {
     getMeProfile: () => Promise<PostgrestError | any>;
     getUserProfileByUsername: (username: string) => Promise<PostgrestError>;
-    getTeamProfiles: () => Promise<any>;
     getSubscription: () => Promise<PostgrestError>;
     deleteProfile: (uid: string) => Promise<PostgrestError>;
   };
@@ -25,7 +24,6 @@ interface ProfileState {
 const useProfileStore = create<ProfileState>((set, get) => ({
   data: {
     me: null,
-    team: null,
     subscription: null,
     loadingSubscription: false,
   },
@@ -48,9 +46,6 @@ const useProfileStore = create<ProfileState>((set, get) => ({
           ...state,
           data: { me: data[0] },
         }));
-
-        get().operations.getTeamProfiles();
-        get().operations.getSubscription();
       }
     },
     getUserProfileByUsername: async (username: string) => {
@@ -65,27 +60,6 @@ const useProfileStore = create<ProfileState>((set, get) => ({
       }
 
       return data[0];
-    },
-    getTeamProfiles: async () => {
-      const me = get().data.me;
-      if (!me.team_id) return;
-
-      const { data, error } = await supabase
-        .from("profiles")
-        .select(
-          "*, hype_received:hype_activity!public_hype_activity_recipient_id_fkey( hype_points_received ), hype_given:hype_activity!public_hype_activity_sender_id_fkey( hype_points_received )",
-        )
-        .eq("team_id", me.team_id);
-
-      const teamProfiles = data.map((profile) =>
-        parseProfileQueryResult(profile),
-      );
-
-      set((state) => ({
-        ...state,
-        data: { ...state.data, team: teamProfiles },
-      }));
-      return data;
     },
     getSubscription: async () => {
       set((state) => ({
@@ -112,11 +86,17 @@ const useProfileStore = create<ProfileState>((set, get) => ({
 
       useAuthStore.getState().logout();
 
-      console.log(uid);
-      const { error: deleteError } = await supabase
-        .from("profiles")
-        .delete()
-        .eq("id", uid);
+      const tokenString = await AsyncStorage.getItem(
+        "sb-chwtkqhuwdbvpgqhdjli-auth-token",
+      );
+      const tokenData = JSON.parse(tokenString);
+
+      const { error: deleteError } = await supabase.functions.invoke(
+        "supabase-delete-user",
+        {
+          body: { userId: tokenData.user.id },
+        },
+      );
 
       if (deleteError) {
         Alert.alert("Error", deleteError.message);

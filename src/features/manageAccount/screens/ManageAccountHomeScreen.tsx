@@ -4,6 +4,7 @@ import { MenuActionButton } from "../../../components/Button/MenuActionButton.ts
 import useAuthStore from "../../../stores/authStore.ts";
 import useTeamStore from "../../../stores/teamStore.ts";
 import useProfileStore from "../../../stores/profileStore.ts";
+import { useNavigation } from "@react-navigation/native";
 
 export const ManageAccountHomeScreen = () => {
   const { logout } = useAuthStore();
@@ -15,6 +16,8 @@ export const ManageAccountHomeScreen = () => {
     data: { meTeamData },
     operations: { removeMember },
   } = useTeamStore();
+
+  const navigation = useNavigation<any>();
 
   const displayManageTeam = () => {
     if (meTeamData && meTeamData.role === "leader") return true;

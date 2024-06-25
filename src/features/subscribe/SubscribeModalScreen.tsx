@@ -1,8 +1,8 @@
-import { Alert, Image, StyleSheet, View } from "react-native";
+import { Alert, Image, Linking, StyleSheet, View } from "react-native";
 import BasicText from "../../components/Text/BasicText.tsx";
 import { LinearGradient } from "expo-linear-gradient";
 import { PrimaryButton } from "../../components/Button/PrimaryButton.tsx";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import images from "../../../assets/index.ts";
 import { PaymentSheetError, useStripe } from "@stripe/stripe-react-native";
 import { supabase } from "../../services/supabase.ts";
@@ -13,6 +13,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import useTeamStore from "../../stores/teamStore.ts";
 import Purchases from "react-native-purchases";
 import useSubscriptionStore from "../../stores/subscriptionStore.ts";
+import { Checkbox } from "expo-checkbox";
 
 export const FIXED_MEMBER_SUBSCRIPTION = "3_MEMBER";
 export const FREE_SEAT = 3;
@@ -35,6 +36,7 @@ export const SubscribeModalScreen = () => {
   const navigation = useNavigation<any>();
 
   const [loading, setLoading] = useState(false);
+  const [agreeTOS, setAgreeTOS] = useState(false);
 
   const initializePaymentSheet = async () => {
     // Amount of member seats the user purchases
@@ -150,8 +152,6 @@ export const SubscribeModalScreen = () => {
     ) {
       // Display packages for sale
       return offerings.current.availablePackages.map((offering) => {
-        console.log(offering);
-
         return (
           <View style={styles.cardContainer}>
             <View style={styles.card}>
@@ -184,10 +184,37 @@ export const SubscribeModalScreen = () => {
     }
   };
 
+  const renderAcceptTOS = () => {
+    return (
+      <View style={styles.tosContainer}>
+        <Checkbox
+          value={agreeTOS}
+          onValueChange={() => setAgreeTOS(!agreeTOS)}
+        />
+        <View style={styles.tosLabelContainer}>
+          <BasicText style={{ color: "#ffffff" }}>I agree to </BasicText>
+          <TextButton
+            onPress={() =>
+              handlePressURL(
+                "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
+              )
+            }
+            text={"Terms of use, "}
+          />
+          <TextButton
+            onPress={() => handlePressURL("https://www.kapaii.app/")}
+            text={"Privacy policy"}
+          />
+        </View>
+      </View>
+    );
+  };
+
   const renderPurchaseButton = () => {
     return (
       <View style={styles.purchaseBtnContainer}>
         <PrimaryButton
+          disabled={!agreeTOS}
           onPress={handlePurchase}
           text={"Purchase subscription!"}
         />
@@ -219,6 +246,16 @@ export const SubscribeModalScreen = () => {
     }
   };
 
+  const handlePressURL = async (url) => {
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      Alert.alert(`Don't know how to open this URL: ${url}`);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <LinearGradient style={styles.background} colors={["#004e92", "#000428"]}>
@@ -238,6 +275,7 @@ export const SubscribeModalScreen = () => {
 
           {renderHeroMessage()}
           {renderOfferings()}
+          {renderAcceptTOS()}
           {renderPurchaseButton()}
 
           <BasicText style={styles.checkoutWarning}>
@@ -383,5 +421,15 @@ const styles = StyleSheet.create({
   purchaseBtnContainer: {
     marginLeft: 50,
     marginRight: 50,
+  },
+  tosContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    marginBottom: 20,
+  },
+  tosLabelContainer: {
+    flexDirection: "row",
+    marginLeft: 14,
   },
 });

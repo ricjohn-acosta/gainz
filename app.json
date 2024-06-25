@@ -16,9 +16,9 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.mookentooken.gainz",
-      "buildNumber": "40",
+      "buildNumber": "47",
       "googleServicesFile": "./GoogleService-Info.plist",
       "config": {
         "googleSignIn": {

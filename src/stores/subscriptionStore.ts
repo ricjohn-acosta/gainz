@@ -47,11 +47,12 @@ const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
       }
 
       const customerInfo = await Purchases.getCustomerInfo();
-      const meTeamData = useTeamStore.getState().data.meTeamData;
+      const me = useProfileStore.getState().data.me;
       const myTeam = useTeamStore.getState().data.myTeam;
+
       const teamLength =
         myTeam && myTeam.length > 0
-          ? myTeam.filter((user) => user.profile_id !== meTeamData.profile_id)
+          ? myTeam.filter((user) => user.profile_id !== me.id)
               .length
           : 0;
 
@@ -90,7 +91,7 @@ const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
           return;
         }
 
-        return data[0].subscription_status === "UNSUBSCRIBED";
+        return data.length === 0 || data[0].subscription_status === "UNSUBSCRIBED";
       }
 
       return false;

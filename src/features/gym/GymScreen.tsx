@@ -54,9 +54,7 @@ export default function GymScreen() {
       setTimeout(() => {
         getMeProfile().then((error) => {
           if (error) return;
-          getTeamProfiles();
           getMyTeam();
-          getSubscription();
         });
         setRefreshing(false);
       }, 1000);
@@ -76,6 +74,7 @@ export default function GymScreen() {
         addMemberBottomSheetRef.current?.present();
       }
     } catch (e) {
+      console.log(e)
       Alert.alert("Error", "Failed to check invite status");
     }
     setLoading(false);

@@ -21,7 +21,7 @@ export default function MyTeam() {
 
     if (myTeam.length > 1) {
       // only show if there are other members in the team apart from the team owner
-      return [meTeamData, ...filteredTeamData];
+      return [...filteredTeamData];
     } else {
       return [];
     }
