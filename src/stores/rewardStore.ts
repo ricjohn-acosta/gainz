@@ -95,8 +95,8 @@ const useRewardStore = create<TeamState>((set, get) => ({
         .in("id", ids);
 
       if (rewardDataError) {
-        console.error(rewardDataError)
-        return rewardDataError
+        console.error(rewardDataError);
+        return rewardDataError;
       }
     },
     redeemReward: async (rewardId, rewardName, rewardAmount) => {
@@ -145,6 +145,8 @@ const useRewardStore = create<TeamState>((set, get) => ({
       }
 
       get().operations.getRewards();
+      // We've successfully redeemed a reward so we update the hype_redeemable value
+      useTeamStore.getState().operations.getMyTeam();
     },
   },
 }));

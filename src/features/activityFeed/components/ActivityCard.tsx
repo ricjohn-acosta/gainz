@@ -22,6 +22,7 @@ import usePostStore from "../../../stores/postStore";
 import moment from "moment";
 import useProfileStore from "../../../stores/profileStore";
 import BasicText from "../../../components/Text/BasicText";
+import { useNavigation } from "@react-navigation/native";
 
 interface ActivityCardProps {
   uid: string;
@@ -51,6 +52,7 @@ export const ActivityCard = (props: ActivityCardProps) => {
   const {
     operations: { addComment, unlike, like },
   } = usePostStore();
+
   const {
     getValues,
     control,
@@ -59,6 +61,8 @@ export const ActivityCard = (props: ActivityCardProps) => {
     watch,
     formState: { errors },
   } = useForm<any>();
+
+  const navigation = useNavigation<any>();
 
   const [liked, setLiked] = useState<boolean>(
     !!likes.find((item) => item.profile_id === me.id),
@@ -78,7 +82,15 @@ export const ActivityCard = (props: ActivityCardProps) => {
     <View style={styles.container}>
       <View style={styles.postInfoContainer}>
         <View style={styles.postAvatar}>
-          <Avatar uid={uid} md />
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Profile", {
+                uid: uid,
+              })
+            }
+          >
+            <Avatar uid={uid} md />
+          </TouchableOpacity>
         </View>
         <View style={styles.postDetails}>
           <BasicText style={styles.displayName}>{posterDisplayName}</BasicText>
@@ -133,7 +145,15 @@ export const ActivityCard = (props: ActivityCardProps) => {
         />
       </View>
       <View style={styles.textInputContainer}>
-        <Avatar uid={uid} sm />
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("Profile", {
+              uid: me.id,
+            })
+          }
+        >
+          <Avatar uid={me.id} sm />
+        </TouchableOpacity>
         <View style={styles.inputContainer}>
           <BasicTextInput
             multiline={true}

@@ -1,7 +1,7 @@
 import {Entypo, MaterialIcons} from "@expo/vector-icons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import MyTeam from "./MyTeam";
@@ -11,6 +11,7 @@ import useProfileStore from "../../../stores/profileStore";
 import { LeaderboardsBottomSheet } from "../../../components/BottomSheet/LeaderboardsBottomSheet/LeaderboardsBottomSheet";
 import { sortTeamBy } from "../../../helpers/teamSorter";
 import useTeamStore from "../../../stores/teamStore";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function MyStats() {
   const {
@@ -20,6 +21,7 @@ export default function MyStats() {
     data: { meTeamData, myTeam },
   } = useTeamStore();
 
+  const isFocused = useIsFocused();
   const giveHypeBottomSheetRef = useRef<BottomSheetModal>(null);
   const leaderboardBottomSheetRef = useRef<BottomSheetModal>(null);
 
@@ -52,6 +54,13 @@ export default function MyStats() {
 
     return result;
   };
+
+  useEffect(() => {
+    if (!isFocused) {
+      giveHypeBottomSheetRef.current?.dismiss();
+      leaderboardBottomSheetRef.current?.dismiss();
+    }
+  }, [isFocused]);
 
   return (
     <>

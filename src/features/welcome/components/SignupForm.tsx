@@ -20,6 +20,7 @@ import BasicText from "../../../components/Text/BasicText";
 import { useForm } from "react-hook-form";
 import { BasicTextInput } from "../../../components/Input/BasicTextInput.tsx";
 import { GoogleSignUpButton } from "../../../components/Auth/GoogleSignUpButton.tsx";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 interface SignupFormProps {
   setForm?: (form: string) => void;
@@ -66,100 +67,105 @@ export const SignupForm = (props: SignupFormProps) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.subContainer}>
-        <View style={styles.logoContainer}>
-          <Image style={styles.logo} source={images.kapaiiSquareLogo} />
-        </View>
-        <BasicText style={styles.title}>Sign up!</BasicText>
-        <View style={styles.inputContainer}>
-          <View style={styles.icon}>
-            <MaterialCommunityIcons
-              name="account-circle-outline"
-              size={18}
-              color="grey"
+      <KeyboardAwareScrollView>
+        <View style={styles.subContainer}>
+          <View style={styles.logoContainer}>
+            <Image style={styles.logo} source={images.kapaiiSquareLogo} />
+          </View>
+          <BasicText style={styles.title}>Sign up!</BasicText>
+          <View style={styles.inputContainer}>
+            <View style={styles.icon}>
+              <MaterialCommunityIcons
+                name="account-circle-outline"
+                size={18}
+                color="grey"
+              />
+            </View>
+            <BasicTextInput
+              style={styles.input}
+              name={"username"}
+              control={control}
+              rules={{ required: "Username required" }}
+              placeholder="Enter username"
             />
           </View>
-          <BasicTextInput
-            style={styles.input}
-            name={"username"}
-            control={control}
-            rules={{ required: "Username required" }}
-            placeholder="Enter username"
-          />
-        </View>
-        {errors && errors["username"] && (
-          <BasicText style={styles.errorMsg}>
-            {errors["username"].message}
-          </BasicText>
-        )}
+          {errors && errors["username"] && (
+            <BasicText style={styles.errorMsg}>
+              {errors["username"].message}
+            </BasicText>
+          )}
 
-        <View style={styles.inputContainer}>
-          <View style={styles.icon}>
-            <MaterialCommunityIcons
-              name="email-outline"
-              size={18}
-              color="grey"
+          <View style={styles.inputContainer}>
+            <View style={styles.icon}>
+              <MaterialCommunityIcons
+                name="email-outline"
+                size={18}
+                color="grey"
+              />
+            </View>
+            <BasicTextInput
+              keyboardType={"email-address"}
+              style={styles.input}
+              name={"email"}
+              control={control}
+              rules={{ required: "Email required" }}
+              placeholder="Enter email"
             />
           </View>
-          <BasicTextInput
-            keyboardType={"email-address"}
-            style={styles.input}
-            name={"email"}
-            control={control}
-            rules={{ required: "Email required" }}
-            placeholder="Enter email"
-          />
-        </View>
-        {errors && errors["email"] && (
-          <BasicText style={styles.errorMsg}>
-            {errors["email"].message}
-          </BasicText>
-        )}
+          {errors && errors["email"] && (
+            <BasicText style={styles.errorMsg}>
+              {errors["email"].message}
+            </BasicText>
+          )}
 
-        <View style={styles.inputContainer}>
-          <View style={styles.icon}>
-            <MaterialCommunityIcons
-              name="lock-outline"
-              size={18}
-              color="grey"
+          <View style={styles.inputContainer}>
+            <View style={styles.icon}>
+              <MaterialCommunityIcons
+                name="lock-outline"
+                size={18}
+                color="grey"
+              />
+            </View>
+            <BasicTextInput
+              password
+              style={styles.input}
+              name={"password"}
+              control={control}
+              rules={{ required: "Password required" }}
+              placeholder="Enter password"
             />
           </View>
-          <BasicTextInput
-            password
-            style={styles.input}
-            name={"password"}
-            control={control}
-            rules={{ required: "Password required" }}
-            placeholder="Enter password"
+          {errors && errors["password"] && (
+            <BasicText style={styles.errorMsg}>
+              {errors["password"].message}
+            </BasicText>
+          )}
+
+          <View style={styles.ctaBtn}>
+            <PrimaryButton
+              onPress={handleSubmit(handleSignup)}
+              text="Sign up"
+            />
+          </View>
+        </View>
+
+        {/*<View style={styles.dividerContainer}>*/}
+        {/*  <Divider title="or continue with" titleStyle={styles.dividerLabel} />*/}
+        {/*  <View style={styles.thirdPartyAuthContainer}>*/}
+        {/*    <GoogleSignUpButton />*/}
+        {/*  </View>*/}
+        {/*</View>*/}
+        <View style={styles.signupContainer}>
+          <BasicText>Already have an account? </BasicText>
+          <TextButton
+            onPress={() => {
+              navigation.navigate("Login");
+            }}
+            textStyle={{ color: "#1f30fb" }}
+            text="Log in!"
           />
         </View>
-        {errors && errors["password"] && (
-          <BasicText style={styles.errorMsg}>
-            {errors["password"].message}
-          </BasicText>
-        )}
-
-        <View style={styles.ctaBtn}>
-          <PrimaryButton onPress={handleSubmit(handleSignup)} text="Sign up" />
-        </View>
-      </View>
-
-      {/*<View style={styles.dividerContainer}>*/}
-      {/*  <Divider title="or continue with" titleStyle={styles.dividerLabel} />*/}
-      {/*  <View style={styles.thirdPartyAuthContainer}>*/}
-      {/*    <GoogleSignUpButton />*/}
-      {/*  </View>*/}
-      {/*</View>*/}
-      <View style={styles.signupContainer}>
-        <BasicText>Already have an account? </BasicText>
-        <TextButton
-          onPress={() => {
-            navigation.navigate("Login");
-          }}
-          textStyle={{ color: "#1f30fb" }}
-          text="Log in!"
-        />
-      </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

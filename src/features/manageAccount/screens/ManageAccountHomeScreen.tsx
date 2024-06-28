@@ -70,9 +70,9 @@ export const ManageAccountHomeScreen = () => {
       )}
 
       <MenuActionButton
-        label={"Logout"}
+        label={"Log out"}
         onPress={() => {
-          Alert.alert("Logout?", "Are you sure you want to logout?", [
+          Alert.alert("Log out?", "Are you sure you want to logout?", [
             {
               text: "Cancel",
               onPress: () => {},

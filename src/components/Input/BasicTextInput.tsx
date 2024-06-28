@@ -25,7 +25,7 @@ export const BasicTextInput = (props: BasicTextInputProps) => {
     multiline,
     errors,
     password,
-    keyboardType
+    keyboardType,
   } = props;
 
   return (
@@ -43,6 +43,7 @@ export const BasicTextInput = (props: BasicTextInputProps) => {
             placeholder={placeholder}
             onChangeText={field.onChange}
             value={field.value}
+            textContentType="oneTimeCode"
           />
         )}
         name={name}

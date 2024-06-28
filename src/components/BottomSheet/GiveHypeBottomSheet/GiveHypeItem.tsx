@@ -5,8 +5,8 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  Touchable,
-  View,
+  Touchable, TouchableOpacity,
+  View
 } from "react-native";
 
 import images from "../../../../assets";
@@ -14,6 +14,7 @@ import Avatar from "../../Avatar/Avatar";
 import { IconButton } from "../../Button/IconButton";
 import BasicText from "../../Text/BasicText";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import { useNavigation } from "@react-navigation/native";
 
 // TODO: userId is actually a fuckin username?? why did i do that?? change this please
 interface GiveHypeItemProps {
@@ -39,13 +40,23 @@ export const GiveHypeItem = (props: GiveHypeItemProps) => {
     writeHypeMessage,
   } = props;
 
+  const navigation = useNavigation<any>();
+
   const [showMessage, setShowMessage] = useState<boolean>(false);
 
   return (
     <View style={styles.parentContainer}>
       <View style={styles.container}>
         <View style={styles.item}>
-          <Avatar uid={uid} md />
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Profile", {
+                uid: uid,
+              })
+            }
+          >
+            <Avatar uid={uid} md />
+          </TouchableOpacity>
           <BasicText style={styles.memberName}>{username}</BasicText>
         </View>
         <View style={styles.giveHypeControls}>

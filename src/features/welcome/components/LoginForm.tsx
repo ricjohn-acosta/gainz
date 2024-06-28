@@ -23,6 +23,7 @@ import { GoogleSignUpButton } from "../../../components/Auth/GoogleSignUpButton.
 import { BasicTextInput } from "../../../components/Input/BasicTextInput.tsx";
 import { useForm } from "react-hook-form";
 import { commentValidation } from "../../../stores/posts/commentValidation.ts";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 interface LoginFormProps {
   setForm?: (form: string) => void;
@@ -71,84 +72,89 @@ export const LoginForm = (props: LoginFormProps) => {
   if (!session) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.subContainer}>
-          <View style={styles.logoContainer}>
-            <Image style={styles.logo} source={images.kapaiiSquareLogo} />
+        <KeyboardAwareScrollView>
+          <View style={styles.subContainer}>
+            <View style={styles.logoContainer}>
+              <Image style={styles.logo} source={images.kapaiiSquareLogo} />
+            </View>
+
+            <BasicText style={styles.title}>Log in!</BasicText>
+            <View style={styles.inputContainer}>
+              <View style={styles.icon}>
+                <MaterialCommunityIcons
+                  name="email-outline"
+                  size={18}
+                  color="grey"
+                />
+              </View>
+              <BasicTextInput
+                keyboardType={"email-address"}
+                style={styles.input}
+                name={"email"}
+                control={control}
+                rules={{ required: "Enter email" }}
+                placeholder="Email"
+              />
+            </View>
+            {errors && errors["email"] && (
+              <BasicText style={styles.errorMsg}>
+                {errors["email"].message}
+              </BasicText>
+            )}
+            <View style={styles.inputContainer}>
+              <View style={styles.icon}>
+                <MaterialCommunityIcons
+                  name="lock-outline"
+                  size={18}
+                  color="grey"
+                />
+              </View>
+              <BasicTextInput
+                password={true}
+                style={styles.input}
+                name={"password"}
+                control={control}
+                rules={{ required: "Enter password" }}
+                placeholder="Password"
+              />
+            </View>
+            {errors && errors["password"] && (
+              <BasicText style={styles.errorMsg}>
+                {errors["password"].message}
+              </BasicText>
+            )}
+            <View style={styles.forgotPasswordBtn}>
+              <TextButton
+                onPress={() => navigation.navigate("ForgotPassword")}
+                textStyle={styles.forgotPasswordText}
+                text="Forgot password?"
+              />
+            </View>
+
+            <View style={styles.ctaBtn}>
+              <PrimaryButton
+                onPress={handleSubmit(handleLogin)}
+                text="Log in"
+              />
+            </View>
           </View>
 
-          <BasicText style={styles.title}>Log in!</BasicText>
-          <View style={styles.inputContainer}>
-            <View style={styles.icon}>
-              <MaterialCommunityIcons
-                name="email-outline"
-                size={18}
-                color="grey"
-              />
-            </View>
-            <BasicTextInput
-              keyboardType={"email-address"}
-              style={styles.input}
-              name={"email"}
-              control={control}
-              rules={{ required: "Enter email" }}
-              placeholder="Email"
-            />
+          <View style={styles.dividerContainer}>
+            {/*<Divider title="or continue with" titleStyle={styles.dividerLabel} />*/}
+            {/*<View style={styles.thirdPartyAuthContainer}>*/}
+            {/*  /!*<Image style={styles.thirdPartyIcon} source={images.fbIcon} />*!/*/}
+            {/*  <GoogleSignUpButton />*/}
+            {/*</View>*/}
           </View>
-          {errors && errors["email"] && (
-            <BasicText style={styles.errorMsg}>
-              {errors["email"].message}
-            </BasicText>
-          )}
-          <View style={styles.inputContainer}>
-            <View style={styles.icon}>
-              <MaterialCommunityIcons
-                name="lock-outline"
-                size={18}
-                color="grey"
-              />
-            </View>
-            <BasicTextInput
-              password={true}
-              style={styles.input}
-              name={"password"}
-              control={control}
-              rules={{ required: "Enter password" }}
-              placeholder="Password"
-            />
-          </View>
-          {errors && errors["password"] && (
-            <BasicText style={styles.errorMsg}>
-              {errors["password"].message}
-            </BasicText>
-          )}
-          <View style={styles.forgotPasswordBtn}>
+          <View style={styles.signupContainer}>
+            <BasicText>Don't have an account? </BasicText>
             <TextButton
-              onPress={() => navigation.navigate("ForgotPassword")}
-              textStyle={styles.forgotPasswordText}
-              text="Forgot password?"
+              onPress={() => navigation.navigate("Signup")}
+              textStyle={{ color: "#1f30fb" }}
+              text="Sign up!"
             />
           </View>
-
-          <View style={styles.ctaBtn}>
-            <PrimaryButton onPress={handleSubmit(handleLogin)} text="Log in" />
-          </View>
-        </View>
-
-        <View style={styles.dividerContainer}>
-          {/*<Divider title="or continue with" titleStyle={styles.dividerLabel} />*/}
-          {/*<View style={styles.thirdPartyAuthContainer}>*/}
-          {/*  /!*<Image style={styles.thirdPartyIcon} source={images.fbIcon} />*!/*/}
-          {/*  <GoogleSignUpButton />*/}
-          {/*</View>*/}
-        </View>
-        <View style={styles.signupContainer}>
-          <BasicText>Don't have an account? </BasicText>
-          <TextButton
-            onPress={() => navigation.navigate("Signup")}
-            textStyle={{ color: "#1f30fb" }}
-            text="Sign up!"
-          />
-        </View>
+        </KeyboardAwareScrollView>
       </SafeAreaView>
     );
   }

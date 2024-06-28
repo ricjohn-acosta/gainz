@@ -35,7 +35,7 @@ export const GiveHypeBottomSheet = forwardRef(
     } = useProfileStore();
     const {
       data: { myTeam, meTeamData },
-      operations: { getMyTeam, getTeamRestriction },
+      operations: { getMyTeam },
     } = useTeamStore();
     const {
       operations: { showFeaturePaywall },
@@ -78,7 +78,7 @@ export const GiveHypeBottomSheet = forwardRef(
     }, [myTeam, meTeamData]);
 
     useEffect(() => {
-      if (meTeamData && meTeamData.length > 0) {
+      if (meTeamData) {
         setGivableHype(meTeamData.hype_givable);
       } else {
         setGivableHype(5);
@@ -155,6 +155,16 @@ export const GiveHypeBottomSheet = forwardRef(
     };
 
     const handleSubmit = async () => {
+      getMyTeam();
+
+      if (meTeamData && meTeamData.hype_givable <= 0) {
+        Alert.alert(
+          "Oops!",
+          "You have run out of hype points to give! Your hype points will replenish tomorrow",
+        );
+        return;
+      }
+
       setSubmitLoading(true);
 
       const showPaywall = await showFeaturePaywall();

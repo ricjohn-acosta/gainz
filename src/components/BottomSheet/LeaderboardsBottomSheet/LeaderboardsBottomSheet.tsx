@@ -1,16 +1,12 @@
-import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import React, { forwardRef } from "react";
 import {
   FlatList,
   SafeAreaView,
   StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 
 import BasicBottomSheet from "../BasicBottomSheet";
-import useProfileStore from "../../../stores/profileStore";
 import { LeaderboardItem } from "./LeaderboardsItem";
 import { sortTeamBy } from "../../../helpers/teamSorter";
 import useTeamStore from "../../../stores/teamStore";

@@ -69,28 +69,6 @@ const HomeStack = () => {
         })}
       />
       <Stack.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={() => ({
-          title: "",
-          headerStyle: {
-            backgroundColor: "#f2f4ff",
-          },
-          headerTitleStyle: {
-            fontFamily: "Poppins-Bold",
-          },
-          headerShadowVisible: false,
-          headerLeft: () => (
-            <Ionicons
-              onPress={() => navigation.goBack()}
-              name="chevron-back-outline"
-              size={30}
-              color="black"
-            />
-          ),
-        })}
-      />
-      <Stack.Screen
         name="Notification"
         component={NotificationScreen}
         options={() => ({
@@ -597,12 +575,8 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#f2f4ff" }}>
-      <BottomSheetModalProvider>
-        <NavigationContainer
-          linking={linking}
-          ref={navigationRef}
-          theme={theme}
-        >
+      <NavigationContainer linking={linking} ref={navigationRef} theme={theme}>
+        <BottomSheetModalProvider>
           <StripeProvider
             publishableKey={
               __DEV__
@@ -650,6 +624,28 @@ export default function App() {
                     name="AuthStack"
                     component={AuthNavigatorStack}
                     options={() => ({ headerShown: false })}
+                  />
+                  <Stack.Screen
+                    name="Profile"
+                    component={ProfileScreen}
+                    options={() => ({
+                      title: "",
+                      headerStyle: {
+                        backgroundColor: "#f2f4ff",
+                      },
+                      headerTitleStyle: {
+                        fontFamily: "Poppins-Bold",
+                      },
+                      headerShadowVisible: false,
+                      headerLeft: () => (
+                        <Ionicons
+                          onPress={() => navigation.goBack()}
+                          name="chevron-back-outline"
+                          size={30}
+                          color="black"
+                        />
+                      ),
+                    })}
                   />
                   <Stack.Screen
                     name="RewardModal"
@@ -747,8 +743,8 @@ export default function App() {
               {/*)}*/}
             </Stack.Navigator>
           </StripeProvider>
-        </NavigationContainer>
-      </BottomSheetModalProvider>
+        </BottomSheetModalProvider>
+      </NavigationContainer>
     </GestureHandlerRootView>
   );
 }

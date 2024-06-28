@@ -1,10 +1,11 @@
-import { Entypo, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import images from "../../../../assets";
 import Avatar from "../../Avatar/Avatar";
 import BasicText from "../../Text/BasicText";
+import { useNavigation } from "@react-navigation/native";
 
 interface LeaderboardItemProps {
   uid: string;
@@ -16,6 +17,9 @@ interface LeaderboardItemProps {
 
 export const LeaderboardItem = (props: LeaderboardItemProps) => {
   const { uid, username, rank, hypeData, teamHasPoints } = props;
+
+  const navigation = useNavigation<any>();
+
   const leaderboardRank = rank + 1;
   const isLeader = leaderboardRank === 1;
 
@@ -38,7 +42,15 @@ export const LeaderboardItem = (props: LeaderboardItemProps) => {
         </BasicText>
       )}
       <View style={styles.item}>
-        <Avatar uid={uid} md />
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("Profile", {
+              uid: uid,
+            })
+          }
+        >
+          <Avatar uid={uid} md />
+        </TouchableOpacity>
         <BasicText style={styles.memberName}>{username}</BasicText>
       </View>
       <View>
