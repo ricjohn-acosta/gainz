@@ -5,6 +5,9 @@ import useAuthStore from "../../../stores/authStore.ts";
 import useTeamStore from "../../../stores/teamStore.ts";
 import useProfileStore from "../../../stores/profileStore.ts";
 import { useNavigation } from "@react-navigation/native";
+import useSubscriptionStore from "../../../stores/subscriptionStore.ts";
+import BasicText from "../../../components/Text/BasicText.tsx";
+import Constants from 'expo-constants';
 
 export const ManageAccountHomeScreen = () => {
   const { logout } = useAuthStore();
@@ -16,6 +19,9 @@ export const ManageAccountHomeScreen = () => {
     data: { meTeamData },
     operations: { removeMember },
   } = useTeamStore();
+  const {
+    operations: { restorePurchases },
+  } = useSubscriptionStore();
 
   const navigation = useNavigation<any>();
 
@@ -88,6 +94,30 @@ export const ManageAccountHomeScreen = () => {
         }}
       />
 
+      {/*<MenuActionButton*/}
+      {/*  label={"Restore purchases"}*/}
+      {/*  labelStyle={{ color: "#1f30fb" }}*/}
+      {/*  onPress={() => {*/}
+      {/*    Alert.alert(*/}
+      {/*      "Restore purchases?",*/}
+      {/*      "Restore purchases associated with this account?",*/}
+      {/*      [*/}
+      {/*        {*/}
+      {/*          text: "Cancel",*/}
+      {/*          onPress: () => {},*/}
+      {/*          style: "cancel",*/}
+      {/*        },*/}
+      {/*        {*/}
+      {/*          text: "Yes",*/}
+      {/*          onPress: () => {*/}
+      {/*            restorePurchases();*/}
+      {/*          },*/}
+      {/*        },*/}
+      {/*      ],*/}
+      {/*    );*/}
+      {/*  }}*/}
+      {/*/>*/}
+
       <MenuActionButton
         label={"Delete account"}
         labelStyle={{ color: "red" }}
@@ -111,6 +141,7 @@ export const ManageAccountHomeScreen = () => {
           );
         }}
       />
+      <BasicText>v{Constants.expoConfig.version}</BasicText>
     </View>
   );
 };

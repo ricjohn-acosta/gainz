@@ -18,6 +18,7 @@ interface SubscriptionState {
     saveUserSubscriptionId: (id) => PostgrestError;
     showInvitePaywall: () => Promise<boolean>;
     showFeaturePaywall: () => Promise<boolean>;
+    restorePurchases: () => Promise<void>;
   };
 }
 
@@ -38,6 +39,17 @@ const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
         ...state,
         data: { ...state.data, customer },
       }));
+    },
+    restorePurchases: async () => {
+      try {
+        const restoredCustomerInfo = await Purchases.restorePurchases();
+        set((state) => ({
+          ...state,
+          data: { ...state.data, customer: restoredCustomerInfo },
+        }));
+      } catch (e) {
+        Alert.alert("Error", "Something went wrong restoring purchases");
+      }
     },
     showInvitePaywall: async () => {
       const error = await useTeamStore.getState().operations.getMyTeam();

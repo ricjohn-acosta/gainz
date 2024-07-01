@@ -454,6 +454,7 @@ export default function App() {
   };
 
   useEffect(() => {
+    if (!me) return;
     const setup = async () => {
       if (Platform.OS === "ios") {
         await Purchases.configure({
@@ -462,19 +463,9 @@ export default function App() {
       }
 
       const offerings = await Purchases.getOfferings();
-      const customerSubscriptionId = await getSubscriptionId();
 
-      if (customerSubscriptionId) {
-        // If we existing sub then login to revenuecat with app user id
-        const { customerInfo } = await Purchases.logIn(
-          customerSubscriptionId.rc_customer_id,
-        );
-        setCustomer(customerInfo);
-      } else {
-        // If new customer
-        const customerInfo = await Purchases.getCustomerInfo();
-        setCustomer(customerInfo);
-      }
+      const { customerInfo, created } = await Purchases.logIn(me.id);
+      setCustomer(customerInfo);
 
       setOfferings(offerings);
     };
@@ -482,7 +473,7 @@ export default function App() {
     Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
 
     setup().catch(console.log);
-  }, []);
+  }, [me]);
 
   // Load user data
   useEffect(() => {
