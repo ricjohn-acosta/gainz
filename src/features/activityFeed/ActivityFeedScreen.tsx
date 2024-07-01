@@ -1,7 +1,8 @@
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
+  Dimensions,
   FlatList,
   Keyboard,
   RefreshControl,
@@ -50,11 +51,12 @@ export const ActivityFeedScreen = () => {
   const writePostBottomSheefRef = useRef<BottomSheetModal>(null);
 
   const [refreshing, setRefreshing] = React.useState(false);
+  const [postCount, setPostCount] = useState(9);
 
   useEffect(() => {
     if (!me) return;
-    getTeamPosts();
-  }, [me, isFocused]);
+    getTeamPosts(0, postCount);
+  }, [me, isFocused, postCount]);
 
   const showGiveHypeBottomSheet = useCallback(() => {
     giveHypeBottomSheetRef.current?.present();
@@ -81,7 +83,8 @@ export const ActivityFeedScreen = () => {
     try {
       setRefreshing(true);
       setTimeout(() => {
-        getTeamPosts();
+        getTeamPosts(0, 9);
+        setPostCount(9);
         setRefreshing(false);
       }, 1000);
     } catch (e) {
@@ -90,7 +93,7 @@ export const ActivityFeedScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <KeyboardAwareFlatList
         extraData={teamPostsData}
         refreshControl={
@@ -100,6 +103,11 @@ export const ActivityFeedScreen = () => {
         enableResetScrollToCoords={false}
         extraScrollHeight={50}
         stickyHeaderIndices={[0]}
+        onEndReachedThreshold={0.5}
+        onEndReached={({ distanceFromEnd }) => {
+          if (distanceFromEnd === 0) return;
+          setPostCount(postCount + 9);
+        }}
         ListHeaderComponent={
           <>
             <View style={styles.actionButtonsContainer}>
@@ -217,7 +225,7 @@ export const ActivityFeedScreen = () => {
         </View>
       </BasicBottomSheet>
       <GiveHypeBottomSheet ref={giveHypeBottomSheetRef} />
-    </SafeAreaView>
+    </View>
   );
 };
 

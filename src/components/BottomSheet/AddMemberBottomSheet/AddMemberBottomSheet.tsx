@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import BasicBottomSheet from "../BasicBottomSheet";
 import { PrimaryButton } from "../../Button/PrimaryButton";
@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { inviteValidation } from "./inviteValidation";
 import BasicText from "../../Text/BasicText";
 import useTeamStore from "../../../stores/teamStore.ts";
+import useSubscriptionStore from "../../../stores/subscriptionStore.ts";
 
 interface AddMemberBottomSheetProps {}
 
@@ -17,6 +18,9 @@ export const AddMemberBottomSheet = forwardRef(
     const {
       data: { me },
     } = useProfileStore();
+    const {
+      data: { customer },
+    } = useSubscriptionStore();
     const {
       data: { myTeam },
     } = useTeamStore();
@@ -33,6 +37,16 @@ export const AddMemberBottomSheet = forwardRef(
 
     const [inviteSent, setInviteSent] = useState(false);
 
+    useEffect(() => {
+      if (inviteSent) {
+        const timer = setTimeout(() => {
+          setInviteSent(false);
+        }, 1000);
+
+        return () => clearTimeout(timer);
+      }
+    }, [inviteSent]);
+
     const handleInvite = async () => {
       if (getValues() && getValues("email")) {
         const recipientEmail = getValues("email");
@@ -46,6 +60,15 @@ export const AddMemberBottomSheet = forwardRef(
 
     const displayMemberCountStatus = () => {
       if (!myTeam) return;
+
+      if (customer && customer.activeSubscriptions.length > 0) {
+        return (
+          <BasicText style={styles.subtitle}>
+            Add people you want to appreciate in your team
+          </BasicText>
+        );
+      }
+
       // Remaining available seats
       const seats =
         3 - myTeam.filter((user) => user.profile_id !== me.id).length;

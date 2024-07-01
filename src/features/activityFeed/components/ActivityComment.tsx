@@ -8,6 +8,7 @@ import { IconButton } from "../../../components/Button/IconButton";
 import usePostStore from "../../../stores/postStore";
 import useProfileStore from "../../../stores/profileStore";
 import BasicText from "../../../components/Text/BasicText";
+import { useNavigation } from "@react-navigation/native";
 
 interface ActivityCommentProps {
   uid: string;
@@ -37,6 +38,8 @@ export const ActivityComment = (props: ActivityCommentProps) => {
     operations: { unlike, like },
   } = usePostStore();
 
+  const navigation = useNavigation<any>();
+
   const [liked, setLiked] = useState<boolean>(
     !!likes.find((item) => item.profile_id === me.id),
   );
@@ -49,7 +52,15 @@ export const ActivityComment = (props: ActivityCommentProps) => {
     <View style={styles.container}>
       <View style={styles.postInfoContainer}>
         <View>
-          <Avatar uid={uid} sm />
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Profile", {
+                uid: uid,
+              })
+            }
+          >
+            <Avatar uid={uid} sm />
+          </TouchableOpacity>
         </View>
         <View style={styles.nameAndDate}>
           <BasicText style={styles.displayName}>{posterDisplayName}</BasicText>

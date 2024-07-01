@@ -20,7 +20,7 @@ export const NotificationCard = (props: NotificationCardProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: '90%',
+    width: '80%',
     flexDirection: "row",
     marginBottom: 20,
   },

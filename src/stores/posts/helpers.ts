@@ -2,7 +2,6 @@ import moment from "moment/moment";
 
 export const buildPostsListData = (
   postData,
-  commentData,
   hypeActivityData,
   redeemActivityData,
 ) => {
@@ -15,7 +14,17 @@ export const buildPostsListData = (
       likes: post.postLikesData,
       datePosted: post.created_at,
       content: post.content,
-      comments: [],
+      comments: post.postComments.map((comment) => {
+        return {
+          profileId: comment.profile_id,
+          commentId: comment.comment_id,
+          username: comment.commenterData.username,
+          avatar: comment.commenterData.avatar_url,
+          likes: comment.commentLikesData,
+          datePosted: comment.created_at,
+          content: comment.content,
+        };
+      }),
     };
   });
 
@@ -38,22 +47,6 @@ export const buildPostsListData = (
       datePosted: redeemActivity.created_at,
       entityType: "redeemActivity",
     };
-  });
-
-  // Attach comments into posts
-  commentData.forEach((comment) => {
-    const associatedPost = teamPostsData.find(
-      (post) => post.postId === comment.post_id,
-    );
-    associatedPost.comments.push({
-      profileId: comment.profile_id,
-      commentId: comment.comment_id,
-      username: comment.commenterData.username,
-      avatar: comment.commenterData.avatar_url,
-      likes: comment.commentLikesData,
-      datePosted: comment.created_at,
-      content: comment.content,
-    });
   });
 
   const activityData = [

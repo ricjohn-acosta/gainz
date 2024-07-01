@@ -7,7 +7,11 @@ interface HypeState {
     hypeActivity: any;
   };
   operations: {
-    getTeamHypeActivity: (teamId: number) => Promise<PostgrestError | any>;
+    getTeamHypeActivity: (
+      teamId: number,
+      from,
+      to,
+    ) => Promise<PostgrestError | any>;
     getUserHypeActivity: (uid: string) => any;
   };
 }
@@ -17,10 +21,12 @@ const useHypeStore = create<HypeState>((set, get) => ({
     hypeActivity: null,
   },
   operations: {
-    getTeamHypeActivity: async (teamId) => {
+    getTeamHypeActivity: async (teamId, from, to) => {
       const { data, error } = await supabase
         .from("hype_activity")
         .select("*")
+        .order("created_at", { ascending: false })
+        .range(from, to)
         .eq("team_id", teamId);
       if (error) {
         console.error(error);

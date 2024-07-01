@@ -12,7 +12,7 @@ interface PostState {
     teamPostsData?: any;
   };
   operations: {
-    getTeamPosts: () => Promise<PostgrestError>;
+    getTeamPosts: (from, to) => Promise<PostgrestError>;
     createPost: (content) => Promise<PostgrestError>;
     addComment: (content, postId) => Promise<PostgrestError>;
     like: (id, entityType) => Promise<PostgrestError>;
@@ -25,7 +25,7 @@ const usePostStore = create<PostState>((set, get) => ({
     teamPostsData: null,
   },
   operations: {
-    getTeamPosts: async () => {
+    getTeamPosts: async (from, to) => {
       const me = useProfileStore.getState().data.me;
 
       if (!me) {
@@ -39,20 +39,12 @@ const usePostStore = create<PostState>((set, get) => ({
           `
           *,
           posterData:profiles ( username, avatar_url ),
-          postLikesData:post_likes!public_post_likes_post_id_fkey( profile_id )
+          postLikesData:post_likes!public_post_likes_post_id_fkey( profile_id ),
+          postComments:comments!public_comments_post_id_fkey( *, commenterData:profiles ( username, avatar_url ), commentLikesData:comment_likes!public_comment_likes_comment_id_fkey( profile_id ) )
         `,
         )
-        .eq("team_id", me.team_id);
-
-      const { data: commentData, error: commentDataError } = await supabase
-        .from("comments")
-        .select(
-          `
-          *,
-          commenterData:profiles ( username, avatar_url ),
-          commentLikesData:comment_likes!public_comment_likes_comment_id_fkey( profile_id )
-        `,
-        )
+        .order("created_at", { ascending: false })
+        .range(from, to)
         .eq("team_id", me.team_id);
 
       if (postDataError) {
@@ -60,20 +52,14 @@ const usePostStore = create<PostState>((set, get) => ({
         return postDataError;
       }
 
-      if (commentDataError) {
-        console.error(commentDataError);
-        return commentDataError;
-      }
-
       const hypeActivityData = await useHypeStore
         .getState()
-        .operations.getTeamHypeActivity(me.team_id);
+        .operations.getTeamHypeActivity(me.team_id, from, to);
       const redeemActivityData = await useRewardStore
         .getState()
-        .operations.getTeamRewardsActivity(me.team_id);
+        .operations.getTeamRewardsActivity(me.team_id, from, to);
       const teamPostsData = buildPostsListData(
         postData,
-        commentData,
         hypeActivityData,
         redeemActivityData,
       );
@@ -103,7 +89,7 @@ const usePostStore = create<PostState>((set, get) => ({
       }
 
       // refresh
-      get().operations.getTeamPosts();
+      get().operations.getTeamPosts(0, 9);
     },
     addComment: async (content, postId) => {
       const me = useProfileStore.getState().data.me;
@@ -126,7 +112,7 @@ const usePostStore = create<PostState>((set, get) => ({
       }
 
       // refresh
-      get().operations.getTeamPosts();
+      get().operations.getTeamPosts(0, 9);
     },
     like: async (id, entityType) => {
       const me = useProfileStore.getState().data.me;
@@ -161,7 +147,7 @@ const usePostStore = create<PostState>((set, get) => ({
       }
 
       // refresh
-      get().operations.getTeamPosts();
+      get().operations.getTeamPosts(0, 9);
     },
     unlike: async (id, entityType) => {
       const me = useProfileStore.getState().data.me;
@@ -194,7 +180,7 @@ const usePostStore = create<PostState>((set, get) => ({
       }
 
       // refresh
-      get().operations.getTeamPosts();
+      get().operations.getTeamPosts(0, 9);
     },
   },
 }));

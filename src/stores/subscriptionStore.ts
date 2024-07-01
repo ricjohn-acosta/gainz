@@ -14,6 +14,7 @@ interface SubscriptionState {
   operations: {
     setOfferings: (offerings) => void;
     setCustomer: (customer) => void;
+    getSubscriptionId: () => Promise<string | undefined>;
     saveUserSubscriptionId: (id) => PostgrestError;
     showInvitePaywall: () => Promise<boolean>;
     showFeaturePaywall: () => Promise<boolean>;
@@ -46,14 +47,13 @@ const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
         return;
       }
 
-      const customerInfo = await Purchases.getCustomerInfo();
+      const customerInfo = await get().data.customer;
       const me = useProfileStore.getState().data.me;
       const myTeam = useTeamStore.getState().data.myTeam;
 
       const teamLength =
         myTeam && myTeam.length > 0
-          ? myTeam.filter((user) => user.profile_id !== me.id)
-              .length
+          ? myTeam.filter((user) => user.profile_id !== me.id).length
           : 0;
 
       if (teamLength >= 3 && customerInfo.activeSubscriptions.length === 0) {
@@ -91,10 +91,31 @@ const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
           return;
         }
 
-        return data.length === 0 || data[0].subscription_status === "UNSUBSCRIBED";
+        return (
+          data.length === 0 || data[0].subscription_status === "UNSUBSCRIBED"
+        );
       }
 
       return false;
+    },
+    getSubscriptionId: async () => {
+      const me = useProfileStore.getState().data.me;
+
+      if (!me) return;
+
+      const { data, selectError } = await supabase
+        .from("rc_customers")
+        .select("*")
+        .eq("profile_id", me.id);
+
+      if (selectError) {
+        Alert.alert("Error", selectError.message);
+        return;
+      }
+
+      if (data) {
+        return data[0];
+      }
     },
     saveUserSubscriptionId: async (id) => {
       const me = useProfileStore.getState().data.me;

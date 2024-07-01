@@ -369,7 +369,7 @@ const AuthNavigatorStack = () => {
 export default function App() {
   const { session, setSession, logout, loginWithToken } = useAuthStore();
   const {
-    operations: { setOfferings, setCustomer },
+    operations: { setOfferings, setCustomer, getSubscriptionId },
   } = useSubscriptionStore();
   const {
     data: { me },
@@ -462,10 +462,21 @@ export default function App() {
       }
 
       const offerings = await Purchases.getOfferings();
-      const customerInfo = await Purchases.getCustomerInfo();
+      const customerSubscriptionId = await getSubscriptionId();
+
+      if (customerSubscriptionId) {
+        // If we existing sub then login to revenuecat with app user id
+        const { customerInfo } = await Purchases.logIn(
+          customerSubscriptionId.rc_customer_id,
+        );
+        setCustomer(customerInfo);
+      } else {
+        // If new customer
+        const customerInfo = await Purchases.getCustomerInfo();
+        setCustomer(customerInfo);
+      }
 
       setOfferings(offerings);
-      setCustomer(customerInfo);
     };
 
     Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
@@ -639,7 +650,7 @@ export default function App() {
                       headerShadowVisible: false,
                       headerLeft: () => (
                         <Ionicons
-                          onPress={() => navigation.goBack()}
+                          onPress={() => navigationRef.goBack()}
                           name="chevron-back-outline"
                           size={30}
                           color="black"

@@ -12,6 +12,8 @@ interface TeamState {
     getRewards: () => Promise<PostgrestError>;
     getTeamRewardsActivity: (
       teamId: number,
+      from,
+      to,
     ) => Promise<PostgrestError | Error | any>;
     redeemReward: (
       rewardId: number,
@@ -54,10 +56,12 @@ const useRewardStore = create<TeamState>((set, get) => ({
         data: { ...state.data, rewards: rewardsData },
       }));
     },
-    getTeamRewardsActivity: async (teamId: number) => {
+    getTeamRewardsActivity: async (teamId: number, from, to) => {
       const { data: rewardsActivityData, error } = await supabase
         .from("rewards_activity")
         .select("*")
+        .order("created_at", { ascending: false })
+        .range(from, to)
         .eq("team_id", teamId);
 
       if (error) {

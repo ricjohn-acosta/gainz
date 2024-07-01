@@ -1,10 +1,18 @@
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import images from "../../../assets";
 import Avatar from "../../components/Avatar/Avatar";
 import BasicText from "../../components/Text/BasicText";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
 
 interface HypeNotificationProps {
   uid: string;
@@ -18,11 +26,21 @@ interface HypeNotificationProps {
 export default function HypeNotification(props: HypeNotificationProps) {
   const { uid, donor, recipient, time, donorMessage, hypeReceived } = props;
 
+  const navigation = useNavigation<any>();
+
   return (
     <>
       <View style={{ flexDirection: "row" }}>
         <View>
-          <Avatar uid={uid} sm />
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Profile", {
+                uid: uid,
+              })
+            }
+          >
+            <Avatar uid={uid} sm />
+          </TouchableOpacity>
         </View>
 
         <View style={{ marginTop: 2 }}>
