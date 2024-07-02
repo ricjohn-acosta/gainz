@@ -5,6 +5,7 @@ import { create } from "zustand";
 
 import useProfileStore from "./profileStore";
 import { supabase } from "../services/supabase";
+import useTeamStore from "./teamStore.ts";
 
 interface AuthState {
   notLoaded: boolean;
@@ -95,6 +96,13 @@ const useAuthStore = create<AuthState>((set, get) => ({
   logout: async () => {
     const { error } = await supabase.auth.signOut();
     if (error) return Promise.reject(error);
+
+    useTeamStore.setState({
+      data: { meTeamData: null, myTeam: null, restricted: false },
+    });
+    useProfileStore.setState({
+      data: { me: null },
+    });
     set({ session: null });
     return Promise.resolve();
   },
