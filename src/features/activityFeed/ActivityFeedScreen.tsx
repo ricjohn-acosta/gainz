@@ -58,6 +58,12 @@ export const ActivityFeedScreen = () => {
     getTeamPosts(0, postCount);
   }, [me, isFocused, postCount]);
 
+  useEffect(() => {
+    if (!isFocused) {
+      giveHypeBottomSheetRef.current?.dismiss();
+    }
+  }, [isFocused]);
+
   const showGiveHypeBottomSheet = useCallback(() => {
     giveHypeBottomSheetRef.current?.present();
   }, []);
