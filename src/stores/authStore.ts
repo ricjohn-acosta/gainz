@@ -97,12 +97,6 @@ const useAuthStore = create<AuthState>((set, get) => ({
     const { error } = await supabase.auth.signOut();
     if (error) return Promise.reject(error);
 
-    useTeamStore.setState({
-      data: { meTeamData: null, myTeam: null, restricted: false },
-    });
-    useProfileStore.setState({
-      data: { me: null },
-    });
     set({ session: null });
     return Promise.resolve();
   },

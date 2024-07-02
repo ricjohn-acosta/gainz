@@ -4,6 +4,7 @@ import { View, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import Avatar from "../../../components/Avatar/Avatar";
 import useProfileStore from "../../../stores/profileStore";
 import useTeamStore from "../../../stores/teamStore";
+import { useEffect, useState } from "react";
 
 export default function MyTeam() {
   const navigation = useNavigation<any>();
@@ -12,7 +13,15 @@ export default function MyTeam() {
   } = useProfileStore();
   const {
     data: { myTeam, meTeamData },
+    operations: { getMyTeam },
   } = useTeamStore();
+
+  const [teamData, setTeamData] = useState([]);
+
+  useEffect(() => {
+    getMyTeam();
+    getListData();
+  }, [myTeam, meTeamData]);
 
   const getListData = () => {
     if (!myTeam || !meTeamData) return;
@@ -21,9 +30,9 @@ export default function MyTeam() {
 
     if (myTeam.length > 1) {
       // only show if there are other members in the team apart from the team owner
-      return [...filteredTeamData];
+      setTeamData([...filteredTeamData]);
     } else {
-      return [];
+      setTeamData([]);
     }
   };
 
@@ -41,8 +50,8 @@ export default function MyTeam() {
           }}
           scrollEnabled={false}
           horizontal={false}
-          key={getListData()?.length}
-          data={getListData()}
+          key={teamData.length}
+          data={teamData}
           numColumns={3}
           renderItem={(data: any) => {
             if (me.id === data.item.profile_id) return null;

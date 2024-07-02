@@ -7,7 +7,7 @@ import useProfileStore from "../../../stores/profileStore.ts";
 import { useNavigation } from "@react-navigation/native";
 import useSubscriptionStore from "../../../stores/subscriptionStore.ts";
 import BasicText from "../../../components/Text/BasicText.tsx";
-import Constants from 'expo-constants';
+import Constants from "expo-constants";
 
 export const ManageAccountHomeScreen = () => {
   const { logout } = useAuthStore();
@@ -141,7 +141,7 @@ export const ManageAccountHomeScreen = () => {
           );
         }}
       />
-      <BasicText>v{Constants.expoConfig.version}</BasicText>
+      <BasicText>v{Constants.expoConfig.version}.2</BasicText>
     </View>
   );
 };
