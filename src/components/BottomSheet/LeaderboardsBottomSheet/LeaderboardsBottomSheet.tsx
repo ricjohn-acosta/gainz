@@ -1,17 +1,12 @@
-import React, { forwardRef } from "react";
-import {
-  FlatList,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from "react-native";
+import React, { forwardRef, useCallback } from "react";
+import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
 
-import BasicBottomSheet from "../BasicBottomSheet";
 import { LeaderboardItem } from "./LeaderboardsItem";
 import { sortTeamBy } from "../../../helpers/teamSorter";
 import useTeamStore from "../../../stores/teamStore";
-import BasicText from "../../Text/BasicText";
 import { GeneralMessage } from "../../Message/GeneralMessage.tsx";
+import BasicText from "../../Text/BasicText";
+import BasicBottomSheet from "../BasicBottomSheet";
 
 interface LeaderboardsBottomSheetProps {}
 
@@ -36,6 +31,21 @@ export const LeaderboardsBottomSheet = forwardRef(
       return result;
     };
 
+    const renderMemberList = useCallback(
+      (data) => {
+        return (
+          <LeaderboardItem
+            teamHasPoints={checkTeamHasPoints()}
+            uid={data.item.profile_id}
+            username={data.item.username}
+            rank={data.index}
+            hypeData={data.item.hype_received}
+          />
+        );
+      },
+      [checkTeamHasPoints],
+    );
+
     return (
       <SafeAreaView>
         <BasicBottomSheet ref={ref} _snapPoints={["95%"]}>
@@ -58,17 +68,7 @@ export const LeaderboardsBottomSheet = forwardRef(
             <View style={styles.giveHypeItemContainer}>
               <FlatList
                 data={sortedTeam?.length <= 1 ? [] : sortedTeam}
-                renderItem={(data) => {
-                  return (
-                    <LeaderboardItem
-                      teamHasPoints={checkTeamHasPoints()}
-                      uid={data.item.profile_id}
-                      username={data.item.username}
-                      rank={data.index}
-                      hypeData={data.item.hype_received}
-                    />
-                  );
-                }}
+                renderItem={renderMemberList}
               />
             </View>
           </View>

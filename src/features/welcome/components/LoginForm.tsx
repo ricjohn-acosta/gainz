@@ -3,26 +3,20 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
   Image,
-  Keyboard,
   SafeAreaView,
   StyleSheet,
-  Text,
-  TextInput,
   View,
 } from "react-native";
 
 import images from "../../../../assets";
 import { PrimaryButton } from "../../../components/Button/PrimaryButton";
 import { TextButton } from "../../../components/Button/TextButton";
-import Divider from "../../../components/Divider/Divider";
 import useAuthStore from "../../../stores/authStore";
 import useProfileStore from "../../../stores/profileStore";
 import { Loading } from "../../../components/Progress/Loading";
 import BasicText from "../../../components/Text/BasicText";
-import { GoogleSignUpButton } from "../../../components/Auth/GoogleSignUpButton.tsx";
 import { BasicTextInput } from "../../../components/Input/BasicTextInput.tsx";
 import { useForm } from "react-hook-form";
-import { commentValidation } from "../../../stores/posts/commentValidation.ts";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 interface LoginFormProps {
@@ -40,13 +34,9 @@ export const LoginForm = (props: LoginFormProps) => {
     getValues,
     control,
     handleSubmit,
-    reset,
-    watch,
     formState: { errors },
   } = useForm<any>();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
   useEffect(() => {

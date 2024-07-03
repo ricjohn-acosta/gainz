@@ -2,20 +2,13 @@ import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
-  Dimensions,
-  FlatList,
-  Keyboard,
   RefreshControl,
-  SafeAreaView,
   StyleSheet,
-  Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
 
 import { ActivityCard } from "./components/ActivityCard";
-import images from "../../../assets";
 import BasicBottomSheet from "../../components/BottomSheet/BasicBottomSheet";
 import { GiveHypeBottomSheet } from "../../components/BottomSheet/GiveHypeBottomSheet/GiveHypeBottomSheet";
 import { useIsFocused } from "@react-navigation/native";
@@ -98,6 +91,41 @@ export const ActivityFeedScreen = () => {
     }
   };
 
+  const renderActivityList = useCallback((data) => {
+    if (data.item.entityType === "redeemActivity") {
+      return (
+        <RedeemActivityCard
+          redeemerUsername={data.item.redeemerUsername}
+          rewardName={data.item.rewardName}
+          amount={data.item.amount}
+        />
+      );
+    }
+
+    if (data.item.entityType === "hypeActivity") {
+      return (
+        <HypeActivityCard
+          hypeReceived={data.item.hypeReceived}
+          recipientUsername={data.item.recipientUsername}
+          senderUsername={data.item.senderUsername}
+        />
+      );
+    }
+
+    return (
+      <ActivityCard
+        uid={data.item.profileId}
+        likes={data.item.likes}
+        postId={data.item.postId}
+        posterDisplayName={data.item.username}
+        avatar={data.item.avatar}
+        datePosted={data.item.datePosted}
+        content={data.item.content}
+        replies={data.item.comments}
+      />
+    );
+  }, []);
+
   return (
     <View style={styles.container}>
       <KeyboardAwareFlatList
@@ -171,40 +199,7 @@ export const ActivityFeedScreen = () => {
           </>
         }
         data={teamPostsData}
-        renderItem={(data: any) => {
-          if (data.item.entityType === "redeemActivity") {
-            return (
-              <RedeemActivityCard
-                redeemerUsername={data.item.redeemerUsername}
-                rewardName={data.item.rewardName}
-                amount={data.item.amount}
-              />
-            );
-          }
-
-          if (data.item.entityType === "hypeActivity") {
-            return (
-              <HypeActivityCard
-                hypeReceived={data.item.hypeReceived}
-                recipientUsername={data.item.recipientUsername}
-                senderUsername={data.item.senderUsername}
-              />
-            );
-          }
-
-          return (
-            <ActivityCard
-              uid={data.item.profileId}
-              likes={data.item.likes}
-              postId={data.item.postId}
-              posterDisplayName={data.item.username}
-              avatar={data.item.avatar}
-              datePosted={data.item.datePosted}
-              content={data.item.content}
-              replies={data.item.comments}
-            />
-          );
-        }}
+        renderItem={renderActivityList}
       />
       <BasicBottomSheet ref={writePostBottomSheefRef} _snapPoints={["50%"]}>
         <View style={{ padding: 20 }}>

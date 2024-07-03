@@ -1,5 +1,5 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import {
   ImageBackground,
   SafeAreaView,
@@ -22,7 +22,7 @@ import images from "../../../assets";
 import { AddMemberBottomSheet } from "../../components/BottomSheet/AddMemberBottomSheet/AddMemberBottomSheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BasicText from "../../components/Text/BasicText";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Avatar from "../../components/Avatar/Avatar.tsx";
 import useSubscriptionStore from "../../stores/subscriptionStore.ts";
 
