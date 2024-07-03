@@ -1,4 +1,11 @@
-import { Alert, Image, Linking, StyleSheet, View } from "react-native";
+import {
+  Alert,
+  Image,
+  Linking,
+  Platform,
+  StyleSheet,
+  View,
+} from "react-native";
 import BasicText from "../../components/Text/BasicText.tsx";
 import { LinearGradient } from "expo-linear-gradient";
 import { PrimaryButton } from "../../components/Button/PrimaryButton.tsx";
@@ -193,14 +200,16 @@ export const SubscribeModalScreen = () => {
         />
         <View style={styles.tosLabelContainer}>
           <BasicText style={{ color: "#ffffff" }}>I agree to </BasicText>
-          <TextButton
-            onPress={() =>
-              handlePressURL(
-                "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
-              )
-            }
-            text={"Terms of use, "}
-          />
+          {Platform.OS === "ios" && (
+            <TextButton
+              onPress={() =>
+                handlePressURL(
+                  "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
+                )
+              }
+              text={"Terms of use, "}
+            />
+          )}
           <TextButton
             onPress={() => handlePressURL("https://www.kapaii.app/")}
             text={"Privacy policy"}

@@ -19,7 +19,6 @@ export default function MyTeam() {
   const [teamData, setTeamData] = useState([]);
 
   useEffect(() => {
-    getMyTeam();
     getListData();
   }, [myTeam, meTeamData]);
 
