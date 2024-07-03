@@ -68,7 +68,10 @@ const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
           ? myTeam.filter((user) => user.profile_id !== me.id).length
           : 0;
 
-      if (teamLength >= 3 && customerInfo.activeSubscriptions.length === 0) {
+      if (
+        teamLength >= 3 &&
+        (!customerInfo || customerInfo.activeSubscriptions.length === 0)
+      ) {
         return true;
       }
 

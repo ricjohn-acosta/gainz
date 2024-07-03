@@ -252,24 +252,27 @@ export const GiveHypeBottomSheet = forwardRef(
       setHypeToGiveCounter(null);
     };
 
-    const renderMemberList = useCallback((data) => {
-      // Dont let users give themselves hype
-      if (data.item.id === me.username) return null;
-      return (
-        <GiveHypeItem
-          singleUserHype={!!memberUsername}
-          uid={data.item.uid}
-          userId={data.item.username}
-          username={data.item.username}
-          removeHype={handleRemoveHype}
-          addHype={handleAddHype}
-          hypeToGive={
-            hypeToGiveCounter ? hypeToGiveCounter[data.item.id] : null
-          }
-          writeHypeMessage={handleWriteHypeMessage}
-        />
-      );
-    }, []);
+    const renderMemberList = useCallback(
+      (data) => {
+        // Dont let users give themselves hype
+        if (data.item.id === me.username) return null;
+        return (
+          <GiveHypeItem
+            singleUserHype={!!memberUsername}
+            uid={data.item.uid}
+            userId={data.item.username}
+            username={data.item.username}
+            removeHype={handleRemoveHype}
+            addHype={handleAddHype}
+            hypeToGive={
+              hypeToGiveCounter ? hypeToGiveCounter[data.item.id] : null
+            }
+            writeHypeMessage={handleWriteHypeMessage}
+          />
+        );
+      },
+      [handleAddHype, handleRemoveHype],
+    );
 
     return (
       <SafeAreaView>
