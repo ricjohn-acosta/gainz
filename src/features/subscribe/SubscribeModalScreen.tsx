@@ -425,6 +425,7 @@ const styles = StyleSheet.create({
     color: "#ffffff",
   },
   cancelContainer: {
+    marginTop: 20,
     alignItems: "flex-end",
   },
   purchaseBtnContainer: {

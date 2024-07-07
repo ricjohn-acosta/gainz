@@ -454,25 +454,30 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (!me) return;
-    const setup = async () => {
-      if (Platform.OS === "ios") {
+    try {
+      if (!me) return;
+      const setup = async () => {
         await Purchases.configure({
-          apiKey: process.env.EXPO_PUBLIC_RC_APPLE_KEY,
+          apiKey:
+            Platform.OS === "ios"
+              ? process.env.EXPO_PUBLIC_RC_APPLE_KEY
+              : process.env.EXPO_PUBLIC_RC_ANDROID_KEY,
         });
-      }
 
-      const offerings = await Purchases.getOfferings();
+        const offerings = await Purchases.getOfferings();
 
-      const { customerInfo, created } = await Purchases.logIn(me.id);
-      setCustomer(customerInfo);
+        const { customerInfo } = await Purchases.logIn(me.id);
+        setCustomer(customerInfo);
 
-      setOfferings(offerings);
-    };
+        setOfferings(offerings);
+      };
 
-    Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
+      Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
 
-    setup().catch(console.log);
+      setup().catch(console.log);
+    } catch (e) {
+      console.error(e)
+    }
   }, [me]);
 
   // Load user data
