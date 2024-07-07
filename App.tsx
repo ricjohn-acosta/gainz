@@ -44,6 +44,7 @@ import { SubscribeModalScreen } from "./src/features/subscribe/SubscribeModalScr
 import { ManageAccountStack } from "./src/features/manageAccount/ManageAccountStack.tsx";
 import Purchases, { LOG_LEVEL } from "react-native-purchases";
 import useSubscriptionStore from "./src/stores/subscriptionStore.ts";
+import * as Updates from "expo-updates";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -369,7 +370,7 @@ const AuthNavigatorStack = () => {
 export default function App() {
   const { session, setSession, logout, loginWithToken } = useAuthStore();
   const {
-    operations: { setOfferings, setCustomer, getSubscriptionId },
+    operations: { setOfferings, setCustomer },
   } = useSubscriptionStore();
   const {
     data: { me },
@@ -377,6 +378,8 @@ export default function App() {
   const {
     operations: { registerForPushNotificationsAsync, savePushTokenToDB },
   } = useNotifications();
+  const { isUpdateAvailable, isUpdatePending } = Updates.useUpdates();
+
   const navigationRef = createNavigationContainerRef();
 
   StatusBar.setBackgroundColor("#f2f4ff");
@@ -454,6 +457,13 @@ export default function App() {
   };
 
   useEffect(() => {
+    if (isUpdatePending) {
+      // Update has successfully downloaded; apply it now
+      Updates.reloadAsync();
+    }
+  }, [isUpdatePending]);
+
+  useEffect(() => {
     try {
       if (!me) return;
       const setup = async () => {
@@ -476,7 +486,7 @@ export default function App() {
 
       setup().catch(console.log);
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
   }, [me]);
 
@@ -591,6 +601,18 @@ export default function App() {
                 : process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY
             }
           >
+            {isUpdateAvailable &&
+              Alert.alert(
+                "An update is available!",
+                "Please update your app now for better experience",
+                [
+                  {
+                    text: "Update",
+                    onPress: () => Updates.fetchUpdateAsync(),
+                    style: "cancel",
+                  },
+                ],
+              )}
             <Stack.Navigator>
               {session && me && !notLoaded ? (
                 <>
