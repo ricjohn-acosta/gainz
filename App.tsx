@@ -10,7 +10,13 @@ import {
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, Image, Platform, StatusBar, View } from "react-native";
+import {
+  Alert,
+  Image,
+  Platform,
+  StatusBar,
+  View,
+} from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { ActivityFeedScreen } from "./src/features/activityFeed/ActivityFeedScreen";
@@ -378,7 +384,6 @@ export default function App() {
   const {
     operations: { registerForPushNotificationsAsync, savePushTokenToDB },
   } = useNotifications();
-  const { isUpdateAvailable, isUpdatePending } = Updates.useUpdates();
 
   const navigationRef = createNavigationContainerRef();
 
@@ -455,13 +460,6 @@ export default function App() {
     const result = await AsyncStorage.getItem("has_skipped_invite_code");
     setHasUserSkippedInviteCode(result);
   };
-
-  useEffect(() => {
-    if (isUpdatePending) {
-      // Update has successfully downloaded; apply it now
-      Updates.reloadAsync();
-    }
-  }, [isUpdatePending]);
 
   useEffect(() => {
     try {
@@ -601,18 +599,6 @@ export default function App() {
                 : process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY
             }
           >
-            {isUpdateAvailable &&
-              Alert.alert(
-                "An update is available!",
-                "Please update your app now for better experience",
-                [
-                  {
-                    text: "Update",
-                    onPress: () => Updates.fetchUpdateAsync(),
-                    style: "cancel",
-                  },
-                ],
-              )}
             <Stack.Navigator>
               {session && me && !notLoaded ? (
                 <>

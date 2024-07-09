@@ -141,7 +141,7 @@ export const ManageAccountHomeScreen = () => {
           );
         }}
       />
-      <BasicText>v{Constants.expoConfig.version}.7</BasicText>
+      <BasicText>v{Constants.expoConfig.version}.8</BasicText>
     </View>
   );
 };
