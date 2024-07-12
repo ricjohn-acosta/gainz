@@ -10,13 +10,7 @@ import {
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Alert,
-  Image,
-  Platform,
-  StatusBar,
-  View,
-} from "react-native";
+import { Alert, Image, Platform, StatusBar, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { ActivityFeedScreen } from "./src/features/activityFeed/ActivityFeedScreen";
@@ -638,7 +632,10 @@ export default function App() {
                   <Stack.Screen
                     name="AuthStack"
                     component={AuthNavigatorStack}
-                    options={() => ({ headerShown: false })}
+                    options={() => ({
+                      headerShown: false,
+                      gestureEnabled: true,
+                    })}
                   />
                   <Stack.Screen
                     name="Profile"
@@ -648,6 +645,7 @@ export default function App() {
                       headerStyle: {
                         backgroundColor: "#f2f4ff",
                       },
+                      gestureEnabled: true,
                       headerTitleStyle: {
                         fontFamily: "Poppins-Bold",
                       },
@@ -666,6 +664,7 @@ export default function App() {
                     name="RewardModal"
                     component={RewardModalStack}
                     options={({ navigation }) => ({
+                      gestureEnabled: true,
                       presentation: "modal",
                       headerTitle: "Rewards",
                       headerShown: false,
@@ -692,17 +691,24 @@ export default function App() {
                   <Stack.Screen
                     name="Login"
                     component={LoginForm}
-                    options={() => ({ headerShown: false })}
+                    options={() => ({
+                      headerShown: false,
+                      gestureEnabled: true,
+                    })}
                   />
                   <Stack.Screen
                     name="Signup"
                     component={SignupForm}
-                    options={() => ({ headerShown: false })}
+                    options={() => ({
+                      headerShown: false,
+                      gestureEnabled: true,
+                    })}
                   />
                   <Stack.Screen
                     name="ForgotPassword"
                     component={ForgotPasswordForm}
                     options={({ navigation }) => ({
+                      gestureEnabled: true,
                       title: "",
                       headerStyle: {
                         backgroundColor: "#f2f4ff",
@@ -727,6 +733,7 @@ export default function App() {
                     name="ResetPassword"
                     component={ResetPasswordForm}
                     options={({ navigation }) => ({
+                      gestureEnabled: true,
                       title: "",
                       headerStyle: {
                         backgroundColor: "#f2f4ff",

@@ -33,6 +33,9 @@ const BasicBottomSheet = forwardRef(
 
     return (
       <BottomSheetModal
+        keyboardBehavior={"interactive"}
+        keyboardBlurBehavior={"restore"}
+        android_keyboardInputMode="adjustResize"
         enablePanDownToClose={enablePanDownToClose}
         onDismiss={onDismiss}
         style={style}
