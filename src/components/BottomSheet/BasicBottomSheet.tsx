@@ -37,7 +37,6 @@ const BasicBottomSheet = forwardRef(
         keyboardBlurBehavior={"restore"}
         android_keyboardInputMode="adjustResize"
         enablePanDownToClose={enablePanDownToClose}
-        enableContentPanningGesture={false}
         onDismiss={onDismiss}
         style={style}
         onChange={handleOnChange}
