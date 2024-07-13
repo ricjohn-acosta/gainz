@@ -1,7 +1,7 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import React, { forwardRef, useMemo } from "react";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 
 interface BasicBottomSheetProps {
   children: React.ReactNode;
@@ -37,6 +37,8 @@ const BasicBottomSheet = forwardRef(
         keyboardBlurBehavior={"restore"}
         android_keyboardInputMode="adjustResize"
         enablePanDownToClose={enablePanDownToClose}
+        // disable this in android bc weird shit happens
+        enableContentPanningGesture={Platform.OS !== "android"}
         onDismiss={onDismiss}
         style={style}
         onChange={handleOnChange}
