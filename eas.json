@@ -34,12 +34,14 @@
     "production": {
       "channel": "production",
       "env": {
+        "ANDROID_SDK_ROOT": "/Users/ricjohn/Library/Android/sdk",
         "EXPO_PUBLIC_SUPABASE_URL": "https://chwtkqhuwdbvpgqhdjli.supabase.co",
         "EXPO_PUBLIC_SUPABASE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNod3RrcWh1d2RidnBncWhkamxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5NDYxMzAsImV4cCI6MjAyNTUyMjEzMH0.6Ba244A7pjRQMHrL0HC2AGgVI5Wioi6HK3W22ZimOKE",
         "EXPO_PUBLIC_RC_APPLE_KEY": "appl_EFunEffsBbIXRmoXuWwhneoXLbP",
         "EXPO_PUBLIC_RC_ANDROID_KEY": "goog_lYbUgGGsxhYFMoLxypJKiRBFwgZ"
       },
-      "autoIncrement": true
+      "autoIncrement": true,
+      "node": "18.18.0"
     }
   },
   "submit": {
