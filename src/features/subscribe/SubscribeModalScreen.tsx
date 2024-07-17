@@ -167,8 +167,12 @@ export const SubscribeModalScreen = () => {
                   {offering.product.title}
                 </BasicText>
               </View>
-
               <View style={styles.productBodyContainer}>
+                {offering.product.introPrice && (
+                  <BasicText style={styles.introPriceLabel}>
+                    First two weeks free!
+                  </BasicText>
+                )}
                 <BasicText style={styles.price}>
                   {offering.product.priceString}
                   <BasicText
@@ -335,7 +339,7 @@ const styles = StyleSheet.create({
   productBodyContainer: {
     justifyContent: "center",
     alignItems: "center",
-    padding: 30,
+    padding: 25,
   },
   productTitle: {
     color: "#ffd600",
@@ -441,5 +445,9 @@ const styles = StyleSheet.create({
   tosLabelContainer: {
     flexDirection: "row",
     marginLeft: 14,
+  },
+  introPriceLabel: {
+    color: "#1f30fb",
+    fontFamily: "Poppins-Bold",
   },
 });
