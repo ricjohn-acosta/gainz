@@ -467,7 +467,6 @@ export default function App() {
         });
 
         const offerings = await Purchases.getOfferings();
-        console.log(offerings.all.default)
 
         const { customerInfo } = await Purchases.logIn(me.id);
         setCustomer(customerInfo);
