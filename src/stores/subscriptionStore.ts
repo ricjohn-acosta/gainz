@@ -63,6 +63,10 @@ const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
       const me = useProfileStore.getState().data.me;
       const myTeam = useTeamStore.getState().data.myTeam;
 
+      if (me.is_founder) {
+        return false;
+      }
+
       const teamLength =
         myTeam && myTeam.length > 0
           ? myTeam.filter((user) => user.profile_id !== me.id).length
@@ -96,6 +100,15 @@ const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
       }
 
       if (leader) {
+        const { data: profilesData, profilesError } = await supabase
+          .from("profiles")
+          .select("*")
+          .match({ id: leader.profile_id, is_founder: true });
+
+        if (!profilesError && profilesData.length > 0) {
+          return false;
+        }
+
         const { data, selectError } = await supabase
           .from("rc_customers")
           .select("*")

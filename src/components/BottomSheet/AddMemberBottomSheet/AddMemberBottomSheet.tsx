@@ -59,9 +59,12 @@ export const AddMemberBottomSheet = forwardRef(
     };
 
     const displayMemberCountStatus = () => {
-      if (!myTeam) return;
+      if (!myTeam || !me) return;
 
-      if (customer && customer.activeSubscriptions.length > 0) {
+      if (
+        me.is_founder ||
+        (customer && customer.activeSubscriptions.length > 0)
+      ) {
         return (
           <BasicText style={styles.subtitle}>
             Add people you want to appreciate in your team
