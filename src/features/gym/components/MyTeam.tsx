@@ -55,6 +55,7 @@ export default function MyTeam() {
           }
         >
           <Avatar
+            teamList
             uid={data.item.profile_id}
             status={data.item.status}
             username={data.item.username}
@@ -81,7 +82,7 @@ export default function MyTeam() {
           horizontal={false}
           key={teamData.length}
           data={teamData}
-          numColumns={3}
+          numColumns={4}
           renderItem={renderTeamList}
         />
       </View>

@@ -20,10 +20,11 @@ interface AvatarProps {
   lg?: boolean;
   md?: boolean;
   sm?: boolean;
+  teamList?: boolean;
 }
 
 export default function Avatar(props: AvatarProps) {
-  const { url, status, lg, md, sm, username, uid } = props;
+  const { url, status, lg, md, sm, username, uid, teamList } = props;
 
   const {
     data: { me },
@@ -75,7 +76,7 @@ export default function Avatar(props: AvatarProps) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, width: teamList ? 100 : "unset" }}>
       <View style={[lg && styles.lg, sm && styles.sm, md && styles.md]}>
         {url ? (
           <ImageBackground
