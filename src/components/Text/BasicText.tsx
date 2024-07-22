@@ -1,10 +1,11 @@
 import React from "react";
-import { Text } from "react-native";
+import { Text, PixelRatio } from "react-native";
 
 const BasicText = (props) => {
   const { style } = props;
 
   let fontFamily = "Poppins-Regular";
+  let fontSize;
 
   if (style) {
     // android doesnt support fontweight
@@ -20,18 +21,20 @@ const BasicText = (props) => {
       fontFamily = "Poppins-SemiBold";
     }
 
-    if (style.fontWeight === "bold" && style.fontStyle === 'italic') {
-      fontFamily = "Poppins-BoldItalic"
+    if (style.fontWeight === "bold" && style.fontStyle === "italic") {
+      fontFamily = "Poppins-BoldItalic";
     }
   }
 
-  const mergedStyle = [{ fontFamily }, style];
+  if (style && style.fontSize && PixelRatio.get() <= 3) {
+    console.log(style.fontSize)
 
-  return (
-    <Text style={mergedStyle}>
-      {props.children}
-    </Text>
-  );
+    fontSize = style.fontSize * 0.9;
+  }
+
+  const mergedStyle = [{ fontFamily }, style, { fontSize }];
+
+  return <Text style={mergedStyle}>{props.children}</Text>;
 };
 
 export default BasicText;
