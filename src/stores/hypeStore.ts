@@ -1,6 +1,7 @@
 import { create } from "zustand/esm";
 import { PostgrestError } from "@supabase/supabase-js";
 import { supabase } from "../services/supabase";
+import useTeamStore from "./teamStore.ts";
 
 interface HypeState {
   data: {
@@ -13,6 +14,8 @@ interface HypeState {
       to,
     ) => Promise<PostgrestError | any>;
     getUserHypeActivity: (uid: string) => any;
+    getUnseenHypeReceivedNotifications: () => Promise<any>;
+    updateNotificationsAsSeen: (ids) => void;
   };
 }
 
@@ -48,6 +51,41 @@ const useHypeStore = create<HypeState>((set, get) => ({
       }
 
       return data;
+    },
+    getUnseenHypeReceivedNotifications: async () => {
+      await useTeamStore.getState().operations.getMyTeam();
+      const me = useTeamStore.getState().data.meTeamData;
+
+      if (!me) return;
+
+      const { data, error } = await supabase
+        .from("hype_activity")
+        .select("*")
+        .match({
+          recipient_id: me.profile_id,
+          seen: false,
+        });
+
+      if (error) {
+        console.error("error fetching event hype received");
+        return;
+      }
+
+      return data;
+    },
+    updateNotificationsAsSeen: async (ids) => {
+      const me = useTeamStore.getState().data.meTeamData;
+
+      if (!me) return;
+
+      const { error } = await supabase
+        .from("hype_activity")
+        .update({ seen: true })
+        .in("id", ids); // List of ids for the rows you want to update
+
+      if (error) {
+        console.error(error.message);
+      }
     },
   },
 }));

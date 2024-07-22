@@ -24,22 +24,30 @@ export const GiveHypeSuccess = (props: GiveHypeSuccessProps) => {
     <View style={styles.container}>
       <View style={styles.messageContainer}>
         <LottieView
-            resizeMode={'cover'}
-            style={{ position: "absolute", width: 500, height: 500}}
-            source={images.confettiAnimation}
-            ref={confettiAnimationRef}
-            loop={false}
-            autoPlay={false}
+          resizeMode={"cover"}
+          style={{ position: "absolute", width: 500, height: 500 }}
+          source={images.confettiAnimation2}
+          ref={confettiAnimationRef}
+          loop={false}
+          autoPlay={false}
         />
         <View>
           <AntDesign name="checkcircle" size={80} color="green" />
         </View>
         <BasicText style={styles.title}>Nice one!</BasicText>
-        <BasicText style={styles.subtitle}>Hype points have been sent.</BasicText>
-        <BasicText style={styles.message}>Your team will love you for this 🔥</BasicText>
+        <BasicText style={styles.subtitle}>
+          Hype points have been sent.
+        </BasicText>
+        <BasicText style={styles.message}>
+          Your team will love you for this 🔥
+        </BasicText>
         <View style={styles.actionButtons}>
           <PrimaryButton onPress={onBack} text={"Give more hype"} />
-          <TextButton onPress={onClose} text={"Close"} textStyle={{ color: "grey" }} />
+          <TextButton
+            onPress={onClose}
+            text={"Close"}
+            textStyle={{ color: "grey" }}
+          />
         </View>
       </View>
     </View>

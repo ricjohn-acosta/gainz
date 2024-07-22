@@ -22,6 +22,7 @@ const images = {
   add: require("./icons/add.png"),
   trophy: require("./icons/trophy.png"),
   confettiAnimation: require("./animations/confetti-animation.json"),
+  confettiAnimation2: require("./animations/confetti-animation2.json"),
   team: require("./illustrations/team.png"),
 };
 

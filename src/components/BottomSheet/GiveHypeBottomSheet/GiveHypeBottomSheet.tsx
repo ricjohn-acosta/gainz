@@ -205,6 +205,7 @@ export const GiveHypeBottomSheet = forwardRef(
           hype_message: hypeToGiveData.message,
           hype_points_received: hypeToGiveData.counter,
           team_id: me.team_id,
+          seen: false,
         });
 
         sendPushNotification(recipientProfile.expo_push_token, {

@@ -44,7 +44,7 @@ import { SubscribeModalScreen } from "./src/features/subscribe/SubscribeModalScr
 import { ManageAccountStack } from "./src/features/manageAccount/ManageAccountStack.tsx";
 import Purchases, { LOG_LEVEL } from "react-native-purchases";
 import useSubscriptionStore from "./src/stores/subscriptionStore.ts";
-import * as Updates from "expo-updates";
+import { HypeReceivedModal } from "./src/features/hypeReceived/HypeReceivedModal.tsx";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -765,6 +765,7 @@ export default function App() {
               {/*)}*/}
             </Stack.Navigator>
           </StripeProvider>
+          {me && <HypeReceivedModal/>}
         </BottomSheetModalProvider>
       </NavigationContainer>
     </GestureHandlerRootView>
