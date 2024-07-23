@@ -33,7 +33,7 @@ export const RedeemSuccess = (props: RedeemSuccessProps) => {
           <LottieView
               resizeMode={'cover'}
               style={{ position: "absolute", width: 500, height: 500}}
-              source={images.confettiAnimation}
+              source={images.confettiAnimation2}
               ref={confettiAnimationRef}
               loop={false}
               autoPlay={false}
