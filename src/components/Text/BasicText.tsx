@@ -26,10 +26,14 @@ const BasicText = (props) => {
     }
   }
 
-  if (style && style.fontSize && PixelRatio.get() <= 3) {
-    console.log(style.fontSize)
+  if (style && style.fontSize) {
+    if (PixelRatio.get() === 3) {
+      fontSize = style.fontSize * 0.9;
+    }
 
-    fontSize = style.fontSize * 0.9;
+    if (PixelRatio.get() <= 2) {
+      fontSize = style.fontSize * 0.9;
+    }
   }
 
   const mergedStyle = [{ fontFamily }, style, { fontSize }];
