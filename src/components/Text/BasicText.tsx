@@ -32,7 +32,7 @@ const BasicText = (props) => {
     }
 
     if (PixelRatio.get() <= 2) {
-      fontSize = style.fontSize * 0.9;
+      fontSize = style.fontSize * 0.8;
     }
   }
 
