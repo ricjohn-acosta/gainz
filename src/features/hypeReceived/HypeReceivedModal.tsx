@@ -45,6 +45,8 @@ export const HypeReceivedModal: FC = () => {
     if (hypeReceived.length === 0) return;
     // Show this modal when we receive hype notifications
     modalRef.current.present();
+    const notificationIds = hypeReceived.map((hype) => hype.id);
+    updateNotificationsAsSeen(notificationIds);
   }, [hypeReceived, hypeReceived.length]);
 
   // Do an initial API call for users going into the app from notification alert
@@ -62,9 +64,6 @@ export const HypeReceivedModal: FC = () => {
 
   const handleClearHypeReceived = () => {
     if (hypeReceived.length === 0) return;
-
-    const notificationIds = hypeReceived.map((hype) => hype.id);
-    updateNotificationsAsSeen(notificationIds);
 
     setHypeReceived([]);
     setPage(0);
