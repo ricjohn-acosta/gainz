@@ -167,17 +167,6 @@ export const GiveHypeBottomSheet = forwardRef(
 
       setSubmitLoading(true);
 
-      const showPaywall = await showFeaturePaywall();
-
-      if (showPaywall) {
-        Alert.alert(
-          "Hype giving disabled",
-          "Your team's subscription may have expired. Please contact your team leader.",
-        );
-        setSubmitLoading(false);
-        return;
-      }
-
       if (!hypeToGiveCounter) return;
 
       const usernames = Object.keys(hypeToGiveCounter);
