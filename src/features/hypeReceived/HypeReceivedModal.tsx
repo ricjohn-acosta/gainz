@@ -12,6 +12,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import useHypeStore from "../../stores/hypeStore.ts";
 import { TextButton } from "../../components/Button/TextButton.tsx";
 import { PrimaryButton } from "../../components/Button/PrimaryButton.tsx";
+import * as Notifications from "expo-notifications";
 
 export interface HypeReceived {
   id: number;
@@ -36,6 +37,8 @@ export const HypeReceivedModal: FC = () => {
   const [page, setPage] = useState<number>(0);
 
   const modalRef = useRef<BottomSheetModal>(null);
+  const lastNotificationResponse = Notifications.useLastNotificationResponse();
+
   const isMultipleHype = hypeReceived.length > 1;
 
   // We listen for hype received in real time
@@ -47,7 +50,7 @@ export const HypeReceivedModal: FC = () => {
     modalRef.current.present();
     const notificationIds = hypeReceived.map((hype) => hype.id);
     updateNotificationsAsSeen(notificationIds);
-  }, [hypeReceived, hypeReceived.length]);
+  }, [hypeReceived, hypeReceived.length, lastNotificationResponse]);
 
   // Do an initial API call for users going into the app from notification alert
   useEffect(() => {
@@ -60,7 +63,7 @@ export const HypeReceivedModal: FC = () => {
     };
 
     fetchUnseenHypeReceivedNotifications();
-  }, []);
+  }, [lastNotificationResponse]);
 
   const handleClearHypeReceived = () => {
     if (hypeReceived.length === 0) return;
@@ -129,7 +132,7 @@ export const HypeReceivedModal: FC = () => {
         }}
         ref={modalRef}
         detached
-        _snapPoints={Platform.OS === 'ios' ? ["40%"] : ["45%"]}
+        _snapPoints={Platform.OS === "ios" ? ["40%"] : ["45%"]}
         bottomInset={120}
         onDismiss={handleClearHypeReceived}
       >
