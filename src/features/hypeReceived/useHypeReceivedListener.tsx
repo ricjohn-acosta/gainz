@@ -21,7 +21,6 @@ export const useHypeReceivedListener = (
         switch (payload.eventType) {
           case "INSERT":
             set((prevState) => {
-              console.log(payload.new);
               return [...prevState, payload.new];
             });
             break;
