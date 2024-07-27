@@ -1,6 +1,7 @@
 import { supabase } from "../../../services/supabase";
 import useProfileStore from "../../../stores/profileStore";
 import useTeamStore from "../../../stores/teamStore.ts";
+import { Alert } from "react-native";
 
 export const useInviteMember = () => {
   const {
@@ -12,6 +13,12 @@ export const useInviteMember = () => {
 
   const sendInvite = async (recipientEmail: string) => {
     if (!me) return;
+
+    const inviteExists = await checkIfInviteExists(recipientEmail, me.team_id);
+    if (inviteExists) {
+      Alert.alert("User has already been invited to your team.");
+      return;
+    }
 
     const { data, error: fetchError } = await supabase
       .from("team_members")
@@ -52,6 +59,15 @@ export const useInviteMember = () => {
       console.error(error);
       return error;
     }
+
+    const { error: sendgridError } = await supabase.functions.invoke(
+      "sendgrid-email",
+      {
+        body: { recipientEmail },
+      },
+    );
+
+    if (error) console.error(sendgridError);
   };
 
   const acceptInvite = async (teamId: number) => {
@@ -122,6 +138,24 @@ export const useInviteMember = () => {
       freeMemberLimit -
       myTeam.filter((member) => member.profile_id !== me.id).length
     );
+  };
+
+  const checkIfInviteExists = async (recipientEmail, teamId) => {
+    const { data, error } = await supabase
+      .from("user_invites")
+      .select("*")
+      .match({
+        recipient_email: recipientEmail,
+        team_id: teamId,
+        status: "pending",
+      });
+
+    if (error) {
+      console.error("Error checking if invite exists");
+      return false;
+    }
+
+    return data.length > 0;
   };
 
   return {
