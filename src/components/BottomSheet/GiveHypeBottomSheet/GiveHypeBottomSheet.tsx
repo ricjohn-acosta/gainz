@@ -31,7 +31,7 @@ export const GiveHypeBottomSheet = forwardRef(
   ({ snapPoints, memberUsername }: GiveHypeBottomSheetProps, ref: any) => {
     const {
       data: { me },
-      operations: { getMeProfile, getUserProfileByUsername },
+      operations: { getMeProfile, getUserProfileByUsername, reloadProfile },
     } = useProfileStore();
     const {
       data: { myTeam, meTeamData },
@@ -220,7 +220,7 @@ export const GiveHypeBottomSheet = forwardRef(
           return;
         }
 
-        getMyTeam();
+        reloadProfile();
         resetPoints();
         setSubmitLoading(false);
         setShowSuccessView(true);
