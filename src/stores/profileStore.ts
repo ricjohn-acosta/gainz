@@ -1,11 +1,12 @@
 import { create } from "zustand/esm";
 import { supabase } from "../services/supabase";
 import useAuthStore from "./authStore";
-import { parseProfileQueryResult } from "./profile/helpers";
 import { PostgrestError } from "@supabase/supabase-js";
 import teamStore from "./teamStore.ts";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import postStore from "./postStore.ts";
+import rewardStore from "./rewardStore.ts";
 
 interface ProfileState {
   data: {
@@ -18,6 +19,7 @@ interface ProfileState {
     getUserProfileByUsername: (username: string) => Promise<PostgrestError>;
     getSubscription: () => Promise<PostgrestError>;
     deleteProfile: (uid: string) => Promise<PostgrestError>;
+    reloadProfile: () => void;
   };
 }
 
@@ -102,6 +104,15 @@ const useProfileStore = create<ProfileState>((set, get) => ({
         Alert.alert("Error", deleteError.message);
         return deleteError;
       }
+    },
+    reloadProfile: async () => {
+      get()
+        .operations.getMeProfile()
+        .then((_) => {
+          teamStore.getState().operations.getMyTeam();
+          postStore.getState().operations.getTeamPosts(0, 9);
+          rewardStore.getState().operations.getRewards();
+        });
     },
   },
 }));
