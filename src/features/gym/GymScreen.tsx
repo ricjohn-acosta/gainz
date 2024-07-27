@@ -1,5 +1,5 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   ImageBackground,
   SafeAreaView,
@@ -17,23 +17,19 @@ import MyTeam from "./components/MyTeam";
 import useProfileStore from "../../stores/profileStore";
 import { AcceptInvitation } from "../welcome/components/AcceptInvitation";
 import { useMyTeam } from "./hooks/useMyTeam";
-import useTeamStore from "../../stores/teamStore";
 import images from "../../../assets";
 import { AddMemberBottomSheet } from "../../components/BottomSheet/AddMemberBottomSheet/AddMemberBottomSheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BasicText from "../../components/Text/BasicText";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import Avatar from "../../components/Avatar/Avatar.tsx";
 import useSubscriptionStore from "../../stores/subscriptionStore.ts";
 
 export default function GymScreen() {
   const {
     data: { me },
-    operations: { getMeProfile },
+    operations: { reloadProfile },
   } = useProfileStore();
-  const {
-    operations: { getMyTeam },
-  } = useTeamStore();
   const {
     data: { canInvite },
   } = useMyTeam();
@@ -51,10 +47,7 @@ export default function GymScreen() {
     try {
       setRefreshing(true);
       setTimeout(() => {
-        getMeProfile().then((error) => {
-          if (error) return;
-          getMyTeam();
-        });
+        reloadProfile();
         setRefreshing(false);
       }, 1000);
     } catch (e) {

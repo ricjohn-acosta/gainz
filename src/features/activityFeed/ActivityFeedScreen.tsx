@@ -27,6 +27,7 @@ import { GeneralMessage } from "../../components/Message/GeneralMessage.tsx";
 export const ActivityFeedScreen = () => {
   const {
     data: { me },
+    operations: { reloadProfile },
   } = useProfileStore();
   const {
     data: { teamPostsData },
@@ -82,7 +83,7 @@ export const ActivityFeedScreen = () => {
     try {
       setRefreshing(true);
       setTimeout(() => {
-        getTeamPosts(0, 9);
+        reloadProfile();
         setPostCount(9);
         setRefreshing(false);
       }, 1000);
