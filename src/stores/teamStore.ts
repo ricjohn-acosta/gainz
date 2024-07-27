@@ -43,7 +43,7 @@ const useTeamStore = create<TeamState>((set, get) => ({
         return error;
       }
 
-      if (!data) {
+      if (!data || !data.length === 0) {
         set((state) => ({
           ...state,
           data: { ...state.data, myTeam: null, meTeamData: null },
