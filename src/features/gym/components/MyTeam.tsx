@@ -1,10 +1,10 @@
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { View, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 
 import Avatar from "../../../components/Avatar/Avatar";
 import useProfileStore from "../../../stores/profileStore";
 import useTeamStore from "../../../stores/teamStore";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 export default function MyTeam() {
   const navigation = useNavigation<any>();
@@ -19,19 +19,27 @@ export default function MyTeam() {
 
   const [teamData, setTeamData] = useState([]);
 
-  useEffect(() => {
-    getMeProfile().then((error) => {
-      if (error) return;
-      getMyTeam();
-    });
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getMeProfile().then((error) => {
+        if (error) return;
+        getMyTeam();
+      });
+    }, []),
+  );
 
-  useEffect(() => {
-    getListData();
-  }, [myTeam, meTeamData]);
+  useFocusEffect(
+    useCallback(() => {
+      getListData();
+    }, [myTeam, meTeamData]),
+  );
 
   const getListData = () => {
-    if (!myTeam || !meTeamData) return;
+    if (!myTeam || !meTeamData) {
+      setTeamData([]);
+      return;
+    }
+
     const filteredTeamData = myTeam.filter((user) => user.profile_id !== me.id);
     meTeamData.sortOrder = 1;
 
@@ -43,28 +51,31 @@ export default function MyTeam() {
     }
   };
 
-  const renderTeamList = useCallback((data) => {
-    if (me.id === data.item.profile_id) return null;
-    return (
-      <View style={{ flexDirection: "column" }}>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("Profile", {
-              uid: data.item.profile_id,
-            })
-          }
-        >
-          <Avatar
-            teamList
-            uid={data.item.profile_id}
-            status={data.item.status}
-            username={data.item.username}
-            md
-          />
-        </TouchableOpacity>
-      </View>
-    );
-  }, []);
+  const renderTeamList = useCallback(
+    (data) => {
+      if (me.id === data.item.profile_id) return null;
+      return (
+        <View style={{ flexDirection: "column" }}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Profile", {
+                uid: data.item.profile_id,
+              })
+            }
+          >
+            <Avatar
+              teamList
+              uid={data.item.profile_id}
+              status={data.item.status}
+              username={data.item.username}
+              md
+            />
+          </TouchableOpacity>
+        </View>
+      );
+    },
+    [myTeam, meTeamData],
+  );
 
   if (!myTeam) return null;
 
