@@ -3,7 +3,7 @@
     "scheme": "kapaii",
     "name": "Kapaii",
     "slug": "gainz",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/logo/kapaii-square-logo-resized.png",
     "userInterfaceStyle": "light",
@@ -18,7 +18,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.mookentooken.gainz",
-      "buildNumber": "60",
+      "buildNumber": "61",
       "googleServicesFile": "./GoogleService-Info.plist",
       "config": {
         "googleSignIn": {
@@ -36,7 +36,7 @@
     },
     "android": {
       "package": "com.mookentooken.gainz",
-      "versionCode": 56,
+      "versionCode": 57,
       "googleServicesFile": "./google-services.json",
       "permissions": [
         "com.android.vending.BILLING"

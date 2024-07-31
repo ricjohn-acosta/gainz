@@ -107,6 +107,7 @@ export const ActivityFeedScreen = () => {
       return (
         <HypeActivityCard
           hypeReceived={data.item.hypeReceived}
+          hypeMessage={data.item.hypeMessage}
           recipientUsername={data.item.recipientUsername}
           senderUsername={data.item.senderUsername}
         />

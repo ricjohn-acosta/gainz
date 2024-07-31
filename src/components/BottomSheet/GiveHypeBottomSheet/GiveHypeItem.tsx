@@ -1,15 +1,7 @@
-import { AntDesign, Entypo, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, Entypo } from "@expo/vector-icons";
 import React, { useState } from "react";
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  Touchable, TouchableOpacity,
-  View
-} from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
-import images from "../../../../assets";
 import Avatar from "../../Avatar/Avatar";
 import { IconButton } from "../../Button/IconButton";
 import BasicText from "../../Text/BasicText";
@@ -71,6 +63,7 @@ export const GiveHypeItem = (props: GiveHypeItemProps) => {
                   defaultColor: "black",
                   pressedColor: "grey",
                 }}
+                hitSlop={8}
               />
             </View>
           )}
@@ -87,6 +80,7 @@ export const GiveHypeItem = (props: GiveHypeItemProps) => {
                 defaultColor: "#1f30fb",
                 pressedColor: "#5f6cff",
               }}
+              hitSlop={8}
             />
             <View>
               <IconButton
@@ -97,6 +91,7 @@ export const GiveHypeItem = (props: GiveHypeItemProps) => {
                   defaultColor: "#1f30fb",
                   pressedColor: "#5f6cff",
                 }}
+                hitSlop={8}
                 onPress={() => removeHype(userId)}
               />
             </View>
