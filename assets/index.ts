@@ -15,6 +15,7 @@ const images = {
   x5Combo: require("./icons/x5-combo.png"),
   kapaiiLogo: require("./logo/kapaii-horizontal-logo.png"),
   kapaiiSquareLogo: require("./logo/kapaii-square-logo.jpeg"),
+  kapaiiSquareLogoLight: require("./logo/kapaii-square-logo-light.png"),
   cashReward: require("./cash-reward-placeholder.jpg"),
   fbIcon: require("./icons/fb-icon.png"),
   googleIcon: require("./icons/google-icon.png"),
@@ -24,6 +25,11 @@ const images = {
   confettiAnimation: require("./animations/confetti-animation.json"),
   confettiAnimation2: require("./animations/confetti-animation2.json"),
   team: require("./illustrations/team.png"),
+  clientTutorial1: require("./tutorials/client-tutorial-1.gif"),
+  clientTutorial2: require("./tutorials/client-tutorial-2.gif"),
+  clientTutorial3: require("./tutorials/client-tutorial-3.gif"),
+  trainerTutorial2: require("./tutorials/trainer-tutorial-2.gif"),
+  trainerTutorial3: require("./tutorials/trainer-tutorial-3.gif"),
 };
 
 export default images;

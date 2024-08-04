@@ -10,7 +10,7 @@ import {
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, Image, Platform, StatusBar, View } from "react-native";
+import { Alert, Image, Platform, StatusBar, View, LogBox } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { ActivityFeedScreen } from "./src/features/activityFeed/ActivityFeedScreen";
@@ -45,6 +45,7 @@ import { ManageAccountStack } from "./src/features/manageAccount/ManageAccountSt
 import Purchases, { LOG_LEVEL } from "react-native-purchases";
 import useSubscriptionStore from "./src/stores/subscriptionStore.ts";
 import { HypeReceivedModal } from "./src/features/hypeReceived/HypeReceivedModal.tsx";
+import { TutorialScreen } from "./src/features/tutorial/TutorialScreen.tsx";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -385,6 +386,8 @@ export default function App() {
 
   const [hasUserSkippedInviteCode, setHasUserSkippedInviteCode] =
     useState<string>(null);
+  const [hasUserFinishedTutorial, setHasUserFinishedTutorial] =
+    useState<string>(null);
   const [notLoaded, setNotLoaded] = useState(true);
   const [notification, setNotification] = useState<
     Notifications.Notification | undefined
@@ -455,6 +458,11 @@ export default function App() {
     setHasUserSkippedInviteCode(result);
   };
 
+  const checkIfUserFinishedTutorial = async () => {
+    const result = await AsyncStorage.getItem("show_tutorial");
+    setHasUserFinishedTutorial(result);
+  };
+
   useEffect(() => {
     try {
       if (!me) return;
@@ -488,7 +496,8 @@ export default function App() {
       .refreshSession()
       .then(async (session) => {
         setSession(session.data.session);
-        checkIfUserSkippedInviteCode();
+        // checkIfUserSkippedInviteCode();
+        checkIfUserFinishedTutorial();
         setNotLoaded(false);
         if (session.error) await logout();
       })
@@ -570,6 +579,8 @@ export default function App() {
     }
   }, [navigationRef, lastNotificationResponse]);
 
+  // LogBox.ignoreAllLogs(); //Ignore all log notifications
+
   const [isLoaded] = useFonts({
     "Poppins-Regular": require("./assets/fonts/Poppins/Poppins-Regular.ttf"),
     "Poppins-Bold": require("./assets/fonts/Poppins/Poppins-Bold.ttf"),
@@ -629,6 +640,24 @@ export default function App() {
                   {/*    })}*/}
                   {/*  />*/}
                   {/*)}*/}
+                  {!hasUserFinishedTutorial && (
+                    <Stack.Screen
+                      name="Tutorial"
+                      component={TutorialScreen}
+                      options={({ navigation }) => ({
+                        headerTitle: "Tutorial",
+                        headerTitleStyle: {
+                          fontFamily: "Poppins-Bold",
+                          color: "black",
+                        },
+                        headerShown: true,
+                        headerStyle: {
+                          backgroundColor: "#f2f4ff",
+                        },
+                        headerShadowVisible: false,
+                      })}
+                    />
+                  )}
                   <Stack.Screen
                     name="AuthStack"
                     component={AuthNavigatorStack}
@@ -765,7 +794,7 @@ export default function App() {
               {/*)}*/}
             </Stack.Navigator>
           </StripeProvider>
-          {me && <HypeReceivedModal/>}
+          {me && <HypeReceivedModal />}
         </BottomSheetModalProvider>
       </NavigationContainer>
     </GestureHandlerRootView>

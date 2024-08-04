@@ -94,6 +94,15 @@ export const ManageAccountHomeScreen = () => {
         }}
       />
 
+      <MenuActionButton
+        label={"How to use Kapaii"}
+        onPress={() => {
+          navigation.navigate("Tutorial", {
+            fromScreen: "ManageAccountHomeScreen",
+          });
+        }}
+      />
+
       {/*<MenuActionButton*/}
       {/*  label={"Restore purchases"}*/}
       {/*  labelStyle={{ color: "#1f30fb" }}*/}

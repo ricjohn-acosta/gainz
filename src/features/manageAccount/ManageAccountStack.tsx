@@ -5,6 +5,7 @@ import { ManageTeamScreen } from "./screens/ManageTeamScreen.tsx";
 import { View } from "react-native";
 import { TextButton } from "../../components/Button/TextButton.tsx";
 import { ManageSubscriptionScreen } from "./screens/ManageSubscriptionScreen.tsx";
+import { TutorialScreen } from "../tutorial/TutorialScreen.tsx";
 
 export const ManageAccountStack = () => {
   const Stack = createStackNavigator();
@@ -50,6 +51,22 @@ export const ManageAccountStack = () => {
               />
             </View>
           ),
+        })}
+      />
+      <Stack.Screen
+        name="Tutorial"
+        component={TutorialScreen}
+        options={({ navigation }) => ({
+          headerTitle: "Tutorial",
+          headerTitleStyle: {
+            fontFamily: "Poppins-Bold",
+            color: "black",
+          },
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: "#f2f4ff",
+          },
+          headerShadowVisible: false,
         })}
       />
       <Stack.Screen

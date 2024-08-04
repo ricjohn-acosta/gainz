@@ -43,7 +43,7 @@ export const LoginForm = (props: LoginFormProps) => {
     if (user) {
       navigation.reset({
         index: 0,
-        routes: [{ name: "Invitation" }],
+        routes: [{ name: "Tutorial" }],
       });
     }
   }, [user]);
