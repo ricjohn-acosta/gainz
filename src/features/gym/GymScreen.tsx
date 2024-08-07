@@ -84,7 +84,7 @@ export default function GymScreen() {
         >
           <ImageBackground style={styles.addMemberBtn} source={images.add} />
           <View style={{ marginTop: 4 }}>
-            <BasicText style={{ color: "#808080" }}>Invite</BasicText>
+            <BasicText style={{ color: "#808080" }}>Invite clients!</BasicText>
           </View>
         </View>
       </TouchableOpacity>

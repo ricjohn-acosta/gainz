@@ -3,12 +3,9 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
-  Text,
-  TextInput,
   View,
-  Alert,
   Image,
-  SafeAreaView,
+  SafeAreaView, Platform
 } from "react-native";
 
 import images from "../../../../assets";
@@ -21,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { BasicTextInput } from "../../../components/Input/BasicTextInput.tsx";
 import { GoogleSignUpButton } from "../../../components/Auth/GoogleSignUpButton.tsx";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { AppleSignUpButton } from "../../../components/Auth/AppleSignUpButton.tsx";
 
 interface SignupFormProps {
   setForm?: (form: string) => void;
@@ -149,12 +147,13 @@ export const SignupForm = (props: SignupFormProps) => {
           </View>
         </View>
 
-        {/*<View style={styles.dividerContainer}>*/}
-        {/*  <Divider title="or continue with" titleStyle={styles.dividerLabel} />*/}
-        {/*  <View style={styles.thirdPartyAuthContainer}>*/}
-        {/*    <GoogleSignUpButton />*/}
-        {/*  </View>*/}
-        {/*</View>*/}
+        <View style={styles.dividerContainer}>
+          <Divider title="or continue with" titleStyle={styles.dividerLabel} />
+          <View style={styles.thirdPartyAuthContainer}>
+            <GoogleSignUpButton />
+            {Platform.OS === "ios" && <AppleSignUpButton />}
+          </View>
+        </View>
         <View style={styles.signupContainer}>
           <BasicText>Already have an account? </BasicText>
           <TextButton
@@ -244,10 +243,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   thirdPartyAuthContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     margin: 20,
+    gap: 6,
   },
   thirdPartyIcon: {
     width: 50,

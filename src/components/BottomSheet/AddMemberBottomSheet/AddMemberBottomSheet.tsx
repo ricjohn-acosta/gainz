@@ -83,7 +83,7 @@ export const AddMemberBottomSheet = forwardRef(
             {seats}
           </BasicText>{" "}
           more member
-          {seats === 1 ? "" : "s"} in your team.
+          {seats === 1 ? "" : "s"} in your team for free.
         </BasicText>
       );
     };

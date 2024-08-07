@@ -1,12 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { Image, Platform, SafeAreaView, StyleSheet, View } from "react-native";
 
 import images from "../../../../assets";
 import { PrimaryButton } from "../../../components/Button/PrimaryButton";
@@ -18,6 +13,9 @@ import BasicText from "../../../components/Text/BasicText";
 import { BasicTextInput } from "../../../components/Input/BasicTextInput.tsx";
 import { useForm } from "react-hook-form";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import Divider from "../../../components/Divider/Divider.tsx";
+import { GoogleSignUpButton } from "../../../components/Auth/GoogleSignUpButton.tsx";
+import { AppleSignUpButton } from "../../../components/Auth/AppleSignUpButton.tsx";
 
 interface LoginFormProps {
   setForm?: (form: string) => void;
@@ -130,11 +128,15 @@ export const LoginForm = (props: LoginFormProps) => {
           </View>
 
           <View style={styles.dividerContainer}>
-            {/*<Divider title="or continue with" titleStyle={styles.dividerLabel} />*/}
-            {/*<View style={styles.thirdPartyAuthContainer}>*/}
-            {/*  /!*<Image style={styles.thirdPartyIcon} source={images.fbIcon} />*!/*/}
-            {/*  <GoogleSignUpButton />*/}
-            {/*</View>*/}
+            <Divider
+              title="or continue with"
+              titleStyle={styles.dividerLabel}
+            />
+            <View style={styles.thirdPartyAuthContainer}>
+              {/*<Image style={styles.thirdPartyIcon} source={images.fbIcon} />*/}
+              <GoogleSignUpButton />
+              {Platform.OS === "ios" && <AppleSignUpButton />}
+            </View>
           </View>
           <View style={styles.signupContainer}>
             <BasicText>Don't have an account? </BasicText>
@@ -158,10 +160,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#f2f4ff",
   },
   thirdPartyAuthContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     margin: 20,
+    gap: 6,
   },
   thirdPartyIcon: {
     width: 50,

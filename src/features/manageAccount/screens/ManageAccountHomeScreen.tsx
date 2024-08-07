@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import useSubscriptionStore from "../../../stores/subscriptionStore.ts";
 import BasicText from "../../../components/Text/BasicText.tsx";
 import Constants from "expo-constants";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export const ManageAccountHomeScreen = () => {
   const { logout } = useAuthStore();
@@ -39,6 +40,17 @@ export const ManageAccountHomeScreen = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.myDetailsContainer}>
+        <BasicText style={styles.myUsername}>
+          <BasicText>Hi, </BasicText>
+          {me.username}
+        </BasicText>
+
+        <View style={styles.myEmailContainer}>
+          <MaterialIcons name="email" size={16} color="#1f30fb" />
+          <BasicText style={styles.myEmail}>{me.email}</BasicText>
+        </View>
+      </View>
       {displayManageTeam() && (
         <MenuActionButton label={"Manage team"} to={"ManageTeam"} />
       )}
@@ -158,6 +170,21 @@ export const ManageAccountHomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     margin: 12,
-    marginTop: 30,
+  },
+  myDetailsContainer: {
+    marginBottom: 30,
+  },
+  myUsername: {
+    color: "#1f30fb",
+    fontSize: 24,
+    fontFamily: "Poppins-Bold",
+  },
+  myEmailContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  myEmail: {
+    color: "#1f30fb",
   },
 });
