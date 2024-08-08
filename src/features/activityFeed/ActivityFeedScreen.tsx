@@ -37,6 +37,7 @@ export const ActivityFeedScreen = () => {
     getValues,
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<any>();
 
@@ -68,6 +69,7 @@ export const ActivityFeedScreen = () => {
 
   const hideWritePostBottomSheet = useCallback(() => {
     writePostBottomSheefRef.current?.dismiss();
+    reset();
   }, []);
 
   const handleCreatePost = async () => {
@@ -203,7 +205,11 @@ export const ActivityFeedScreen = () => {
         data={teamPostsData}
         renderItem={renderActivityList}
       />
-      <BasicBottomSheet ref={writePostBottomSheefRef} _snapPoints={["50%"]}>
+      <BasicBottomSheet
+        onDismiss={reset}
+        ref={writePostBottomSheefRef}
+        _snapPoints={["50%"]}
+      >
         <View style={{ padding: 20 }}>
           <BasicText style={styles.modalTitle}>Write a post ✏️</BasicText>
           <BasicBottomSheetTextInput
