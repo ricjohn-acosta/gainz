@@ -10,15 +10,23 @@ import images from "../../../../../assets/index.ts";
 interface TrainerOrClientProps {
   handleUserType: (type: string) => void;
   fromScreen: string;
+  userType: string;
 }
 
 export const TrainerOrClient: FC<TrainerOrClientProps> = (props) => {
-  const { handleUserType, fromScreen } = props;
+  const { handleUserType, fromScreen, userType } = props;
 
   const navigation = useNavigation<any>();
 
   useEffect(() => {
-    if (!fromScreen) return;
+    if (!fromScreen && !userType) {
+      navigation.setOptions({
+        headerLeft: null,
+        headerRight: null,
+      });
+      return;
+    }
+
     navigation.setOptions({
       headerLeft: () => (
         <View style={{ marginLeft: 20 }}>
@@ -33,7 +41,7 @@ export const TrainerOrClient: FC<TrainerOrClientProps> = (props) => {
       ),
       headerRight: null,
     });
-  }, [fromScreen]);
+  }, [fromScreen, userType]);
 
   return (
     <View style={s.tutorialContainer}>

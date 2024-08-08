@@ -137,6 +137,7 @@ export const TutorialScreen = ({ route }) => {
     <ScrollView contentContainerStyle={s.container}>
       {userType === "" && (
         <TrainerOrClient
+          userType={userType}
           handleUserType={handleUserType}
           fromScreen={fromScreen}
         />
