@@ -172,7 +172,7 @@ export default function ProfileScreen({ route }) {
   return (
     <View style={styles.container}>
       <View style={styles.avatarContainer}>
-        <Avatar uid={uid} lg />
+        <Avatar uid={uid} lg canUpdateAvatar={isMyProfile()} />
       </View>
       <View>
         <BasicText style={styles.displayName}>
@@ -377,4 +377,7 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     color: "white",
   },
+  editAvatarContainer: {
+    alignItems: "center"
+  }
 });

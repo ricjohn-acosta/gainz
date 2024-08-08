@@ -101,6 +101,7 @@ export const ActivityCard = (props: ActivityCardProps) => {
         <View style={styles.likeBtn}>
           {!liked ? (
             <TouchableOpacity
+              hitSlop={8}
               onPress={() => {
                 setLiked(true);
                 like(postId, "post");

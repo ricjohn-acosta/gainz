@@ -36,7 +36,10 @@ const useTeamStore = create<TeamState>((set, get) => ({
 
       const { data, error } = await supabase
         .from("team_members")
-        .select("*")
+        .select(`
+          *,
+          profileData:profiles ( avatar_url )
+        `)
         .eq("team_id", me.team_id);
       if (error) {
         console.error(error);

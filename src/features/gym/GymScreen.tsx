@@ -109,7 +109,7 @@ export default function GymScreen() {
                 })
               }
             >
-              <Avatar uid={me.id} md />
+              <Avatar uid={me.id} md canUpdateAvatar />
             </TouchableOpacity>
           </View>
           <View style={styles.titleContainer}>

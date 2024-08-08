@@ -3,7 +3,7 @@
     "scheme": "kapaii",
     "name": "Kapaii",
     "slug": "gainz",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "orientation": "portrait",
     "icon": "./assets/logo/kapaii-square-logo-resized.png",
     "userInterfaceStyle": "light",
@@ -57,7 +57,8 @@
       "expo-font",
       "expo-apple-authentication",
       "expo-build-properties",
-      "expo-asset"
+      "expo-asset",
+      "expo-image-picker"
     ],
     "runtimeVersion": "1.0.0",
     "updates": {

@@ -70,6 +70,7 @@ export const ActivityComment = (props: ActivityCommentProps) => {
           <View style={styles.likeBtn}>
             {!liked ? (
               <TouchableOpacity
+                hitSlop={8}
                 onPress={() => {
                   setLiked(true);
                   like(commentId, "comment");

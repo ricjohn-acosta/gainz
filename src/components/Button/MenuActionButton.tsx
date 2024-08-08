@@ -1,18 +1,20 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import BasicText from "../Text/BasicText.tsx";
 import { Entypo } from "@expo/vector-icons";
-import { FC } from "react";
+import React, { FC } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 interface ActionButtonProps {
   onPress?: any;
   label: string;
   labelStyle?: any;
+  iconContainerStyle?: any;
   to?: string;
+  icon?: any;
 }
 
 export const MenuActionButton: FC<ActionButtonProps> = (props) => {
-  const { to, label, onPress, labelStyle } = props;
+  const { to, label, onPress, labelStyle, iconContainerStyle, icon } = props;
 
   const navigation = useNavigation<any>();
   const handleNavigate = () => {
@@ -21,6 +23,7 @@ export const MenuActionButton: FC<ActionButtonProps> = (props) => {
 
   return (
     <TouchableOpacity
+      style={styles.container}
       onPress={() => {
         if (to) {
           handleNavigate();
@@ -31,7 +34,10 @@ export const MenuActionButton: FC<ActionButtonProps> = (props) => {
       }}
     >
       <View style={styles.optionContainer}>
-        <BasicText style={[styles.label, labelStyle]}>{label}</BasicText>
+        <View style={styles.labelContainer}>
+          <View style={[iconContainerStyle]}>{icon && icon}</View>
+          <BasicText style={[styles.label, labelStyle]}>{label}</BasicText>
+        </View>
         {to && (
           <Entypo name="chevron-small-right" size={30} color={"#1f30fb"} />
         )}
@@ -53,6 +59,9 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     color: "#000000",
-    marginBottom: 8,
+  },
+  labelContainer: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 });

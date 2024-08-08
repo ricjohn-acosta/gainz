@@ -1,30 +1,32 @@
 import {
   ImageBackground,
-  ImageSourcePropType,
   StyleSheet,
   View,
-  Text,
+  TouchableOpacity,
 } from "react-native";
-import images from "../../../assets";
 import BasicText from "../Text/BasicText";
 import useTeamStore from "../../stores/teamStore.ts";
 import useProfileStore from "../../stores/profileStore.ts";
+import { FontAwesome6 } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { CameraOrAlbumBottomsheet } from "../../features/uploadImage/components/CameraOrAlbumBottomsheet.tsx";
 
 export type UserStatus = "offline" | "online" | "in-gym";
 
 interface AvatarProps {
   uid?: string;
   username?: string;
-  url?: ImageSourcePropType;
   status?: UserStatus;
   lg?: boolean;
   md?: boolean;
   sm?: boolean;
   teamList?: boolean;
+  canUpdateAvatar?: boolean;
 }
 
 export default function Avatar(props: AvatarProps) {
-  const { url, status, lg, md, sm, username, uid, teamList } = props;
+  const { status, lg, md, sm, username, uid, teamList, canUpdateAvatar } =
+    props;
 
   const {
     data: { me },
@@ -33,6 +35,8 @@ export default function Avatar(props: AvatarProps) {
     operations: { getMember },
     data: { myTeam },
   } = useTeamStore();
+
+  const [changeAvatar, setChangeAvatar] = useState<boolean>(false);
 
   const isOnline = status === "online" || status === "in-gym";
 
@@ -75,16 +79,24 @@ export default function Avatar(props: AvatarProps) {
     return color;
   };
 
+  const getUserAvatarURL = () => {
+    if (myTeam.length === 0) {
+      return me.avatar_url ?? null;
+    } else {
+      return getMember(uid)?.profileData.avatar_url ?? null;
+    }
+  };
+
   return (
     <View style={{ ...styles.container, width: teamList ? 100 : "unset" }}>
       <View style={[lg && styles.lg, sm && styles.sm, md && styles.md]}>
-        {url ? (
+        {getUserAvatarURL() ? (
           <ImageBackground
             style={[
               styles.avatar,
               isOnline ? styles.onlineBorder : styles.offlineBorder,
             ]}
-            source={url ?? images.defaultUser}
+            source={{ uri: getUserAvatarURL() }}
           />
         ) : (
           <View
@@ -102,25 +114,44 @@ export default function Avatar(props: AvatarProps) {
         )}
       </View>
 
-      {status && (
-        <View
+      {canUpdateAvatar && (
+        <TouchableOpacity
+          onPress={() => setChangeAvatar(true)}
           style={{
             ...styles.status,
-            display: status === "in-gym" ? "flex" : "none",
+            justifyContent: "center",
+            alignItems: "center",
+            height: md ? 24 : 30,
+            width: md ? 24 : 30,
           }}
         >
-          {status === "in-gym" && (
-            <Text style={{ paddingTop: 2, fontSize: 12, textAlign: "center" }}>
-              🏋
-            </Text>
-          )}
-        </View>
+          <FontAwesome6 name="camera" size={md ? 14 : 20} color="black" />
+        </TouchableOpacity>
       )}
+
+      {/*{status && (*/}
+      {/*  <View*/}
+      {/*    style={{*/}
+      {/*      ...styles.status,*/}
+      {/*      display: status === "in-gym" ? "flex" : "none",*/}
+      {/*    }}*/}
+      {/*  >*/}
+      {/*    {status === "in-gym" && (*/}
+      {/*      <Text style={{ paddingTop: 2, fontSize: 12, textAlign: "center" }}>*/}
+      {/*        🏋*/}
+      {/*      </Text>*/}
+      {/*    )}*/}
+      {/*  </View>*/}
+      {/*)}*/}
       <View>
         {username && (
           <BasicText style={styles.displayName}>{username}</BasicText>
         )}
       </View>
+      <CameraOrAlbumBottomsheet
+        open={changeAvatar}
+        onDismiss={() => setChangeAvatar(false)}
+      />
     </View>
   );
 }
@@ -154,16 +185,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   status: {
-    height: 22,
-    width: 22,
-    backgroundColor: "#c0b9b9",
+    backgroundColor: "#f2f4ff",
     position: "absolute",
     borderRadius: 50,
-    borderStyle: "solid",
-    borderColor: "#939393",
-    borderWidth: 2,
-    top: 1,
-    left: -2,
+    bottom: 0,
+    right: 0,
   },
   displayName: {
     marginTop: 4,
