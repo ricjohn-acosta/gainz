@@ -19,7 +19,7 @@
       "usesAppleSignIn": true,
       "supportsTablet": false,
       "bundleIdentifier": "com.mookentooken.gainz",
-      "buildNumber": "65",
+      "buildNumber": "66",
       "googleServicesFile": "./GoogleService-Info.plist",
       "config": {
         "googleSignIn": {
@@ -37,7 +37,7 @@
     },
     "android": {
       "package": "com.mookentooken.gainz",
-      "versionCode": 64,
+      "versionCode": 65,
       "googleServicesFile": "./google-services.json",
       "permissions": [
         "com.android.vending.BILLING"
