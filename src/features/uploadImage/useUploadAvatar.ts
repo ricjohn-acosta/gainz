@@ -71,7 +71,7 @@ export const useUploadAvatar = () => {
   const uploadAvatar = async (base64Uri) => {
     try {
       // Create a unique filename
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.jpg`;
+      const fileName = `${me.id}.jpg`;
       const fileBody = decode(base64Uri);
 
       // Upload image to Supabase storage
@@ -79,6 +79,7 @@ export const useUploadAvatar = () => {
         .from("avatars") // Replace with your bucket name
         .upload(fileName, fileBody, {
           contentType: "image/jpeg",
+          upsert: true,
         });
 
       if (error || !me.id) {
@@ -91,7 +92,7 @@ export const useUploadAvatar = () => {
         const { error } = await supabase
           .from("profiles")
           .update({
-            avatar_url: data.publicUrl,
+            avatar_url: `${data.publicUrl}?time=${Date.now()}`,
           })
           .eq("id", me.id);
 

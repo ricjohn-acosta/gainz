@@ -8,7 +8,7 @@ import BasicText from "../Text/BasicText";
 import useTeamStore from "../../stores/teamStore.ts";
 import useProfileStore from "../../stores/profileStore.ts";
 import { FontAwesome6 } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { CameraOrAlbumBottomsheet } from "../../features/uploadImage/components/CameraOrAlbumBottomsheet.tsx";
 
 export type UserStatus = "offline" | "online" | "in-gym";
@@ -79,13 +79,13 @@ export default function Avatar(props: AvatarProps) {
     return color;
   };
 
-  const getUserAvatarURL = () => {
-    if (myTeam.length === 0) {
+  const getUserAvatarURL = useCallback(() => {
+    if (!myTeam || myTeam.length === 0) {
       return me.avatar_url ?? null;
     } else {
       return getMember(uid)?.profileData.avatar_url ?? null;
     }
-  };
+  }, [me, myTeam]);
 
   return (
     <View style={{ ...styles.container, width: teamList ? 100 : "unset" }}>
