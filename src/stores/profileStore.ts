@@ -68,14 +68,6 @@ const useProfileStore = create<ProfileState>((set, get) => ({
         ...state,
         data: { ...state.data, loadingSubscription: true },
       }));
-      const {
-        data: { subscription },
-        error: fnError,
-      } = await supabase.functions.invoke("stripe-user-subscription");
-
-      if (fnError) {
-        return fnError;
-      }
 
       set((state) => ({
         ...state,
@@ -110,7 +102,7 @@ const useProfileStore = create<ProfileState>((set, get) => ({
         .operations.getMeProfile()
         .then((_) => {
           teamStore.getState().operations.getMyTeam();
-          postStore.getState().operations.getTeamPosts(0, 9);
+          postStore.getState().operations.getTeamPosts(0, 3);
           rewardStore.getState().operations.getRewards();
         });
     },

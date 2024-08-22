@@ -7,6 +7,7 @@ export const buildPostsListData = (
 ) => {
   const teamPostsData = postData.map((post) => {
     return {
+      assets: post.media,
       profileId: post.profile_id,
       postId: post.post_id,
       username: post.posterData.username,
@@ -31,7 +32,9 @@ export const buildPostsListData = (
   const teamHypeActivityData = hypeActivityData.map((hypeActivity) => {
     return {
       senderUsername: hypeActivity.sender_username,
+      senderId: hypeActivity.sender_id,
       recipientUsername: hypeActivity.recipient_username,
+      recipientId: hypeActivity.recipient_id,
       hypeReceived: hypeActivity.hype_points_received,
       hypeMessage: hypeActivity.hype_message,
       datePosted: hypeActivity.created_at,
@@ -41,6 +44,7 @@ export const buildPostsListData = (
 
   const teamRewardsActivityData = redeemActivityData.map((redeemActivity) => {
     return {
+      redeemerId: redeemActivity.profile_id,
       redeemerUsername: redeemActivity.redeemer_username,
       rewardName: redeemActivity.reward_name,
       amount: redeemActivity.amount,

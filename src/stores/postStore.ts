@@ -2,18 +2,20 @@ import { create } from "zustand/esm";
 import { supabase } from "../services/supabase";
 import useProfileStore from "./profileStore";
 import { PostgrestError } from "@supabase/supabase-js";
-import { sortTeamBy } from "../helpers/teamSorter";
 import { buildPostsListData } from "./posts/helpers";
 import useHypeStore from "./hypeStore";
 import useRewardStore from "./rewardStore";
+import { Alert } from "react-native";
 
 interface PostState {
   data: {
-    teamPostsData?: any;
+    teamPostsData?: any[] | null;
   };
   operations: {
     getTeamPosts: (from, to) => Promise<PostgrestError>;
-    createPost: (content) => Promise<PostgrestError>;
+    getTeamPostsTotalCount: () => Promise<number>;
+    createPost: (content, assets) => Promise<PostgrestError>;
+    deletePost: (postId, assetUris) => Promise<PostgrestError>;
     addComment: (content, postId) => Promise<PostgrestError>;
     like: (id, entityType) => Promise<PostgrestError>;
     unlike: (id, entityType) => Promise<PostgrestError>;
@@ -69,7 +71,40 @@ const usePostStore = create<PostState>((set, get) => ({
         data: { ...state.data, teamPostsData: teamPostsData },
       }));
     },
-    createPost: async (content) => {
+    getTeamPostsTotalCount: async () => {
+      const me = useProfileStore.getState().data.me;
+
+      const { count: normalPostCount, error: normalPostError } = await supabase
+        .from("posts")
+        .select(
+          `
+          *,
+          posterData:profiles ( username, avatar_url ),
+          postLikesData:post_likes!public_post_likes_post_id_fkey( profile_id ),
+          postComments:comments!public_comments_post_id_fkey( *, commenterData:profiles ( username, avatar_url ), commentLikesData:comment_likes!public_comment_likes_comment_id_fkey( profile_id ) )
+        `,
+          { count: "exact", head: true },
+        )
+        .eq("team_id", me.team_id);
+
+      const { count: hypePostCount, error: hypePostError } = await supabase
+        .from("hype_activity")
+        .select("*", { count: "exact", head: true })
+        .eq("team_id", me.team_id);
+
+      const { count: rewardPostCount, error: rewardPostError } = await supabase
+        .from("rewards_activity")
+        .select("*", { count: "exact", head: true })
+        .eq("team_id", me.team_id);
+
+      if (normalPostError || hypePostError || rewardPostError) {
+        Alert.alert("Oops!", "Error getting total post count");
+        return;
+      }
+
+      return normalPostCount + hypePostCount + rewardPostCount;
+    },
+    createPost: async (content, assets) => {
       const me = useProfileStore.getState().data.me;
 
       if (!me) {
@@ -81,6 +116,7 @@ const usePostStore = create<PostState>((set, get) => ({
         profile_id: me.id,
         content: content,
         team_id: me.team_id,
+        media: assets,
       });
 
       if (error) {
@@ -90,6 +126,42 @@ const usePostStore = create<PostState>((set, get) => ({
 
       // refresh
       get().operations.getTeamPosts(0, 9);
+    },
+    deletePost: async (postId, assets) => {
+      try {
+        const me = useProfileStore.getState().data.me;
+
+        if (!me) {
+          console.error("Error: Not authenticated");
+          return;
+        }
+
+        const requests = [
+          await supabase.from("posts").delete().eq("post_id", postId),
+        ];
+
+        if (assets) {
+          const uploadRequests = assets.map((asset) => {
+            const fileExtension = asset.type === "image" ? "jpg" : "mp4";
+            const lastSegment = asset.uri.split("/").pop();
+            const filename = lastSegment.split(".")[0];
+
+            return supabase.storage
+              .from("assets")
+              .remove([`${filename}.${fileExtension}`]);
+          });
+
+          requests.push(uploadRequests);
+        }
+
+        Promise.all(requests).then((_) => {
+          // refresh
+          useProfileStore.getState().operations.reloadProfile();
+        });
+      } catch (e) {
+        console.error(e);
+        Alert.alert("Oops!", "Something went wrong deleting this post!");
+      }
     },
     addComment: async (content, postId) => {
       const me = useProfileStore.getState().data.me;

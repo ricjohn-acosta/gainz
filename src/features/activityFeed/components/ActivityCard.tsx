@@ -1,19 +1,16 @@
-import { AntDesign, Entypo, FontAwesome, Ionicons } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
+import { Entypo, FontAwesome, Ionicons } from "@expo/vector-icons";
+import React, { useCallback, useMemo, useState } from "react";
 import {
+  Alert,
   FlatList,
   Keyboard,
   StyleSheet,
-  Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 
 import { ActivityComment } from "./ActivityComment";
-import images from "../../../../assets";
 import Avatar from "../../../components/Avatar/Avatar";
-import { PrimaryButton } from "../../../components/Button/PrimaryButton";
 import { IconButton } from "../../../components/Button/IconButton";
 import { useForm } from "react-hook-form";
 import { BasicTextInput } from "../../../components/Input/BasicTextInput";
@@ -23,6 +20,9 @@ import moment from "moment";
 import useProfileStore from "../../../stores/profileStore";
 import BasicText from "../../../components/Text/BasicText";
 import { useNavigation } from "@react-navigation/native";
+import { AssetLoader } from "./postAsset/AssetLoader.tsx";
+import { ActivitySettingsBottomsheet } from "./activitySettings/ActivitySettingsBottomsheet.tsx";
+import useTeamStore from "../../../stores/teamStore.ts";
 
 interface ActivityCardProps {
   uid: string;
@@ -33,6 +33,7 @@ interface ActivityCardProps {
   replies: any;
   postId?: any;
   likes: any;
+  assets: any;
 }
 
 export const ActivityCard = (props: ActivityCardProps) => {
@@ -44,15 +45,18 @@ export const ActivityCard = (props: ActivityCardProps) => {
     replies,
     postId,
     likes,
+    assets,
   } = props;
 
   const {
     data: { me },
   } = useProfileStore();
   const {
-    operations: { addComment, unlike, like },
+    data: { meTeamData },
+  } = useTeamStore();
+  const {
+    operations: { addComment, deletePost, unlike, like },
   } = usePostStore();
-
   const {
     getValues,
     control,
@@ -61,12 +65,18 @@ export const ActivityCard = (props: ActivityCardProps) => {
     watch,
     formState: { errors },
   } = useForm<any>();
-
   const navigation = useNavigation<any>();
 
   const [liked, setLiked] = useState<boolean>(
     !!likes.find((item) => item.profile_id === me.id),
   );
+  const [showMenu, setShowMenu] = useState<boolean>(false);
+
+  const canSeeMenu = () => {
+    return (
+      (me && me.id === uid) || (meTeamData && meTeamData.role === "leader")
+    );
+  };
 
   const handleAddComment = async () => {
     if (getValues() && getValues("comment")) {
@@ -78,8 +88,58 @@ export const ActivityCard = (props: ActivityCardProps) => {
     }
   };
 
+  const handleDeletePost = () => {
+    Alert.alert("Delete post?", "Are you sure you want to delete this post?", [
+      {
+        text: "Cancel",
+        onPress: () => {},
+        style: "cancel",
+      },
+      {
+        text: "Yes",
+        onPress: () => {
+          deletePost(postId, assets);
+          setShowMenu(false);
+        },
+      },
+    ]);
+  };
+
+  const renderActivityComment = useCallback(
+    (data: any) => {
+      return (
+        <ActivityComment
+          uid={data.item.profileId}
+          likes={data.item.likes}
+          posterDisplayName={data.item.username}
+          avatar={data.item.avatar}
+          datePosted={data.item.datePosted}
+          content={data.item.content}
+          commentId={data.item.commentId}
+        />
+      );
+    },
+    [replies],
+  );
+
+  const assetLoader = useMemo(() => {
+    return <AssetLoader postId={postId} />;
+  }, [postId, datePosted]);
+
+  const keyExtractor = useCallback((item) => item.commentId, []);
+
   return (
     <View style={styles.container}>
+      {canSeeMenu() && (
+        <TouchableOpacity
+          onPress={() => setShowMenu(true)}
+          hitSlop={8}
+          style={styles.menuIconContainer}
+        >
+          <Entypo name="dots-three-horizontal" size={18} color="black" />
+        </TouchableOpacity>
+      )}
+
       <View style={styles.postInfoContainer}>
         <View style={styles.postAvatar}>
           <TouchableOpacity
@@ -126,23 +186,13 @@ export const ActivityCard = (props: ActivityCardProps) => {
       </View>
       <View style={styles.postContent}>
         <BasicText>{content}</BasicText>
+        {assetLoader}
       </View>
       <View>
         <FlatList
+          keyExtractor={keyExtractor}
           data={replies}
-          renderItem={(data: any) => {
-            return (
-              <ActivityComment
-                uid={data.item.profileId}
-                likes={data.item.likes}
-                posterDisplayName={data.item.username}
-                avatar={data.item.avatar}
-                datePosted={data.item.datePosted}
-                content={data.item.content}
-                commentId={data.item.commentId}
-              />
-            );
-          }}
+          renderItem={renderActivityComment}
         />
       </View>
       <View style={styles.textInputContainer}>
@@ -157,7 +207,7 @@ export const ActivityCard = (props: ActivityCardProps) => {
         </TouchableOpacity>
         <View style={styles.inputContainer}>
           <BasicTextInput
-            multiline={true}
+            multiline
             style={styles.textInput}
             name={"comment"}
             control={control}
@@ -180,6 +230,12 @@ export const ActivityCard = (props: ActivityCardProps) => {
           </View>
         </View>
       </View>
+
+      <ActivitySettingsBottomsheet
+        handleDeletePost={handleDeletePost}
+        open={showMenu}
+        onDismiss={() => setShowMenu(false)}
+      />
     </View>
   );
 };
@@ -247,5 +303,10 @@ const styles = StyleSheet.create({
   likeBtn: {
     justifyContent: "center",
     alignItems: "center",
+  },
+  menuIconContainer: {
+    width: "100%",
+    alignItems: "flex-end",
+    marginBottom: 10,
   },
 });

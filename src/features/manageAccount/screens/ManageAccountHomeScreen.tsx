@@ -51,6 +51,15 @@ export const ManageAccountHomeScreen = () => {
           <BasicText style={styles.myEmail}>{me.email}</BasicText>
         </View>
       </View>
+      <MenuActionButton
+        label={"How to use Kapaii"}
+        onPress={() => {
+          navigation.navigate("Tutorial", {
+            fromScreen: "ManageAccountHomeScreen",
+          });
+        }}
+      />
+
       {displayManageTeam() && (
         <MenuActionButton label={"Manage team"} to={"ManageTeam"} />
       )}
@@ -106,14 +115,6 @@ export const ManageAccountHomeScreen = () => {
         }}
       />
 
-      <MenuActionButton
-        label={"How to use Kapaii"}
-        onPress={() => {
-          navigation.navigate("Tutorial", {
-            fromScreen: "ManageAccountHomeScreen",
-          });
-        }}
-      />
 
       {/*<MenuActionButton*/}
       {/*  label={"Restore purchases"}*/}

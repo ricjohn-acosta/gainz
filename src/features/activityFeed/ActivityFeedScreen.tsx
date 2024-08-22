@@ -1,7 +1,9 @@
-import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
+  ActivityIndicator,
+  Alert,
   RefreshControl,
   StyleSheet,
   TouchableOpacity,
@@ -23,6 +25,8 @@ import HypeActivityCard from "./components/HypeActivityCard";
 import RedeemActivityCard from "./components/RedeemActivityCard";
 import BasicText from "../../components/Text/BasicText";
 import { GeneralMessage } from "../../components/Message/GeneralMessage.tsx";
+import { PhotosToUploadGallery } from "../uploaders/uploadImagesForPost/PhotosToUploadGallery.tsx";
+import { useUploadPostImage } from "../uploaders/uploadImagesForPost/useUploadPostImage.ts";
 
 export const ActivityFeedScreen = () => {
   const {
@@ -31,7 +35,7 @@ export const ActivityFeedScreen = () => {
   } = useProfileStore();
   const {
     data: { teamPostsData },
-    operations: { getTeamPosts, createPost },
+    operations: { getTeamPosts, getTeamPostsTotalCount, createPost },
   } = usePostStore();
   const {
     getValues,
@@ -40,16 +44,30 @@ export const ActivityFeedScreen = () => {
     reset,
     formState: { errors },
   } = useForm<any>();
+  const {
+    data: { photos },
+    operations: { addPhoto, removePhoto, clearPhotos, uploadAllAssets },
+  } = useUploadPostImage();
 
   const isFocused = useIsFocused();
   const giveHypeBottomSheetRef = useRef<BottomSheetModal>(null);
   const writePostBottomSheefRef = useRef<BottomSheetModal>(null);
 
-  const [refreshing, setRefreshing] = React.useState(false);
-  const [postCount, setPostCount] = useState(9);
+  const [refreshing, setRefreshing] = useState(false);
+  const [postCount, setPostCount] = useState(3);
+  const [totalPostsCount, setTotalPostsCount] = useState<number | null>(null);
+  const [isPosting, setIsPosting] = useState<boolean>(false);
+
+  useEffect(() => {
+    fetchTotalPostsCount();
+  }, []);
 
   useEffect(() => {
     if (!me) return;
+    if (teamPostsData && totalPostsCount === teamPostsData.length) {
+      return;
+    }
+
     getTeamPosts(0, postCount);
   }, [me, isFocused, postCount]);
 
@@ -58,6 +76,11 @@ export const ActivityFeedScreen = () => {
       giveHypeBottomSheetRef.current?.dismiss();
     }
   }, [isFocused]);
+
+  const fetchTotalPostsCount = async () => {
+    const count = await getTeamPostsTotalCount();
+    setTotalPostsCount(count);
+  };
 
   const showGiveHypeBottomSheet = useCallback(() => {
     giveHypeBottomSheetRef.current?.present();
@@ -73,12 +96,39 @@ export const ActivityFeedScreen = () => {
   }, []);
 
   const handleCreatePost = async () => {
+    setIsPosting(true);
     if (getValues() && getValues("content")) {
-      const content = getValues("content");
+      if (photos.length > 0) {
+        uploadAllAssets().then(async (attachedAssets) => {
+          const content = getValues("content");
 
-      const res = await createPost(content);
-      hideWritePostBottomSheet();
+          if (attachedAssets.some((asset) => asset == null)) {
+            Alert.alert("Oops!", "Something went wrong uploading attachments!");
+            return;
+          }
+
+          const res = await createPost(content, attachedAssets);
+
+          if (res) Alert.alert("Oops!", "Something went wrong creating a post");
+          setIsPosting(false);
+          hideWritePostBottomSheet();
+        });
+      } else {
+        const content = getValues("content");
+
+        const res = await createPost(content, null);
+
+        if (res) Alert.alert("Oops!", "Something went wrong creating a post");
+
+        setIsPosting(false);
+        hideWritePostBottomSheet();
+      }
     }
+  };
+
+  const handleDismissWritePost = () => {
+    reset();
+    clearPhotos();
   };
 
   const onRefresh = () => {
@@ -86,7 +136,7 @@ export const ActivityFeedScreen = () => {
       setRefreshing(true);
       setTimeout(() => {
         reloadProfile();
-        setPostCount(9);
+        setPostCount(3);
         setRefreshing(false);
       }, 1000);
     } catch (e) {
@@ -94,45 +144,115 @@ export const ActivityFeedScreen = () => {
     }
   };
 
-  const renderActivityList = useCallback((data) => {
-    if (data.item.entityType === "redeemActivity") {
-      return (
-        <RedeemActivityCard
-          redeemerUsername={data.item.redeemerUsername}
-          rewardName={data.item.rewardName}
-          amount={data.item.amount}
-        />
-      );
-    }
-
-    if (data.item.entityType === "hypeActivity") {
-      return (
-        <HypeActivityCard
-          hypeReceived={data.item.hypeReceived}
-          hypeMessage={data.item.hypeMessage}
-          recipientUsername={data.item.recipientUsername}
-          senderUsername={data.item.senderUsername}
-        />
-      );
-    }
-
+  const renderListHeader = useCallback(() => {
     return (
-      <ActivityCard
-        uid={data.item.profileId}
-        likes={data.item.likes}
-        postId={data.item.postId}
-        posterDisplayName={data.item.username}
-        avatar={data.item.avatar}
-        datePosted={data.item.datePosted}
-        content={data.item.content}
-        replies={data.item.comments}
-      />
+      <>
+        <View style={styles.actionButtonsContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              showWritePostBottomSheet();
+            }}
+            style={styles.actionButton}
+          >
+            <View style={styles.actionButtonContent}>
+              <BasicText style={{ color: "black", fontFamily: "Poppins-Bold" }}>
+                Share post
+              </BasicText>
+              <FontAwesome
+                style={{ marginLeft: 10 }}
+                name="pencil-square-o"
+                size={22}
+                color="#1f30fb"
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              showGiveHypeBottomSheet();
+              hideWritePostBottomSheet();
+            }}
+            style={styles.actionButton}
+          >
+            <View style={styles.actionButtonContent}>
+              <BasicText style={{ color: "black", fontFamily: "Poppins-Bold" }}>
+                Give Hype
+              </BasicText>
+              <MaterialIcons
+                style={{ marginLeft: 4 }}
+                name="local-fire-department"
+                size={22}
+                color="#ff046d"
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
+        {!teamPostsData ||
+          (teamPostsData.length === 0 && (
+            <GeneralMessage
+              title={"No posts yet"}
+              subtitle={"Share your progress, wins or loss!"}
+            />
+          ))}
+      </>
     );
-  }, []);
+  });
+
+  const renderActivityList = useCallback(
+    (data) => {
+      if (data.item.entityType === "redeemActivity") {
+        return (
+          <RedeemActivityCard
+            redeemerId={data.item.redeemerId}
+            redeemerUsername={data.item.redeemerUsername}
+            rewardName={data.item.rewardName}
+            amount={data.item.amount}
+            datePosted={data.item.datePosted}
+          />
+        );
+      }
+
+      if (data.item.entityType === "hypeActivity") {
+        return (
+          <HypeActivityCard
+            hypeReceived={data.item.hypeReceived}
+            hypeMessage={data.item.hypeMessage}
+            recipientId={data.item.recipientId}
+            recipientUsername={data.item.recipientUsername}
+            senderUsername={data.item.senderUsername}
+            senderId={data.item.senderId}
+            datePosted={data.item.datePosted}
+          />
+        );
+      }
+
+      return (
+        <ActivityCard
+          assets={data.item.assets}
+          uid={data.item.profileId}
+          likes={data.item.likes}
+          postId={data.item.postId}
+          posterDisplayName={data.item.username}
+          avatar={data.item.avatar}
+          datePosted={data.item.datePosted}
+          content={data.item.content}
+          replies={data.item.comments}
+        />
+      );
+    },
+    [teamPostsData],
+  );
+
+  const keyExtractor = useCallback((item) => item.postId, []);
+
+  const handleEndReached = ({ distanceFromEnd }) => {
+    if (distanceFromEnd === 0) return;
+    setPostCount(postCount + 3);
+  };
 
   return (
     <View style={styles.container}>
       <KeyboardAwareFlatList
+        keyExtractor={keyExtractor}
         extraData={teamPostsData}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -141,96 +261,52 @@ export const ActivityFeedScreen = () => {
         enableResetScrollToCoords={false}
         extraScrollHeight={50}
         stickyHeaderIndices={[0]}
-        onEndReachedThreshold={0.5}
-        onEndReached={({ distanceFromEnd }) => {
-          if (distanceFromEnd === 0) return;
-          setPostCount(postCount + 9);
-        }}
-        ListHeaderComponent={
-          <>
-            <View style={styles.actionButtonsContainer}>
-              <TouchableOpacity
-                onPress={() => {
-                  showWritePostBottomSheet();
-                }}
-                style={styles.actionButton}
-              >
-                <View style={styles.actionButtonContent}>
-                  <BasicText
-                    style={{ color: "black", fontFamily: "Poppins-Bold" }}
-                  >
-                    Write post
-                  </BasicText>
-                  <FontAwesome
-                    style={{ marginLeft: 10 }}
-                    name="pencil-square-o"
-                    size={22}
-                    color="#1f30fb"
-                  />
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  showGiveHypeBottomSheet();
-                  hideWritePostBottomSheet();
-                }}
-                style={styles.actionButton}
-              >
-                <View style={styles.actionButtonContent}>
-                  <BasicText
-                    style={{ color: "black", fontFamily: "Poppins-Bold" }}
-                  >
-                    Give Hype
-                  </BasicText>
-                  <MaterialIcons
-                    style={{ marginLeft: 4 }}
-                    name="local-fire-department"
-                    size={22}
-                    color="#ff046d"
-                  />
-                </View>
-              </TouchableOpacity>
-            </View>
-            {!teamPostsData ||
-              (teamPostsData.length === 0 && (
-                <GeneralMessage
-                  title={"No posts yet"}
-                  subtitle={
-                    "Share your successes, challenges or spread positivity!"
-                  }
-                />
-              ))}
-          </>
-        }
+        onEndReachedThreshold={0.1}
+        maxToRenderPerBatch={10}
+        onEndReached={handleEndReached}
+        ListHeaderComponent={renderListHeader}
         data={teamPostsData}
         renderItem={renderActivityList}
       />
       <BasicBottomSheet
-        onDismiss={reset}
+        enablePanDownToClose={!isPosting}
+        onDismiss={handleDismissWritePost}
         ref={writePostBottomSheefRef}
-        _snapPoints={["50%"]}
+        _snapPoints={["60%"]}
       >
         <View style={{ padding: 20 }}>
-          <BasicText style={styles.modalTitle}>Write a post ✏️</BasicText>
+          <BasicText style={styles.modalTitle}>Share a post ✏️</BasicText>
           <BasicBottomSheetTextInput
             maxLength={1000}
             name={"content"}
             errors={errors}
             control={control}
             rules={{ validate: postValidation, required: "Required" }}
-            placeholder={
-              "Share your successes, challenges or spread positivity!"
-            }
+            placeholder={"Share your progress, wins or loss!"}
             inputStyle={styles.modalInput}
             numberOfLines={50}
           />
           <View style={styles.modalCtaBtnContainer}>
-            <PrimaryButton
-              disabled={Object.keys(errors).length !== 0}
-              onPress={handleSubmit(handleCreatePost)}
-              text={"Post"}
-            />
+            {isPosting ? (
+              <ActivityIndicator size={"small"} />
+            ) : (
+              <>
+                <TouchableOpacity onPress={addPhoto}>
+                  <FontAwesome6 name="images" size={26} color="#32C732" />
+                </TouchableOpacity>
+                <PrimaryButton
+                  disabled={Object.keys(errors).length !== 0}
+                  onPress={handleSubmit(handleCreatePost)}
+                  text={"Post"}
+                />
+              </>
+            )}
           </View>
+
+          <PhotosToUploadGallery
+            photos={photos}
+            handleRemovePhoto={removePhoto}
+          />
         </View>
       </BasicBottomSheet>
       <GiveHypeBottomSheet ref={giveHypeBottomSheetRef} />
@@ -298,9 +374,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#f2f4ff",
   },
   modalCtaBtnContainer: {
-    display: "flex",
     width: "100%",
-    alignItems: "flex-end",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    gap: 10,
   },
   modalCtaBtn: {
     display: "flex",

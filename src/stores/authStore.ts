@@ -39,7 +39,6 @@ const useAuthStore = create<AuthState>((set, get) => ({
     set({ session });
     set({ notLoaded: false });
     await useProfileStore.getState().operations.getMeProfile();
-    await useProfileStore.getState().operations.getSubscription();
   },
   login: async (email, password) => {
     if (!email) return Promise.reject("Email is required");
@@ -55,7 +54,6 @@ const useAuthStore = create<AuthState>((set, get) => ({
     }
     set({ session: data.session });
     await useProfileStore.getState().operations.getMeProfile();
-    await useProfileStore.getState().operations.getSubscription();
     return Promise.resolve(data.user);
   },
   loginWithToken: async (access_token, refresh_token) => {

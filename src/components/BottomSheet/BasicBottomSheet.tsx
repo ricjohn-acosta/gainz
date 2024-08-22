@@ -12,6 +12,9 @@ interface BasicBottomSheetProps {
   style?: any;
   onDismiss?: any;
   enablePanDownToClose?: false;
+  handleComponent?: any;
+  backgroundStyle?: any;
+  handleIndicatorStyle?: any;
 }
 
 const BasicBottomSheet = forwardRef(
@@ -28,11 +31,16 @@ const BasicBottomSheet = forwardRef(
       style,
       onDismiss,
       enablePanDownToClose,
+      handleIndicatorStyle,
+      backgroundStyle
     } = props;
     const snapPoints = useMemo(() => [..._snapPoints], []);
 
     return (
       <BottomSheetModal
+        backgroundStyle={backgroundStyle}
+        handleIndicatorStyle={handleIndicatorStyle}
+        // handleComponent={() => handleComponent ?? null}
         keyboardBehavior={"interactive"}
         keyboardBlurBehavior={"restore"}
         android_keyboardInputMode="adjustResize"

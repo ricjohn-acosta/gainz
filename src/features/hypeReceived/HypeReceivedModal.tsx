@@ -132,7 +132,7 @@ export const HypeReceivedModal: FC = () => {
         }}
         ref={modalRef}
         detached
-        _snapPoints={Platform.OS === "ios" ? ["40%"] : ["45%"]}
+        _snapPoints={Platform.OS === "ios" ? ["40%"] : ["50%"]}
         bottomInset={120}
         onDismiss={handleClearHypeReceived}
       >

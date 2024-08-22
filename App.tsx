@@ -382,8 +382,6 @@ export default function App() {
 
   const navigationRef = createNavigationContainerRef();
 
-  StatusBar.setBackgroundColor("#f2f4ff");
-
   const [hasUserSkippedInviteCode, setHasUserSkippedInviteCode] =
     useState<string>(null);
   const [hasUserFinishedTutorial, setHasUserFinishedTutorial] =
@@ -464,6 +462,8 @@ export default function App() {
   };
 
   useEffect(() => {
+    Platform.OS === 'android' && StatusBar.setBackgroundColor("#f2f4ff");
+
     try {
       if (!me) return;
       const setup = async () => {

@@ -4,7 +4,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { MenuActionButton } from "../../../components/Button/MenuActionButton.tsx";
 import { styles as s } from "./style.ts";
 import { FontAwesome6 } from "@expo/vector-icons";
-import { useUploadAvatar } from "../useUploadAvatar.ts";
+import { useUploadAvatar } from "./useUploadAvatar.ts";
 
 interface CameraOrAlbumBottomsheetProps {
   open: boolean;

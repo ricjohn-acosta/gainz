@@ -24,12 +24,15 @@ const images = {
   trophy: require("./icons/trophy.png"),
   confettiAnimation: require("./animations/confetti-animation.json"),
   confettiAnimation2: require("./animations/confetti-animation2.json"),
+  celebrationAnimation: require("./animations/celebration.json"),
+  redeemAnimation: require("./animations/redeem-animation.json"),
   team: require("./illustrations/team.png"),
   clientTutorial1: require("./tutorials/client-tutorial-1.gif"),
   clientTutorial2: require("./tutorials/client-tutorial-2.gif"),
   clientTutorial3: require("./tutorials/client-tutorial-3.gif"),
   trainerTutorial2: require("./tutorials/trainer-tutorial-2.gif"),
   trainerTutorial3: require("./tutorials/trainer-tutorial-3.gif"),
+  placeholderVideo: require("./placeholder-video.png"),
 };
 
 export default images;

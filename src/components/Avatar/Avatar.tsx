@@ -9,7 +9,7 @@ import useTeamStore from "../../stores/teamStore.ts";
 import useProfileStore from "../../stores/profileStore.ts";
 import { FontAwesome6 } from "@expo/vector-icons";
 import React, { useCallback, useState } from "react";
-import { CameraOrAlbumBottomsheet } from "../../features/uploadImage/components/CameraOrAlbumBottomsheet.tsx";
+import { CameraOrAlbumBottomsheet } from "../../features/uploaders/uploadAvatar/CameraOrAlbumBottomsheet.tsx";
 
 export type UserStatus = "offline" | "online" | "in-gym";
 
@@ -85,7 +85,7 @@ export default function Avatar(props: AvatarProps) {
     } else {
       return getMember(uid)?.profileData.avatar_url ?? null;
     }
-  }, [me, myTeam]);
+  }, [me, myTeam, uid]);
 
   return (
     <View style={{ ...styles.container, width: teamList ? 100 : "unset" }}>

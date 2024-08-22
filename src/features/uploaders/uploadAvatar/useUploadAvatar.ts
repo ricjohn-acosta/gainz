@@ -1,8 +1,8 @@
 import * as ImagePicker from "expo-image-picker";
 import { Alert } from "react-native";
-import { supabase } from "../../services/supabase.ts";
 import { decode } from "base64-arraybuffer";
-import useProfileStore from "../../stores/profileStore.ts";
+import useProfileStore from "../../../stores/profileStore.ts";
+import { supabase } from "../../../services/supabase.ts";
 
 export const useUploadAvatar = () => {
   const {
@@ -70,6 +70,8 @@ export const useUploadAvatar = () => {
 
   const uploadAvatar = async (base64Uri) => {
     try {
+      if (!me.id) return;
+
       // Create a unique filename
       const fileName = `${me.id}.jpg`;
       const fileBody = decode(base64Uri);
@@ -82,24 +84,25 @@ export const useUploadAvatar = () => {
           upsert: true,
         });
 
-      if (error || !me.id) {
+      if (error) {
         console.error("Error uploading image:", error.message);
       } else {
-        const { data } = supabase.storage
-          .from("avatars")
-          .getPublicUrl(fileName);
-
-        const { error } = await supabase
+        const req = supabase
           .from("profiles")
           .update({
-            avatar_url: `${data.publicUrl}?time=${Date.now()}`,
+            avatar_url: `https://ik.imagekit.io/kapaii/avatars/${me.id}.jpg?tr=h-500,w-500&time=${Date.now()}`,
           })
           .eq("id", me.id);
 
-        if (error)
-          Alert.alert("Oops!", "Something went wrong changing your avatar");
+        req.then((res) => {
+          if (res.error) {
+            console.error(res.error);
+            Alert.alert("Oops!", "Something went wrong changing your avatar");
+            return;
+          }
 
-        reloadProfile();
+          reloadProfile();
+        });
       }
     } catch (error) {
       console.error("Upload failed:", error.message);

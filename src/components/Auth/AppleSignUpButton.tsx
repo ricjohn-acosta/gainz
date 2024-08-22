@@ -45,7 +45,6 @@ export const AppleSignUpButton = () => {
                   if (session.error) await logout();
                 })
                 .catch(async (error) => {
-                  console.log(error);
                   Alert.alert("Error refreshing session", error);
                 });
             }
